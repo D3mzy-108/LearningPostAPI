@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+        LearningPost
+        {% endblock title %}
+    </title>
+    {% block links %}{% endblock links %}
+    <link rel="stylesheet" href="{% static 'styles/global.css' %}">
+    <script src="{% static 'scripts/jquery.min.js' %}"></script>
+</head>
+
+<body class="bg-[var(--bg)]">
+    {% block content %}
+
+    {% endblock content %}
+    <script src="{% static 'scripts/tailwind.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/6.0.4/ionicons.min.js"
+        integrity="sha512-8O7VIjJxO2P/Vfm34bYnEbPwocNkwUQdzJCYooCDWP9MT4GpPw5Ktmk9NxVyWfrzDlXnbCsZzSUR81Etc6gv0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+
+</html>

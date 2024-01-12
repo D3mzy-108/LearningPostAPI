@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<header class="p-6 flex justify-between items-center w-screen overflow-hidden">
+    {% include 'partials/logo.html' %}
+</header>
+
+<main class="w-full p-6">
+    <form method="post" action="" class="w-full max-w-md mx-auto flex flex-col items-center gap-4">
+        {% csrf_token %}
+        <legend class="font-medium text-3xl text-[var(--fg2)]">Sign In</legend>
+        <div class="w-full mt-6">
+            <input type="email" name="email" id="email"
+                class="rounded-md w-full p-4 text-[var(--fg)] placeholder:text-[var(--fg2)] bg-[var(--bg2)]"
+                placeholder="Email Address:">
+        </div>
+        <div class="w-full">
+            <input type="password" name="password" id="password"
+                class="rounded-md w-full p-4 text-[var(--fg)] placeholder:text-[var(--fg2)] bg-[var(--bg2)]"
+                placeholder="Password:">
+        </div>
+        <div class="w-full mt-2 text-center px-6">
+            <button type="submit"
+                class="w-full max-w-xs p-4 text-[var(--fg)] bg-[var(--highlight)] font-semibold rounded-md">
+                Submit
+            </button>
+        </div>
+
+        <div class="w-full py-4 flex items-center px-4 gap-4">
+            <div class="flex-1 bg-[var(--lightgray)] h-px"></div>
+            <span class="text-sm text-[var(--fg2)]">or</span>
+            <div class="flex-1 bg-[var(--lightgray)] h-px"></div>
+        </div>
+        <button type="button" class="p-4 w-5/6 rounded-md border border-[var(--lightgray)] flex items-center gap-4">
+            <img src="{% static 'assets/images/google-logo.jpg' %}" alt="google" class="w-[30px] rounded-full">
+            <span class="text-[var(--fg2)]">Sign In with Google</span>
+        </button>
+    </form>
+</main>
+{% endblock content %}

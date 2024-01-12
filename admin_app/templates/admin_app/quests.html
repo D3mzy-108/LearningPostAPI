@@ -1,0 +1,56 @@
+{% extends 'admin.html' %}
+{% load static %}
+{% block screen %}
+<div class="w-fit ml-auto">
+    <a href="{% url 'create_quest' %}" class="py-3 px-4 flex items-center gap-2 bg-[var(--bg2)] rounded-md">
+        <ion-icon name="document" class="text-[var(--fg2)]"></ion-icon>
+        <span class="text-[var(--fg)]">Create Quest</span>
+    </a>
+</div>
+
+{% if not quests %}
+<div class="text-center text-[var(--fg)] text-lg font-medium mt-8">No Quests Created</div>
+{% endif %}
+
+<div class="w-full mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+    {% for quest in quests %}
+    <div class="w-full relative">
+        <img src="{{quest.cover.url}}" alt="" class="w-full aspect-square rounded-md bg-[var(--bg2)]">
+        <div class="w-full py-3">
+            <div class="flex items-center">
+                <div class="flex-1 truncate">
+                    <span class="font-semibold text-[var(--fg)]">{{quest.title}}</span>
+                </div>
+                <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
+                    <ion-icon name="bookmark" class="text-[var(--highlight)]"></ion-icon>
+                    <span>{{quest.bookmarked.count}}</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 mt-1 text-[12px] text-[var(--fg2)] truncate">
+                <span>{{quest.questions.count}} Questions</span>
+                <span>.</span>
+                <span>{{quest.grade}} Grade</span>
+            </div>
+        </div>
+
+        <div class="absolute top-0 right-0 p-1 w-fit flex flex-col gap-3">
+            <button
+                onclick="confirm('Are you sure you want to delete {{quest.title}}') ? window.location.replace(`{% url 'delete_quest' pk=quest.pk %}`) : null"
+                class="w-fit px-2 aspect-square grid place-items-center rounded-full bg-red-500/50 text-[#FFFFFF]">
+                <ion-icon name="trash"></ion-icon>
+            </button>
+            <a href="{% url 'edit_quest' pk=quest.pk %}"
+                class="w-fit px-2 aspect-square grid place-items-center rounded-full bg-[#00000040] text-[var(--fg)]">
+                <ion-icon name="create"></ion-icon>
+            </a>
+            <a href="{% url 'view_questions' pk=quest.pk %}"
+                class="w-fit px-2 aspect-square grid place-items-center rounded-full bg-[#00000040] text-[var(--fg)]">
+                <ion-icon name="document-text"></ion-icon>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% include 'partials/pagination.html' %}
+{% endblock screen %}

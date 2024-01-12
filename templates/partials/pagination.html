@@ -1,0 +1,17 @@
+<div class="pt-12 pb-8 w-fit mx-auto flex items-center gap-4">
+    {% if paginator.has_previous %}
+    <a href="?page={{paginator.previous_page_number}}"
+        class="py-3 px-4 grid place-items-center gap-2 bg-[var(--bg2)] rounded-md text-[var(--fg)]">
+        <ion-icon name="chevron-back"></ion-icon>
+    </a>
+    {% endif %}
+    <div class="w-fit py-3 px-2 text-[var(--fg2)] text-sm">
+        {{page}} of {{paginator.paginator.num_pages}}
+    </div>
+    {% if paginator.has_next %}
+    <a href="?page={{paginator.next_page_number}}"
+        class="py-3 px-4 grid place-items-center gap-2 bg-[var(--bg2)] rounded-md text-[var(--fg)]">
+        <ion-icon name="chevron-forward"></ion-icon>
+    </a>
+    {% endif %}
+</div>

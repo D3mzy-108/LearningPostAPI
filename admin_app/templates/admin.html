@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}
+Admin Portal
+{% endblock title %}
+{% block content %}
+<div class="w-full flex max-sm:flex-col gap-4 relative">
+    {% include 'partials/admin_nav.html' %}
+    <div class="p-3 md:p-6 flex-1 w-full">
+        {% block screen %}
+
+        {% endblock screen %}
+    </div>
+</div>
+{% endblock content %}
