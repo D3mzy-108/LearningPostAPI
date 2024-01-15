@@ -25,6 +25,11 @@ def quests(request):
         displayed_quests = []
     quests_list = []
     for quest in displayed_quests:
+        if User.objects.filter(pk=request.user.pk).exists():
+            answered_count = request.user.answered.filter(
+                question__quest__pk=quest.pk).count()
+        else:
+            answered_count = 0
         quests_list.append({
             'testid': quest.pk,
             'cover': quest.cover.url,
@@ -34,7 +39,7 @@ def quests(request):
             'instructions': quest.instructions,
             'bookmarked': quest.bookmarked.filter(pk=request.user.pk).exists(),
             'question_count': quest.questions.count(),
-            'answered_count': request.user.answered.filter(question__quest__pk=quest.pk).count(),
+            'answered_count': answered_count,
         })
     context = {
         'success': True,
