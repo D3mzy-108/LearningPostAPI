@@ -34,6 +34,7 @@ def quests(request):
             'instructions': quest.instructions,
             'bookmarked': quest.bookmarked.filter(pk=request.user.pk).exists(),
             'question_count': quest.questions.count(),
+            'answered_count': request.user.answered.filter(question__quest__pk=quest.pk),
         })
     context = {
         'success': True,
