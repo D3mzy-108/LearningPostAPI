@@ -3,10 +3,41 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from admin_app.models import Quest, Question, AnsweredBy
 from website.models import User
+from django.contrib.auth import authenticate, login
 
 
-def login(request):
-    context = {}
+def login_endpoint(request):
+    if request.method == 'POST':
+        # Extract user data from the request
+        user_id = request.POST.get('userId')
+        display_name = request.POST.get('displayName')
+        email = request.POST.get('email')
+        profileUrl = request.POST.get('profileURL')
+        # Add other necessary user information
+
+        # Check if the user already exists
+        user, created = User.objects.get_or_create(
+            username=user_id, defaults={'email': email})
+
+        # If the user is newly created, set additional attributes
+        if created:
+            user.first_name = display_name
+            user.profile_photo = profileUrl
+            # Set other user attributes as needed
+            user.save()
+
+        # Authenticate and login the user
+        authenticated_user = authenticate(request, username=user_id)
+        login(request, authenticated_user)
+        context = {
+            'success': True,
+            'message': 'Login Successful!'
+        }
+        return JsonResponse(context)
+    context = {
+        'success': False,
+        'message': 'Login Failed!'
+    }
     return JsonResponse(context)
 
 
