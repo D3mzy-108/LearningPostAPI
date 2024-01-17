@@ -4,8 +4,10 @@ from django.core.paginator import Paginator
 from admin_app.models import Quest, Question, AnsweredBy
 from website.models import User
 from django.contrib.auth import authenticate, login
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 def login_endpoint(request):
     if request.method == 'POST':
         # Extract user data from the request
