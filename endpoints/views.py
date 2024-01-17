@@ -31,7 +31,8 @@ def login_endpoint(request):
         login(request, authenticated_user)
         context = {
             'success': True,
-            'message': 'Login Successful!'
+            'message': 'Login Successful!',
+            'isNewUser': created,
         }
         return JsonResponse(context)
     context = {
