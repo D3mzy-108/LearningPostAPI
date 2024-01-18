@@ -60,7 +60,7 @@ def quests(request, username):
     quests_list = []
     for quest in displayed_quests:
         if User.objects.filter(username=username).exists():
-            answered_count = request.user.answered.filter(
+            answered_count = get_object_or_404(User, username=username).answered.filter(
                 question__quest__pk=quest.pk).count()
         else:
             answered_count = 0
@@ -140,7 +140,7 @@ def bookmarks(request, username):
     bookmark_list = []
     for quest in displayed_quests:
         if User.objects.filter(username=username).exists():
-            answered_count = request.user.answered.filter(
+            answered_count = get_object_or_404(User, username=username).answered.filter(
                 question__quest__pk=quest.pk).count()
         else:
             answered_count = 0
