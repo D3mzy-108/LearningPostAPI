@@ -172,6 +172,7 @@ def add_to_bookmark(request, testid, is_adding):
     else:
         quest.bookmarked.remove(user)
         message = f'Removed {quest.title} from your bookmarks'
+    quest.save()
     context = {
         'success': True,
         'message': message,
