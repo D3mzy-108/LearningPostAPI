@@ -121,3 +121,59 @@ def answer(request, questionid):
         question=get_object_or_404(Question, id=questionid)
     )
     return JsonResponse({'success': True})
+
+
+def bookmarks(request):
+    if User.objects.filter(pk=request.user.pk).exists():
+        bookmarked_quests = Quest.objects.filter(
+            bookmarked__pk=request.user.pk).order_by('title')
+    else:
+        bookmarked_quests = []
+    paginator = Paginator(bookmarked_quests, 10)
+    page = request.GET.get('page')
+    if page == None:
+        page = 1
+    try:
+        displayed_quests = paginator.page(page)
+    except:
+        displayed_quests = []
+    bookmark_list = []
+    for quest in displayed_quests:
+        if User.objects.filter(pk=request.user.pk).exists():
+            answered_count = request.user.answered.filter(
+                question__quest__pk=quest.pk).count()
+        else:
+            answered_count = 0
+        bookmark_list.append({
+            'testid': quest.pk,
+            'cover': quest.cover.url,
+            'title': quest.title,
+            'grade': quest.grade,
+            'time': quest.time,
+            'instructions': quest.instructions,
+            'bookmarked': quest.bookmarked.filter(pk=request.user.pk).exists(),
+            'question_count': quest.questions.count(),
+            'answered_count': answered_count,
+        })
+    else:
+        context = {
+            'success': True,
+            'quests': bookmark_list,
+        }
+        return JsonResponse(context)
+
+
+def add_to_bookmark(request, testid, is_adding):
+    quest = get_object_or_404(Quest, pk=testid)
+    user = get_object_or_404(User, pk=request.user.pk)
+    if is_adding == 'true':
+        quest.bookmarked.add(user)
+        message = f'Saved {quest.title} to your bookmarks'
+    else:
+        quest.bookmarked.remove(user)
+        message = f'Removed {quest.title} from your bookmarks'
+    context = {
+        'success': True,
+        'message': message,
+    }
+    return JsonResponse(context)
