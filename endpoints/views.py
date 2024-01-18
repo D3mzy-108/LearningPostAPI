@@ -3,7 +3,8 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from admin_app.models import Quest, Question, AnsweredBy
 from website.models import User
-from django.contrib.auth import authenticate, login
+# from django.contrib.auth import authenticate, login
+from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -29,8 +30,8 @@ def login_endpoint(request):
             user.save()
 
         # Authenticate and login the user
-        authenticated_user = authenticate(request, username=user_id)
-        login(request, authenticated_user)
+        authenticated_user = auth.authenticate(request, user)
+        auth.login(request, authenticated_user)
         context = {
             'success': True,
             'message': 'Login Successful!',
