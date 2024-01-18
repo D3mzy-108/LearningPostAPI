@@ -44,7 +44,7 @@ def login_endpoint(request):
     return JsonResponse(context)
 
 
-def quests(request):
+def quests(request, username):
     quests = Quest.objects.all().order_by('-id')
     search = request.GET.get('search')
     if search is not None:
@@ -59,7 +59,7 @@ def quests(request):
         displayed_quests = []
     quests_list = []
     for quest in displayed_quests:
-        if User.objects.filter(pk=request.user.pk).exists():
+        if User.objects.filter(username=username).exists():
             answered_count = request.user.answered.filter(
                 question__quest__pk=quest.pk).count()
         else:
@@ -71,7 +71,7 @@ def quests(request):
             'grade': quest.grade,
             'time': quest.time,
             'instructions': quest.instructions,
-            'bookmarked': quest.bookmarked.filter(pk=request.user.pk).exists(),
+            'bookmarked': quest.bookmarked.filter(username=username).exists(),
             'question_count': quest.questions.count(),
             'answered_count': answered_count,
         })
@@ -82,10 +82,10 @@ def quests(request):
     return JsonResponse(context)
 
 
-def questions(request, testid):
+def questions(request, testid, username):
     all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
     unanswered_questions = all_questions.exclude(
-        answered_by__user__pk=request.user.pk)
+        answered_by__user__username=username)
     if unanswered_questions.count() > 0:
         random_items = unanswered_questions[:30]
     else:
@@ -115,18 +115,18 @@ def questions(request, testid):
     return JsonResponse(context)
 
 
-def answer(request, questionid):
+def answer(request, questionid, username):
     AnsweredBy.objects.create(
-        user=get_object_or_404(User, pk=request.user.id),
+        user=get_object_or_404(User, username=username),
         question=get_object_or_404(Question, id=questionid)
     )
     return JsonResponse({'success': True})
 
 
-def bookmarks(request):
-    if User.objects.filter(pk=request.user.pk).exists():
+def bookmarks(request, username):
+    if User.objects.filter(username=username).exists():
         bookmarked_quests = Quest.objects.filter(
-            bookmarked__pk=request.user.pk).order_by('title')
+            bookmarked__username=username).order_by('title')
     else:
         bookmarked_quests = []
     paginator = Paginator(bookmarked_quests, 10)
@@ -139,7 +139,7 @@ def bookmarks(request):
         displayed_quests = []
     bookmark_list = []
     for quest in displayed_quests:
-        if User.objects.filter(pk=request.user.pk).exists():
+        if User.objects.filter(username=username).exists():
             answered_count = request.user.answered.filter(
                 question__quest__pk=quest.pk).count()
         else:
@@ -151,7 +151,7 @@ def bookmarks(request):
             'grade': quest.grade,
             'time': quest.time,
             'instructions': quest.instructions,
-            'bookmarked': quest.bookmarked.filter(pk=request.user.pk).exists(),
+            'bookmarked': quest.bookmarked.filter(username=username).exists(),
             'question_count': quest.questions.count(),
             'answered_count': answered_count,
         })
@@ -163,9 +163,9 @@ def bookmarks(request):
         return JsonResponse(context)
 
 
-def add_to_bookmark(request, testid, is_adding):
+def add_to_bookmark(request, username, testid, is_adding):
     quest = get_object_or_404(Quest, pk=testid)
-    user = get_object_or_404(User, pk=request.user.pk)
+    user = get_object_or_404(User, username=username)
     if is_adding == 'true':
         quest.bookmarked.add(user)
         message = f'Saved {quest.title} to your bookmarks'
