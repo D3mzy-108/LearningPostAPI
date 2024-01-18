@@ -30,7 +30,7 @@ def login_endpoint(request):
             user.save()
 
         # Authenticate and login the user
-        authenticated_user = auth.authenticate(request, user)
+        authenticated_user = auth.authenticate(request, username=user_id)
         auth.login(request, authenticated_user)
         context = {
             'success': True,
