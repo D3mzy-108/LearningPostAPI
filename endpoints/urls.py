@@ -3,6 +3,7 @@ from .views import *
 
 urlpatterns = [
     path('login/', login_endpoint),
+    path('get-logged-in-user/<str:username>/', get_logged_in_user),
     path('get-quests/<str:username>/', quests),
     path('quest/<int:testid>/get-questions/<str:username>/', questions),
     path('question/<int:questionid>/answered/<str:username>/', answer),

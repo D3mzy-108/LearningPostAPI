@@ -44,6 +44,28 @@ def login_endpoint(request):
     return JsonResponse(context)
 
 
+def get_logged_in_user(request, username):
+    user = User.objects.filter(username=username)
+    if user.exists():
+        m_user = get_object_or_404(User, username=username)
+        userid = m_user.username
+        display_name = m_user.first_name
+        email = m_user.email
+        profile_url = m_user.profile_photo
+    else:
+        userid = None
+        display_name = 'Guest User'
+        email = None
+        profile_url = ''
+    context = {
+        'userId': userid,
+        'displayName': display_name,
+        'email': email,
+        'profileURL': profile_url,
+    }
+    return JsonResponse(context)
+
+
 def quests(request, username):
     quests = Quest.objects.all().order_by('-id')
     search = request.GET.get('search')
