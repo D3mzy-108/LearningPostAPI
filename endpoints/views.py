@@ -107,7 +107,7 @@ def quests(request, username):
 def questions(request, testid, username):
     all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
     unanswered_questions = all_questions.exclude(
-        answered_by__user__username=username)
+        answered_by__user__username=username).order_by('?')
     if unanswered_questions.count() > 0:
         random_items = unanswered_questions[:30]
     else:
