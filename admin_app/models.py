@@ -11,6 +11,7 @@ class Quest(models.Model):
     title = models.CharField(max_length=100)
     grade = models.CharField(max_length=100)
     time = models.IntegerField(verbose_name='Time per Question')
+    about = models.TextField(blank=True, null=True)
     instructions = models.TextField(blank=True, null=True)
     quest_type = models.CharField(max_length=100, choices=quest_types)
     bookmarked = models.ManyToManyField(User, blank=True, null=True)

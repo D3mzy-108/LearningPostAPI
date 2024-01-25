@@ -7,7 +7,13 @@ from django.core.paginator import Paginator
 
 @login_required
 def quests(request):
-    quests = Quest.objects.all().order_by('-id')
+    search = request.GET.get('search_quest')
+    search_val = ''
+    if search is not None:
+        search_val = search
+        quests = Quest.objects.filter(title__icontains=search).order_by('-id')
+    else:
+        quests = Quest.objects.all().order_by('-id')
     paginator = Paginator(quests, 30)
     page = request.GET.get('page')
     if page == None:
@@ -18,6 +24,7 @@ def quests(request):
         'quests': displayed_quests,
         'paginator': displayed_quests,
         'page': page,
+        'search_val': search_val,
     }
     return render(request, 'admin_app/quests.html', context)
 
@@ -32,6 +39,7 @@ def create_quest(request):
             return redirect('create_quest')
         grade = request.POST['grade']
         time = request.POST['time']
+        about = request.POST['about']
         instructions = request.POST['instructions']
         quest_type = request.POST['quest_type']
 
@@ -40,6 +48,7 @@ def create_quest(request):
         instance.cover = cover
         instance.grade = grade
         instance.time = time
+        instance.about = about
         instance.instructions = instructions
         instance.quest_type = quest_type
         instance.save()
@@ -58,6 +67,7 @@ def edit_quest(request, pk):
             instance.cover = cover
         instance.grade = request.POST['grade']
         instance.time = request.POST['time']
+        instance.about = request.POST['about']
         instance.instructions = request.POST['instructions']
         instance.quest_type = request.POST['quest_type']
         instance.save()
@@ -78,7 +88,14 @@ def delete_quest(request, pk):
 @login_required
 def view_questions(request, pk):
     quest = get_object_or_404(Quest, pk=pk)
-    questions = quest.questions.all().order_by('-id')
+    search = request.GET.get('search_questions')
+    search_val = ''
+    if search is not None:
+        questions = quest.questions.all().filter(
+            question__icontains=search).order_by('-id')
+        search_val = search
+    else:
+        questions = quest.questions.all().order_by('-id')
     paginator = Paginator(questions, 30)
     page = request.GET.get('page')
     if page == None:
@@ -89,6 +106,7 @@ def view_questions(request, pk):
         'questions': displayed_questsions,
         'paginator': displayed_questsions,
         'page': page,
+        'search_val': search_val,
     }
     return render(request, 'admin_app/quest_questions.html', context)
 

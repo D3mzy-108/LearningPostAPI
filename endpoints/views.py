@@ -92,6 +92,7 @@ def quests(request, username):
             'title': quest.title,
             'grade': quest.grade,
             'time': quest.time,
+            'about': quest.about,
             'instructions': quest.instructions,
             'bookmarked': quest.bookmarked.filter(username=username).exists(),
             'question_count': quest.questions.count(),

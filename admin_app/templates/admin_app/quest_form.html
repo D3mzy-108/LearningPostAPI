@@ -41,6 +41,13 @@
     </div>
 
     <div class="w-full">
+        <label for="about" class="text-[var(--fg)] font-medium">About Quest</label>
+        <textarea name="about" id="about" rows="7"
+            placeholder="Provide a short description of what this quest is about, or its table of content."
+            class="w-full mt-3 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold">{{instance.about}}</textarea>
+    </div>
+
+    <div class="w-full">
         <label for="instructions" class="text-[var(--fg)] font-medium">Instructions & Tips</label>
         <textarea name="instructions" id="instructions" rows="7"
             class="w-full mt-3 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold">{{instance.instructions}}</textarea>

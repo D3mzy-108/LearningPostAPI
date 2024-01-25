@@ -1,10 +1,18 @@
 {% extends 'admin.html' %}
 {% load static %}
 {% block screen %}
-<div class="w-fit ml-auto">
-    <a href="{% url 'create_quest' %}" class="py-3 px-4 flex items-center gap-2 bg-[var(--bg2)] rounded-md">
-        <ion-icon name="document" class="text-[var(--fg2)]"></ion-icon>
-        <span class="text-[var(--fg)]">Create Quest</span>
+<div class="w-full flex gap-2 mb-6">
+    <form action="" method="get" class="w-full flex-1">
+        <div class="flex items-center gap-4 pl-4 p-1 rounded-md bg-[var(--bg2)]">
+            <ion-icon class="text-2xl text-[var(--fg2)]" name="search"></ion-icon>
+            <input type="search" name="search_quest" id="search_quest" placeholder="Search for quest..."
+                value="{{search_val}}"
+                class="w-full py-3 pr-4 pl-0 bg-transparent border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold">
+        </div>
+    </form>
+    <a href="{% url 'create_quest' %}" class="w-fit py-2 px-3 flex items-center gap-2 bg-[var(--bg2)] rounded-md">
+        <ion-icon name="add-circle-outline" class="text-[var(--fg2)] text-3xl"></ion-icon>
+        <span class="text-[var(--fg)] max-md:hidden">Create Quest</span>
     </a>
 </div>
 
@@ -12,10 +20,10 @@
 <div class="text-center text-[var(--fg)] text-lg font-medium mt-8">No Quests Created</div>
 {% endif %}
 
-<div class="w-full mt-3 md:mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+<div class="w-full mt-3 md:mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
     {% for quest in quests %}
     <div class="w-full relative">
-        <img src="{{quest.cover.url}}" alt="" class="w-full aspect-square rounded-md bg-[var(--bg2)]">
+        <img src="{{quest.cover.url}}" alt="" class="w-full aspect-square bg-[var(--bg2)]">
         <div class="w-full py-3">
             <div class="flex items-center">
                 <div class="flex-1 truncate">
@@ -26,13 +34,13 @@
                     <span>{{quest.bookmarked.count}}</span>
                 </div>
             </div>
-            <div class="flex flex-col mt-0 text-[12px] text-[var(--fg2)] truncate">
+            <div class="flex flex-col gap-1 mt-1 text-[12px] text-[var(--fg2)] truncate">
                 <span>{{quest.questions.count}} Questions</span>
                 <span>{{quest.grade}} Grade</span>
             </div>
         </div>
 
-        <div class="absolute top-0 right-0 p-1 w-fit flex flex-col gap-3">
+        <div class="absolute top-0 right-0 z-20 p-1 w-fit flex flex-col gap-3">
             <button
                 onclick="confirm('Are you sure you want to delete {{quest.title}}') ? window.location.replace(`{% url 'delete_quest' pk=quest.pk %}`) : null"
                 class="w-fit px-2 aspect-square grid place-items-center rounded-full bg-red-500/50 text-[#FFFFFF]"
@@ -44,12 +52,10 @@
                 title="Edit Quest">
                 <ion-icon name="create" class="pointer-events-none"></ion-icon>
             </a>
-            <a href="{% url 'view_questions' pk=quest.pk %}"
-                class="w-fit px-2 aspect-square grid place-items-center rounded-full bg-[#00000040] text-[var(--fg)]"
-                title="View Questions">
-                <ion-icon name="document-text" class="pointer-events-none"></ion-icon>
-            </a>
         </div>
+        <a href="{% url 'view_questions' pk=quest.pk %}" class="w-full h-full absolute top-0 left-0 z-10"
+            title="View Questions">
+        </a>
     </div>
     {% endfor %}
 </div>
