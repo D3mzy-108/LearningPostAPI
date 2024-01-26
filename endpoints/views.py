@@ -139,10 +139,13 @@ def questions(request, testid, username):
 
 
 def answer(request, questionid, username):
-    AnsweredBy.objects.create(
-        user=get_object_or_404(User, username=username),
-        question=get_object_or_404(Question, id=questionid)
-    )
+    exists = AnsweredBy.objects.filter(
+        user__username=username, question__id=questionid).exists()
+    if not exists:
+        AnsweredBy.objects.create(
+            user=get_object_or_404(User, username=username),
+            question=get_object_or_404(Question, id=questionid)
+        )
     return JsonResponse({'success': True})
 
 
