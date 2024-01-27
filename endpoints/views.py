@@ -73,7 +73,7 @@ def login_endpoint(request):
 def edit_profile(request, username):
     user = get_object_or_404(User, username=username)
     profiles = UserProfile.objects.filter(user__pk=user.pk)
-    if not profile.exists():
+    if not profiles.exists():
         profile = UserProfile()
         profile.user = user
     else:
