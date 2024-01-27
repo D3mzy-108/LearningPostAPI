@@ -1,9 +1,16 @@
+import string
+import random
 from django.shortcuts import render, redirect, get_object_or_404
+from website.models import BetaReferal
 from .models import Quest, Question
 import csv
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
+
+# ========================================================================================================
+# QUESTS
+# ========================================================================================================
 
 @login_required
 def quests(request):
@@ -26,7 +33,7 @@ def quests(request):
         'page': page,
         'search_val': search_val,
     }
-    return render(request, 'admin_app/quests.html', context)
+    return render(request, 'admin_app/quests/quests.html', context)
 
 
 @login_required
@@ -54,7 +61,7 @@ def create_quest(request):
         instance.save()
         return redirect('quests')
     context = {}
-    return render(request, 'admin_app/quest_form.html', context)
+    return render(request, 'admin_app/quests/quest_form.html', context)
 
 
 @login_required
@@ -75,7 +82,7 @@ def edit_quest(request, pk):
     context = {
         'instance': instance
     }
-    return render(request, 'admin_app/quest_form.html', context)
+    return render(request, 'admin_app/quests/quest_form.html', context)
 
 
 @login_required
@@ -108,7 +115,7 @@ def view_questions(request, pk):
         'page': page,
         'search_val': search_val,
     }
-    return render(request, 'admin_app/quest_questions.html', context)
+    return render(request, 'admin_app/quests/quest_questions.html', context)
 
 
 @login_required
@@ -180,4 +187,26 @@ def edit_question(request, quest_pk, pk):
 def delete_question(request, pk):
     question = get_object_or_404(Question, pk=pk)
     question.delete()
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+# ========================================================================================================
+# CLASSIFICATIONS
+# ========================================================================================================
+
+def classifications(request):
+    referrals = BetaReferal.objects.all().order_by('-id')
+    context = {
+        'referrals': referrals,
+    }
+    return render(request, 'admin_app/classifications/classifications.html', context)
+
+
+def generate_new_code(request):
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(characters) for _ in range(15))
+    if not BetaReferal.objects.filter(code=random_string).exists():
+        referal = BetaReferal()
+        referal.code = random_string
+        referal.save()
     return redirect(request.META.get('HTTP_REFERER'))

@@ -11,27 +11,33 @@
             class="w-full pb-0 px-2 m-0 pt-24 md:pt-12 bg-[var(--bg2)] flex flex-col gap-3 overflow-auto max-sm:absolute max-sm:-left-full max-sm:top-0 max-sm:-z-10 max-sm:h-screen">
             <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
-                    <ion-icon name="grid-sharp"></ion-icon>
+                    <ion-icon name="grid-outline"></ion-icon>
                 </div>
                 <a href="#" class="flex-1 font-semibold">Dashboard</a>
             </li>
             <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
-                    <ion-icon name="file-tray-full"></ion-icon>
+                    <ion-icon name="ribbon-outline"></ion-icon>
+                </div>
+                <a href="#" class="flex-1 font-semibold">Achievements</a>
+            </li>
+            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+                <div class="w-fit text-2xl">
+                    <ion-icon name="extension-puzzle-outline"></ion-icon>
+                </div>
+                <a href="{% url 'classifications' %}" class="flex-1 font-semibold">Classifications</a>
+            </li>
+            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+                <div class="w-fit text-2xl">
+                    <ion-icon name="file-tray-full-outline"></ion-icon>
                 </div>
                 <a href="{% url 'quests' %}" class="flex-1 font-semibold">Quests</a>
             </li>
             <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
-                    <ion-icon name="trophy-sharp"></ion-icon>
+                    <ion-icon name="people-outline"></ion-icon>
                 </div>
-                <a href="#" class="flex-1 font-semibold">Leaderboard</a>
-            </li>
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
-                <div class="w-fit text-2xl">
-                    <ion-icon name="ribbon-sharp"></ion-icon>
-                </div>
-                <a href="#" class="flex-1 font-semibold">Achievements</a>
+                <a href="#" class="flex-1 font-semibold">Users</a>
             </li>
         </ul>
     </div>

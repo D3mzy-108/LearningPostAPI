@@ -1,0 +1,44 @@
+{% extends 'admin.html' %}
+{% load static %}
+{% block screen %}
+<div class="w-full flex items-center gap-2 mb-6">
+    <span class="mr-auto text-xl text-[var(--fg)] font-bold">Referrals</span>
+    <a href="{% url 'generate_referral' %}" class="w-fit py-2 px-3 flex items-center gap-2 bg-[var(--bg2)] rounded-md">
+        <ion-icon name="sync-sharp" class="text-[var(--fg2)] text-2xl"></ion-icon>
+        <span class="text-[var(--fg)] max-md:hidden">Generate Referral Code</span>
+    </a>
+</div>
+
+{% if not referrals %}
+<div class="text-center text-[var(--fg)] text-lg font-medium mt-8">No Referrals Created</div>
+{% endif %}
+
+<div class="w-full mt-3 md:mt-6 flex flex-wrap gap-4">
+    {% for referral in referrals %}
+    <div class="py-3 px-4 text-[var(--fg)] bg-[var(--bg2)] rounded-md">
+        <div class="w-fit flex items-center gap-4">
+            <span class="font-semibold">{{referral.code}}</span>
+            {% if referral.is_used %}
+            <small class="text-[var(--fg2)] bg-white/10 py-1 px-2 rounded-md">Used</small>
+            {% else %}
+            <small class="text-[var(--fg2)] bg-white/10 py-1 px-2 rounded-md">Not Used</small>
+            {% endif %}
+        </div>
+        <div class="mt-3 flex justify-between">
+            <div class="w-[100px] flex gap-[7px] items-center truncate">
+                {% if referral.profile %}
+                <img src="{{referral.profile.user.profile_photo}}" alt=""
+                    class="rounded-full w-[20px] h-[20px] bg-white/50">
+                <small class="text-[var(--fg2)]">
+                    {{referral.profile.user.first_name}}
+                </small>
+                {% endif %}
+            </div>
+            <a href="#" class="bg-[var(--red)] text-[var(--fg2)] text-[14px] flex items-center w-fit rounded-full p-2">
+                <ion-icon name="trash-outline"></ion-icon>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock screen %}

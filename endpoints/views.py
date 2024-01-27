@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from admin_app.models import Quest, Question, AnsweredBy
-from website.models import User, UserProfile
+from website.models import User, UserProfile, BetaReferal
 # from django.contrib.auth import authenticate, login
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
@@ -34,11 +34,14 @@ def login_endpoint(request):
 
         profile = UserProfile.objects.filter(user__pk=user.pk)
         if profile.exists():
+            rc = ''
+            if BetaReferal.objects.filter(profile__pk=profile.first().pk):
+                rc = profile.first().referral.code
             user_profile = {
                 'phone': profile.first().phone,
                 'date_of_birth': profile.first().date_of_birth,
                 'school': profile.first().school,
-                'referal_code': profile.first().referal_code,
+                'referal_code': rc,
                 'country': profile.first().country,
                 'state': profile.first().state,
                 'guardian_email': profile.first().guardian_email,
@@ -82,16 +85,35 @@ def edit_profile(request, username):
         profile.phone = request.POST.get('phone')
         profile.date_of_birth = request.POST.get('dob')
         profile.school = request.POST.get('school')
-        profile.referal_code = request.POST.get('ref_code')
         profile.country = request.POST.get('country')
         profile.state = request.POST.get('state')
         profile.guardian_email = request.POST.get('guardian_email')
         profile.guardian_phone = request.POST.get('guardian_phone')
-        profile.save()
-        return JsonResponse({
-            'success': True,
-            'message': 'Your profile has been updated!',
-        })
+        referal_code = request.POST.get('ref_code')
+        referral = BetaReferal.objects.filter(code=referal_code)
+        if referral.exists():
+            m_ref = referral.first()
+            if not m_ref.is_used:
+                profile.save()
+                m_ref.is_used = True
+                m_ref.profile = profile
+                m_ref.save()
+                message = 'Your profile has been updated!'
+            else:
+                if m_ref.profile.user.pk == profile.user.pk:
+                    profile.save()
+                    message = 'Your profile has been updated!'
+                else:
+                    message = 'Referral has already been used!'
+            return JsonResponse({
+                'success': True,
+                'message': message,
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid referral code!',
+            })
     return JsonResponse({
         'success': False,
         'message': 'Invalid request!',
@@ -117,12 +139,15 @@ def get_logged_in_user(request, username):
         email = m_user.email
         profile_url = m_user.profile_photo
         profile = UserProfile.objects.filter(user__pk=m_user.pk)
+        rc = ''
+        if BetaReferal.objects.filter(profile__pk=profile.first().pk):
+            rc = profile.first().referral.code
         if profile.exists():
             user_profile = {
                 'phone': profile.first().phone,
                 'date_of_birth': profile.first().date_of_birth,
                 'school': profile.first().school,
-                'referal_code': profile.first().referal_code,
+                'referal_code': rc,
                 'country': profile.first().country,
                 'state': profile.first().state,
                 'guardian_email': profile.first().guardian_email,

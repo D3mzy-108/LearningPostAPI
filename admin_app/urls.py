@@ -2,6 +2,9 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    # ========================================================================================================
+    # QUESTS
+    # ========================================================================================================
     path('quests/', quests, name='quests'),
     path('quests/add/', create_quest, name='create_quest'),
     path('quests/edit/<int:pk>/', edit_quest, name='edit_quest'),
@@ -15,4 +18,9 @@ urlpatterns = [
          edit_question, name='edit_question'),
     path('quests/questions/<int:pk>/delete/',
          delete_question, name='delete_question'),
+    # ========================================================================================================
+    # REFERRALS
+    # ========================================================================================================
+    path('classifications/', classifications, name="classifications"),
+    path('classifications/generate-new-referral/', generate_new_code, name="generate_referral"),
 ]

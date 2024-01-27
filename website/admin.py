@@ -10,3 +10,8 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(BetaReferal)
+class BetaReferalAdmin(admin.ModelAdmin):
+    pass

@@ -25,7 +25,6 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=100, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     school = models.TextField(null=True, blank=True)
-    referal_code = models.CharField(max_length=10, null=True, blank=True)
     country = models.CharField(max_length=100, null=True)
     state = models.CharField(max_length=100, null=True)
     guardian_email = models.EmailField(null=True, blank=True)
@@ -33,3 +32,13 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class BetaReferal(models.Model):
+    code = models.CharField(max_length=100, unique=True)
+    is_used = models.BooleanField(default=False)
+    profile = models.OneToOneField(
+        UserProfile, on_delete=models.CASCADE, related_name='referral', blank=True, null=True)
+
+    def __str__(self):
+        return self.code
