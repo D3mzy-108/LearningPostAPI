@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from admin_app.models import Quest, Question, AnsweredBy
-from website.models import User
+from website.models import User, UserProfile
 # from django.contrib.auth import authenticate, login
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
@@ -34,7 +34,7 @@ def login_endpoint(request):
         context = {
             'success': True,
             'message': 'Login Successful!',
-            'isNewUser': created,
+            'isNewUser': not UserProfile.objects.filter(user__pk=user.pk).exists(),
         }
         return JsonResponse(context)
     context = {
@@ -44,14 +44,65 @@ def login_endpoint(request):
     return JsonResponse(context)
 
 
+@csrf_exempt
+def edit_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    profiles = UserProfile.objects.filter(user__pk=user.pk)
+    if not profile.exists():
+        profile = UserProfile()
+        profile.user = user
+    else:
+        profile = profiles.first()
+    if request.method == 'POST':
+        profile.phone = request.POST.get('phone')
+        profile.date_of_birth = request.POST.get('dob')
+        profile.school = request.POST.get('school')
+        profile.referal_code = request.POST.get('ref_code')
+        profile.country = request.POST.get('country')
+        profile.state = request.POST.get('state')
+        profile.guardian_email = request.POST.get('guardian_email')
+        profile.guardian_phone = request.POST.get('guardian_phone')
+        profile.save()
+        return JsonResponse({
+            'success': True,
+            'message': 'Your profile has been updated!',
+        })
+    return JsonResponse({
+        'success': False,
+        'message': 'Invalid request!',
+    })
+
+
 def get_logged_in_user(request, username):
     user = User.objects.filter(username=username)
+    user_profile = {
+        'phone': '',
+        'date_of_birth': '',
+        'school': '',
+        'referal_code': '',
+        'country': '',
+        'state': '',
+        'guardian_email': '',
+        'guardian_phone': '',
+    }
     if user.exists():
         m_user = get_object_or_404(User, username=username)
         userid = m_user.username
         display_name = m_user.first_name
         email = m_user.email
         profile_url = m_user.profile_photo
+        profile = UserProfile.objects.filter(user__pk=m_user.pk)
+        if profile.exists():
+            user_profile = {
+                'phone': profile.first().phone,
+                'date_of_birth': profile.first().date_of_birth,
+                'school': profile.first().school,
+                'referal_code': profile.first().referal_code,
+                'country': profile.first().country,
+                'state': profile.first().state,
+                'guardian_email': profile.first().guardian_email,
+                'guardian_phone': profile.first().guardian_phone,
+            }
     else:
         userid = None
         display_name = 'Guest User'
@@ -62,6 +113,7 @@ def get_logged_in_user(request, username):
         'displayName': display_name,
         'email': email,
         'profileURL': profile_url,
+        'userProfile': user_profile,
     }
     return JsonResponse(context)
 
