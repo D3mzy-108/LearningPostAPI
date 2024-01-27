@@ -31,10 +31,35 @@ def login_endpoint(request):
 
         # Login the user
         auth.login(request, user)
+
+        profile = UserProfile.objects.filter(user__pk=user.pk)
+        if profile.exists():
+            user_profile = {
+                'phone': profile.first().phone,
+                'date_of_birth': profile.first().date_of_birth,
+                'school': profile.first().school,
+                'referal_code': profile.first().referal_code,
+                'country': profile.first().country,
+                'state': profile.first().state,
+                'guardian_email': profile.first().guardian_email,
+                'guardian_phone': profile.first().guardian_phone,
+            }
+        else:
+            user_profile = {
+                'phone': '',
+                'date_of_birth': '',
+                'school': '',
+                'referal_code': '',
+                'country': '',
+                'state': '',
+                'guardian_email': '',
+                'guardian_phone': '',
+            }
         context = {
             'success': True,
             'message': 'Login Successful!',
-            'isNewUser': not UserProfile.objects.filter(user__pk=user.pk).exists(),
+            'isNewUser': not profile.exists(),
+            'userProfile': user_profile,
         }
         return JsonResponse(context)
     context = {
