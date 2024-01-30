@@ -5,66 +5,60 @@
     <form action="" method="get" class="w-full flex-1">
         <div class="flex items-center gap-4 pl-4 p-1 rounded-md bg-[var(--bg2)]">
             <ion-icon class="text-2xl text-[var(--fg2)]" name="search"></ion-icon>
-            <input type="search" name="search_quest" id="search_quest" placeholder="Search for quest..."
+            <input type="search" name="search_books" id="search_books" placeholder="Search for books..."
                 value="{{search_val}}"
                 class="w-full py-3 pr-4 pl-0 bg-transparent border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold">
         </div>
     </form>
-    <a href="{% url 'create_quest' %}" class="w-fit py-2 px-3 flex items-center gap-2 bg-[var(--bg2)] rounded-md">
+    <a href="{% url 'create_book' %}" class="w-fit py-2 px-3 flex items-center gap-2 bg-[var(--bg2)] rounded-md">
         <ion-icon name="add-circle-outline" class="text-[var(--fg2)] text-3xl"></ion-icon>
-        <span class="text-[var(--fg)] max-md:hidden">Create Quest</span>
+        <span class="text-[var(--fg)] max-md:hidden">Add a Book</span>
     </a>
 </div>
 
-{% if not quests %}
-<div class="text-center text-[var(--fg)] text-lg font-medium mt-8">No Quests Created</div>
+{% if not library %}
+<div class="text-center text-[var(--fg)] text-lg font-medium mt-8">No Books Uploaded</div>
 {% endif %}
 
 <div class="w-full mt-3 md:mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-    {% for quest in quests %}
+    {% for book in library %}
     <div class="w-full relative">
-        <img src="{{quest.cover.url}}" alt="" class="w-full aspect-square bg-[var(--bg2)]">
+        <img src="{{book.cover.url}}" alt="" class="w-full aspect-[4/6]">
         <div class="w-full py-3">
             <div class="flex items-start">
                 <div class="flex-1 truncate text-white">
-                    <span class="font-semibold text-[var(--fg)]">{{quest.title}}</span>
+                    <span class="font-semibold text-[var(--fg)]">{{book.title}}</span>
                     <div class="flex flex-col gap-1 mt-1 text-[12px] text-[var(--fg2)] truncate">
-                        <span>{{quest.questions.count}} Questions</span>
-                        <span>{{quest.grade}} Grade</span>
+                        <span>0 Chapters</span>
                     </div>
                 </div>
                 <div class="w-fit flex flex-col items-end gap-1">
                     <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
                         <ion-icon name="bookmark" class="text-[var(--highlight)]"></ion-icon>
-                        <span>{{quest.bookmarked.count}}</span>
+                        <span>{{book.bookmarked.count}}</span>
                     </div>
                     <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
                         <ion-icon name="star" class="text-[var(--orange)]"></ion-icon>
-                        <span>{{quest.average_rating|floatformat:1}}</span>
+                        <span>{{book.average_rating|floatformat:1}}</span>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="absolute top-0 right-0 z-20 p-1 w-fit flex flex-col gap-3">
             <button
-                onclick="confirm('Are you sure you want to delete {{quest.title}}') ? window.location.replace(`{% url 'delete_quest' pk=quest.pk %}`) : null"
+                onclick="confirm('Are you sure you want to delete {{book.title}}') ? window.location.replace(`{% url 'delete_book' pk=book.pk %}`) : null"
                 class="w-fit px-2 aspect-square grid place-items-center rounded-full bg-red-500/50 text-[#FFFFFF]"
                 title="Delete">
                 <ion-icon name="trash" class="pointer-events-none"></ion-icon>
             </button>
-            <a href="{% url 'edit_quest' pk=quest.pk %}"
+            <a href="{% url 'edit_book' pk=book.pk %}"
                 class="w-fit px-2 aspect-square grid place-items-center rounded-full bg-[#00000040] text-[var(--fg)]"
                 title="Edit Quest">
                 <ion-icon name="create" class="pointer-events-none"></ion-icon>
             </a>
         </div>
-        <a href="{% url 'view_questions' pk=quest.pk %}" class="w-full h-full absolute top-0 left-0 z-10"
-            title="View Questions">
-        </a>
+        <a href="{% url 'view_book' book.pk %}" class="absolute top-0 left-0 w-full h-full"></a>
     </div>
     {% endfor %}
 </div>
-
-{% include 'partials/pagination.html' %}
 {% endblock screen %}

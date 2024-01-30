@@ -34,9 +34,11 @@
                 </small>
                 {% endif %}
             </div>
-            <a href="#" class="bg-[var(--red)] text-[var(--fg2)] text-[14px] flex items-center w-fit rounded-full p-2">
+            <button
+                onclick="confirm('Are you sure you want to delete this referral code?') ? window.location.replace(`{% url 'delete_code' referral.id %}`) : null"
+                class="bg-[var(--red)] text-[var(--fg2)] text-[14px] flex items-center w-fit rounded-full p-2">
                 <ion-icon name="trash-outline"></ion-icon>
-            </a>
+            </button>
         </div>
     </div>
     {% endfor %}

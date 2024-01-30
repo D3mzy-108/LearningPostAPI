@@ -1,0 +1,51 @@
+{% extends 'admin.html' %}
+{% load static %}
+{% block screen %}
+<div class="w-fit ml-auto flex gap-3">
+    <button class="py-3 px-4 flex items-center gap-2 bg-[var(--bg2)] rounded-md toggleUploadQuestionsDialog">
+        <ion-icon name="cloud-upload" class="text-[var(--fg2)]"></ion-icon>
+        <span class="text-[var(--fg)]">Upload Chapter</span>
+    </button>
+    <a href="{% url 'library' %}" class="p-3 bg-[var(--bg2)] rounded-md grid place-items-center w-fit ml-auto">
+        <ion-icon name="close-sharp" class="text-[var(--fg2)] text-2xl"></ion-icon>
+    </a>
+</div>
+
+<div class="w-full mt-6 grid grid-cols-1 gap-8">
+    <div class="w-full lg:w-4/5 mb-2">
+        <div class="w-full flex items-center gap-4">
+            <img src="{{book.cover.url}}" alt="" class="w-[80px] rounded-md aspect-square shadow-lg">
+            <div class="w-full flex-1">
+                <div class="flex items-center">
+                    <div class="flex-1">
+                        <span class="font-semibold text-[var(--fg)]">{{book.title}}</span>
+                        <div class="w-full text-[12px] text-[var(--fg2)] truncate mt-1">
+                            <span>0 Chapters</span>
+                        </div>
+                    </div>
+                    <div class="w-fit flex flex-col gap-1 items-end">
+                        <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
+                            <ion-icon name="bookmark" class="text-[var(--highlight)]"></ion-icon>
+                            <span>{{book.bookmarked.count}}</span>
+                        </div>
+                        <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
+                            <ion-icon name="star" class="text-[var(--orange)]"></ion-icon>
+                            <span>{{book.average_rating|floatformat:1}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if not questions %}
+    <div class="text-center text-[var(--fg)] text-lg font-medium">No Chapters Added to Book</div>
+    {% endif %}
+</div>
+
+<style>
+</style>
+
+<script>
+</script>
+{% endblock screen %}

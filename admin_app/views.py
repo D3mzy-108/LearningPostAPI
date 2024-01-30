@@ -2,7 +2,7 @@ import string
 import random
 from django.shortcuts import render, redirect, get_object_or_404
 from website.models import BetaReferal
-from .models import Quest, Question
+from .models import Quest, Question, Library
 import csv
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -18,9 +18,9 @@ def quests(request):
     search_val = ''
     if search is not None:
         search_val = search
-        quests = Quest.objects.filter(title__icontains=search).order_by('-id')
+        quests = Quest.objects.filter(title__icontains=search).order_by('?')
     else:
-        quests = Quest.objects.all().order_by('-id')
+        quests = Quest.objects.all().order_by('?')
     paginator = Paginator(quests, 30)
     page = request.GET.get('page')
     if page == None:
@@ -194,6 +194,7 @@ def delete_question(request, pk):
 # CLASSIFICATIONS
 # ========================================================================================================
 
+@login_required
 def classifications(request):
     referrals = BetaReferal.objects.all().order_by('-id')
     context = {
@@ -202,6 +203,7 @@ def classifications(request):
     return render(request, 'admin_app/classifications/classifications.html', context)
 
 
+@login_required
 def generate_new_code(request):
     characters = string.ascii_letters + string.digits
     random_string = ''.join(random.choice(characters) for _ in range(15))
@@ -210,3 +212,89 @@ def generate_new_code(request):
         referal.code = random_string
         referal.save()
     return redirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def delete_code(request, id):
+    get_object_or_404(BetaReferal, id=id).delete()
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+# ========================================================================================================
+# LIBRARY
+# ========================================================================================================
+
+@login_required
+def library(request):
+    search = request.GET.get('search_books')
+    search_val = ''
+    if search is not None:
+        search_val = search
+        books = Library.objects.filter(title__icontains=search).order_by('?')
+    else:
+        books = Library.objects.all().order_by('?')
+    paginator = Paginator(books, 30)
+    page = request.GET.get('page')
+    if page == None:
+        page = 1
+    displayed_books = paginator.page(page)
+
+    context = {
+        'library': displayed_books,
+        'paginator': displayed_books,
+        'page': page,
+        'search_val': search_val,
+    }
+    return render(request, 'admin_app/library/library.html', context)
+
+
+@login_required
+def create_book(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        try:
+            cover = request.FILES.get('cover')
+        except:
+            return redirect('create_quest')
+        about = request.POST['about']
+
+        instance = Library()
+        instance.title = title
+        instance.cover = cover
+        instance.about = about
+        instance.save()
+        return redirect('library')
+    context = {}
+    return render(request, 'admin_app/library/book_form.html', context)
+
+
+@login_required
+def edit_book(request, pk):
+    instance = get_object_or_404(Library, pk=pk)
+    if request.method == 'POST':
+        instance.title = request.POST['title']
+        cover = request.FILES.get('cover')
+        if cover is not None:
+            instance.cover = cover
+        instance.about = request.POST['about']
+        instance.save()
+        return redirect('library')
+    context = {
+        'instance': instance
+    }
+    return render(request, 'admin_app/library/book_form.html', context)
+
+
+@login_required
+def delete_book(request, pk):
+    get_object_or_404(Library, pk=pk).delete()
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def view_book(request, pk):
+    book = get_object_or_404(Library, pk=pk)
+    context = {
+        'book': book,
+    }
+    return render(request, 'admin_app/library/book_details.html', context)

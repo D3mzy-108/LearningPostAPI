@@ -19,14 +19,21 @@
                 <div class="flex items-center">
                     <div class="flex-1">
                         <span class="font-semibold text-[var(--fg)]">{{quest.title}}</span>
+                        <div class="w-full text-[12px] text-[var(--fg2)] truncate mt-1">
+                            <span>{{quest.questions.count}} Questions</span><span> . </span><span>{{quest.grade}}
+                                Grade</span>
+                        </div>
                     </div>
-                    <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
-                        <ion-icon name="bookmark" class="text-[var(--highlight)]"></ion-icon>
-                        <span>{{quest.bookmarked.count}}</span>
+                    <div class="w-fit flex flex-col gap-1 items-end">
+                        <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
+                            <ion-icon name="bookmark" class="text-[var(--highlight)]"></ion-icon>
+                            <span>{{quest.bookmarked.count}}</span>
+                        </div>
+                        <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
+                            <ion-icon name="star" class="text-[var(--orange)]"></ion-icon>
+                            <span>{{quest.average_rating|floatformat:1}}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="w-full text-[12px] text-[var(--fg2)] truncate mt-1">
-                    <span>{{quest.questions.count}} Questions</span><span> . </span><span>{{quest.grade}} Grade</span>
                 </div>
             </div>
         </div>

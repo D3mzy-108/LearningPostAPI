@@ -19,8 +19,18 @@ urlpatterns = [
     path('quests/questions/<int:pk>/delete/',
          delete_question, name='delete_question'),
     # ========================================================================================================
-    # REFERRALS
+    # CLASSIFICATIONS
     # ========================================================================================================
     path('classifications/', classifications, name="classifications"),
-    path('classifications/generate-new-referral/', generate_new_code, name="generate_referral"),
+    path('classifications/generate-new-referral/',
+         generate_new_code, name="generate_referral"),
+    path('classifications/<int:id>/delete/', delete_code, name="delete_code"),
+    # ========================================================================================================
+    # LIBRARY
+    # ========================================================================================================
+    path('library/', library, name='library'),
+    path('library/add/', create_book, name='create_book'),
+    path('library/edit/<int:pk>/', edit_book, name='edit_book'),
+    path('library/delete/<int:pk>/', delete_book, name='delete_book'),
+    path('library/view/<int:pk>/chapters/', view_book, name='view_book')
 ]

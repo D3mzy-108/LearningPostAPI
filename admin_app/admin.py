@@ -15,3 +15,18 @@ class QuestionAdmin(admin.ModelAdmin):
 @admin.register(AnsweredBy)
 class AnsweredByAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Library)
+class LibraryAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(QuestRating)
+class QuestRatingAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(LibraryRating)
+class LibraryRatingAdmin(admin.ModelAdmin):
+    pass
