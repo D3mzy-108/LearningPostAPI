@@ -45,6 +45,12 @@
                 </div>
                 <a href="#" class="flex-1 font-semibold">Users</a>
             </li>
+            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+                <div class="w-fit text-2xl">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                </div>
+                <a href="{% url 'logout' %}" class="flex-1 font-semibold">Logout</a>
+            </li>
         </ul>
     </div>
 </nav>

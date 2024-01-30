@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
+from django.contrib import auth
 from .models import User
 
 
@@ -22,3 +23,8 @@ def home(request):
             return redirect('home')
     context = {}
     return render(request, 'website/home.html', context)
+
+
+def logout(request):
+    auth.logout(request)
+    return redirect('home')
