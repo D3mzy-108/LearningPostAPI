@@ -31,7 +31,7 @@ else:
 
 ALLOWED_HOSTS = ['*']
 
-CORS_ORIGIN_ALLOWED_HOSTS = [
+CORS_ALLOWED_ORIGINS = [
     "https://learningpost.ng",
     "https://app.learningpost.ng",
     "http://learningpost.ng",
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'website',
     'admin_app',
     'endpoints',
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
