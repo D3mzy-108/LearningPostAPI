@@ -31,6 +31,14 @@ else:
 
 ALLOWED_HOSTS = ['*']
 
+CORS_ORIGIN_ALLOWED_HOSTS = [
+    "https://learningpost.ng",
+    "https://app.learningpost.ng",
+    "http://learningpost.ng",
+    "http://app.learningpost.ng",
+    "http://localhost:5000",
+]
+
 
 # Application definition
 
