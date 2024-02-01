@@ -44,15 +44,16 @@
 
 
     {% for chapter in chapters %}
-    <div class="w-full lg:w-4/5 rounded-lg p-4 bg-[var(--bg2)]">
+    <div class="w-full lg:w-4/5 rounded-md py-3 px-4 bg-[var(--bg2)]">
         <div class="flex items-center">
+            <img src="{% static 'assets/images/no_cover.png' %}" alt="" class="w-[45px] h-[45px] rounded-md mr-3">
             <button data-file="{{chapter.chapter_file.url}}"
-                class="showFileContent flex-1 text-start bg-transparent border-none outline-none font-medium text-[var(--fg)] hover:underline">
+                class="showFileContent flex-1 text-start bg-transparent border-none outline-none font-medium text-[var(--fg)] hover:underline truncate">
                 {{chapter.title}}
             </button>
             <button type="button"
                 onclick="confirm('Are you sure you want to delete {{chapter.title}}') ? window.location.replace(`{% url 'delete_chapter' pk=chapter.pk %}`) : null"
-                class="w-fit py-2 px-4 rounded-md bg-[var(--red)] text-[#FFF] font-semibold">
+                class="w-fit py-2 px-4 text-sm rounded-md bg-[var(--red)] text-[#FFF] font-semibold">
                 Delete
             </button>
         </div>

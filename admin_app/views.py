@@ -18,9 +18,9 @@ def quests(request):
     search_val = ''
     if search is not None:
         search_val = search
-        quests = Quest.objects.filter(title__icontains=search).order_by('?')
+        quests = Quest.objects.filter(title__icontains=search).order_by('-id')
     else:
-        quests = Quest.objects.all().order_by('?')
+        quests = Quest.objects.all().order_by('-id')
     paginator = Paginator(quests, 30)
     page = request.GET.get('page')
     if page == None:
@@ -234,9 +234,9 @@ def library(request):
     search_val = ''
     if search is not None:
         search_val = search
-        books = Library.objects.filter(title__icontains=search).order_by('?')
+        books = Library.objects.filter(title__icontains=search).order_by('-id')
     else:
-        books = Library.objects.all().order_by('?')
+        books = Library.objects.all().order_by('-id')
     paginator = Paginator(books, 30)
     page = request.GET.get('page')
     if page == None:
@@ -300,7 +300,7 @@ def view_book(request, pk):
     book = get_object_or_404(Library, pk=pk)
     context = {
         'book': book,
-        'chapters': book.chapters.all(),
+        'chapters': book.chapters.all().order_by('title'),
     }
     return render(request, 'admin_app/library/book_details.html', context)
 

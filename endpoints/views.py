@@ -1,13 +1,16 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.core.paginator import Paginator
-from admin_app.models import Quest, Question, AnsweredBy
+from admin_app.models import *
 from website.models import User, UserProfile, BetaReferal
-# from django.contrib.auth import authenticate, login
+from django.db.models import Avg, ExpressionWrapper, fields
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 
 
+# ========================================================================================================
+# AUTH
+# ========================================================================================================
 @csrf_exempt
 def login_endpoint(request):
     if request.method == 'POST':
@@ -168,12 +171,15 @@ def get_logged_in_user(request, username):
     return JsonResponse(context)
 
 
+# ========================================================================================================
+# QUESTS
+# ========================================================================================================
 def quests(request, username):
-    quests = Quest.objects.all().order_by('-id')
+    quests = Quest.objects.all().order_by('?')
     search = request.GET.get('search')
     if search is not None:
         quests = quests.filter(title__icontains=search)
-    paginator = Paginator(quests, 10)
+    paginator = Paginator(quests, 50)
     page = request.GET.get('page')
     if page == None:
         page = 1
@@ -188,6 +194,15 @@ def quests(request, username):
                 question__quest__pk=quest.pk).count()
         else:
             answered_count = 0
+        avg_rating = quest.rated_quests.aggregate(avg_rating=ExpressionWrapper(
+            Avg('rating'),
+            output_field=fields.FloatField()
+        ))['avg_rating']
+        if avg_rating is not None:
+            rating = round(avg_rating, 1)
+        else:
+            rating = 0.0
+
         quests_list.append({
             'testid': quest.pk,
             'cover': quest.cover.url,
@@ -199,6 +214,7 @@ def quests(request, username):
             'bookmarked': quest.bookmarked.filter(username=username).exists(),
             'question_count': quest.questions.count(),
             'answered_count': answered_count,
+            'rating': rating,
         })
     context = {
         'success': True,
@@ -251,47 +267,154 @@ def answer(request, questionid, username):
     return JsonResponse({'success': True})
 
 
-def bookmarks(request, username):
-    if User.objects.filter(username=username).exists():
-        bookmarked_quests = Quest.objects.filter(
-            bookmarked__username=username).order_by('title')
-    else:
-        bookmarked_quests = []
-    paginator = Paginator(bookmarked_quests, 10)
+# ========================================================================================================
+# LIBRARY
+# ========================================================================================================
+def library(request, username):
+    books = Library.objects.all().order_by('?')
+    search = request.GET.get('search')
+    if search is not None:
+        books = books.filter(title__icontains=search)
+    paginator = Paginator(books, 50)
     page = request.GET.get('page')
     if page == None:
         page = 1
     try:
-        displayed_quests = paginator.page(page)
+        displayed_books = paginator.page(page)
+    except:
+        displayed_books = []
+    books_list = []
+    for book in displayed_books:
+        avg_rating = book.rated_books.aggregate(avg_rating=ExpressionWrapper(
+            Avg('rating'),
+            output_field=fields.FloatField()
+        ))['avg_rating']
+        if avg_rating is not None:
+            rating = round(avg_rating, 1)
+        else:
+            rating = 0.0
+
+        books_list.append({
+            'bookid': book.id,
+            'cover': book.cover.url,
+            'title': book.title,
+            'about': book.about,
+            'bookmarked': book.bookmarked.filter(username=username).exists(),
+            'chapters_count': Chapter.objects.filter(book__id=book.id).count(),
+            'rating': rating,
+        })
+    context = {
+        'success': True,
+        'books': books_list
+    }
+    return JsonResponse(context)
+
+
+def chapters(request, username, bookid):
+    chapters = Chapter.objects.filter(book__id=bookid).order_by('title')
+    list_of_chapters = []
+    for chapter in chapters:
+        list_of_chapters.append({
+            'title': chapter.title,
+            'file': chapter.chapter_file.url,
+        })
+    context = {
+        'success': True,
+        'chapters': list_of_chapters,
+    }
+    return JsonResponse(context)
+
+
+# ========================================================================================================
+# BOOKMARKS
+# ========================================================================================================
+def bookmarks(request, username):
+    if User.objects.filter(username=username).exists():
+        bookmarked_quests = Quest.objects.filter(
+            bookmarked__username=username).order_by('title')
+        bookmarked_books = Library.objects.filter(
+            bookmarked__username=username).order_by('title')
+    else:
+        bookmarked_quests = []
+        bookmarked_books = []
+
+    # BOOKMARKED QUESTS
+    quests_paginator = Paginator(bookmarked_quests, 50)
+    page = request.GET.get('page')
+    if page == None:
+        page = 1
+    try:
+        displayed_quests = quests_paginator.page(page)
     except:
         displayed_quests = []
-    bookmark_list = []
+    quest_list = []
     for quest in displayed_quests:
         if User.objects.filter(username=username).exists():
             answered_count = get_object_or_404(User, username=username).answered.filter(
                 question__quest__pk=quest.pk).count()
         else:
             answered_count = 0
-        bookmark_list.append({
+        avg_rating = quest.rated_quests.aggregate(avg_rating=ExpressionWrapper(
+            Avg('rating'),
+            output_field=fields.FloatField()
+        ))['avg_rating']
+        if avg_rating is not None:
+            rating = round(avg_rating, 1)
+        else:
+            rating = 0.0
+        quest_list.append({
             'testid': quest.pk,
             'cover': quest.cover.url,
             'title': quest.title,
             'grade': quest.grade,
             'time': quest.time,
+            'about': quest.about,
             'instructions': quest.instructions,
             'bookmarked': quest.bookmarked.filter(username=username).exists(),
             'question_count': quest.questions.count(),
             'answered_count': answered_count,
+            'rating': rating,
         })
-    else:
-        context = {
-            'success': True,
-            'quests': bookmark_list,
-        }
-        return JsonResponse(context)
+
+    # BOOKMARKED BOOKS
+    books_paginator = Paginator(bookmarked_books, 50)
+    page = request.GET.get('page')
+    if page == None:
+        page = 1
+    try:
+        displayed_books = books_paginator.page(page)
+    except:
+        displayed_books = []
+    book_list = []
+    for book in displayed_books:
+        avg_rating = book.rated_books.aggregate(avg_rating=ExpressionWrapper(
+            Avg('rating'),
+            output_field=fields.FloatField()
+        ))['avg_rating']
+        if avg_rating is not None:
+            rating = round(avg_rating, 1)
+        else:
+            rating = 0.0
+        book_list.append({
+            'bookid': book.pk,
+            'cover': book.cover.url,
+            'title': book.title,
+            'about': book.about,
+            'bookmarked': book.bookmarked.filter(username=username).exists(),
+            'chapters_count': book.chapters.count(),
+            'rating': rating,
+        })
+
+    # RETURNED CONTEXT
+    context = {
+        'success': True,
+        'quests': quest_list,
+        'books': book_list,
+    }
+    return JsonResponse(context)
 
 
-def add_to_bookmark(request, username, testid, is_adding):
+def add_quest_to_bookmark(request, username, testid, is_adding):
     quest = get_object_or_404(Quest, pk=testid)
     user = get_object_or_404(User, username=username)
     if is_adding == 'true':
