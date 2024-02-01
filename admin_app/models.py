@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Avg
 from website.models import User
+from django.core.validators import FileExtensionValidator
 
 
 class Quest(models.Model):
@@ -57,6 +58,17 @@ class Library(models.Model):
 
     def average_rating(self):
         return self.rated_books.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0.0
+
+
+class Chapter(models.Model):
+    title = models.CharField(max_length=100)
+    chapter_file = models.FileField(
+        validators=[FileExtensionValidator(['epub'])], upload_to='chapters/')
+    book = models.ForeignKey(
+        Library, on_delete=models.CASCADE, related_name='chapters', null=True)
+
+    def __str__(self):
+        return self.title
 
 
 class LibraryRating(models.Model):

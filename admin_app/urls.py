@@ -32,5 +32,9 @@ urlpatterns = [
     path('library/add/', create_book, name='create_book'),
     path('library/edit/<int:pk>/', edit_book, name='edit_book'),
     path('library/delete/<int:pk>/', delete_book, name='delete_book'),
-    path('library/view/<int:pk>/chapters/', view_book, name='view_book')
+    path('library/view/<int:pk>/chapters/', view_book, name='view_book'),
+    path('library/view/<int:pk>/chapters/upload/',
+         upload_chapter, name='upload_chapter'),
+    path('library/chapter/delete/<int:pk>/',
+         delete_chapter, name='delete_chapter'),
 ]

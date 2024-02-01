@@ -22,6 +22,11 @@ class LibraryAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(Chapter)
+class ChapterAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(QuestRating)
 class QuestRatingAdmin(admin.ModelAdmin):
     pass

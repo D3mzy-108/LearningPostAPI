@@ -2,7 +2,7 @@
 {% load static %}
 {% block screen %}
 <div class="w-fit ml-auto flex gap-3">
-    <button class="py-3 px-4 flex items-center gap-2 bg-[var(--bg2)] rounded-md toggleUploadQuestionsDialog">
+    <button class="py-3 px-4 flex items-center gap-2 bg-[var(--bg2)] rounded-md toggleUploadChapterDialog">
         <ion-icon name="cloud-upload" class="text-[var(--fg2)]"></ion-icon>
         <span class="text-[var(--fg)]">Upload Chapter</span>
     </button>
@@ -20,7 +20,7 @@
                     <div class="flex-1">
                         <span class="font-semibold text-[var(--fg)]">{{book.title}}</span>
                         <div class="w-full text-[12px] text-[var(--fg2)] truncate mt-1">
-                            <span>0 Chapters</span>
+                            <span>{{book.chapters.count}} Chapters</span>
                         </div>
                     </div>
                     <div class="w-fit flex flex-col gap-1 items-end">
@@ -38,14 +38,112 @@
         </div>
     </div>
 
-    {% if not questions %}
+    {% if not chapters %}
     <div class="text-center text-[var(--fg)] text-lg font-medium">No Chapters Added to Book</div>
     {% endif %}
+
+
+    {% for chapter in chapters %}
+    <div class="w-full lg:w-4/5 rounded-lg p-4 bg-[var(--bg2)]">
+        <div class="flex items-center">
+            <button data-file="{{chapter.chapter_file.url}}"
+                class="showFileContent flex-1 text-start bg-transparent border-none outline-none font-medium text-[var(--fg)] hover:underline">
+                {{chapter.title}}
+            </button>
+            <button type="button"
+                onclick="confirm('Are you sure you want to delete {{chapter.title}}') ? window.location.replace(`{% url 'delete_chapter' pk=chapter.pk %}`) : null"
+                class="w-fit py-2 px-4 rounded-md bg-[var(--red)] text-[#FFF] font-semibold">
+                Delete
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- UPLOAD DIALOG -->
+<div class="w-screen h-screen fixed top-0 left-0 z-[60] bg-[#00000050] uploadChapterDialog overflow-auto">
+    <div class="w-full max-w-lg h-fit rounded-lg bg-[var(--bg)] my-12 mx-auto relative">
+        <div class="w-full sticky top-0 z-10 bg-[var(--bg)] rounded-t-lg">
+            <div class="p-6 flex items-center">
+                <span class="text-xl font-semibold text-[var(--fg2)]">Upload questions</span>
+                <button class="w-fit ml-auto grid place-items-center toggleUploadChapterDialog">
+                    <ion-icon name="close-sharp" class="text-[var(--fg2)] text-2xl"></ion-icon>
+                </button>
+            </div>
+        </div>
+        <div class="w-full h-fit p-6">
+            <div id="uploadForm" class="w-full">
+                <form action="{% url 'upload_chapter' pk=book.pk %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!-- TTILE -->
+                    <input type="text" name="title" id="title" placeholder="Title *" required
+                        class="w-full p-4 rounded-md border-none outline-none text-[var(--fg)] placeholder:text-[var(--fg2)] bg-[var(--bg2)] font-medium">
+                    <!-- FILE -->
+                    <input type="file" name="chapter" id="chapter" required accept=".epub"
+                        class="w-full mt-6 text-[var(--fg)] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[var(--bg2)] file:text-[var(--fg2)]">
+                    <div class="w-full pt-12 pb-6 text-center px-6">
+                        <button type="submit"
+                            class="w-full max-w-sm py-3 px-4 rounded-md bg-[var(--highlight)] text-[#FFF] font-semibold">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FILE CONTENT DIALOG -->
+<div class="w-screen h-screen fixed top-0 left-0 z-[60] bg-[#00000050] chapterFileContentDialog">
+    <div class="w-full max-w-lg h-screen bg-[var(--bg)] mx-auto relative overflow-auto">
+        <div class="w-full text-end bg-black/20 backdrop-blur-md sticky top-0">
+            <button data-unhook="true" class="showFileContent p-3">
+                <ion-icon name="close-sharp" class="text-[var(--fg2)] text-2xl"></ion-icon>
+            </button>
+        </div>
+        <div id="fileContentWrapper" class="w-full"></div>
+    </div>
 </div>
 
 <style>
+    .uploadChapterDialog,
+    .chapterFileContentDialog {
+        display: none;
+    }
+
+    .uploadChapterDialog * {
+        transition: 0.5s !important;
+    }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/epub.js/0.2.13/epub.min.js"
+    integrity="sha512-ktwncEGc1G2bleGfAdTgIxyHiE5/syR19HWAN3S0soSHF8+q7E73POq13slxkTwYrJF9rVFKaKh1zbZhKK9vdg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.6.1/jszip.min.js"
+    integrity="sha512-qDzk+Wqv8uAmrIr0t9Hjo4qM3DjvwTWuuuG3w9H8JBKd1EMpMaUEKoHKYbX6yP+ilTloEADFKFwKMzOZLlgTEg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+    $('.toggleUploadChapterDialog').click(() => {
+        $('.uploadChapterDialog').fadeToggle(300);
+    });
+
+    $('.showFileContent').click((e) => {
+        var wrapper = document.getElementById('fileContentWrapper');
+        if ($(e.target).attr('data-unhook') == 'true') {
+            wrapper.removeChild(wrapper.children[0]);
+        } else {
+            wrapper.innerHTML = '<div id="chapterFileContent" class="w-full h-screen"></div>'
+            $('.chapterFileContentDialog').fadeToggle(300);
+            var filename = $(e.target).attr('data-file')
+            var chapter_file = ePub(filename);
+            var viewer = chapter_file.renderTo("chapterFileContent", {
+                method: "continuous",
+                flow: 'paginated',
+                width: "100%",
+                height: "100%",
+                allowScriptedContent: true,
+            });
+        }
+    });
 </script>
 {% endblock screen %}

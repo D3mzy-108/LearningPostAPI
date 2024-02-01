@@ -2,7 +2,7 @@ import string
 import random
 from django.shortcuts import render, redirect, get_object_or_404
 from website.models import BetaReferal
-from .models import Quest, Question, Library
+from .models import *
 import csv
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -300,5 +300,22 @@ def view_book(request, pk):
     book = get_object_or_404(Library, pk=pk)
     context = {
         'book': book,
+        'chapters': book.chapters.all(),
     }
     return render(request, 'admin_app/library/book_details.html', context)
+
+
+@login_required
+def upload_chapter(request, pk):
+    chapter = Chapter()
+    chapter.title = request.POST.get('title')
+    chapter.chapter_file = request.FILES.get('chapter')
+    chapter.book = get_object_or_404(Library, pk=pk)
+    chapter.save()
+    return redirect('view_book', pk=pk)
+
+
+@login_required
+def delete_chapter(request, pk):
+    get_object_or_404(Chapter, pk=pk).delete()
+    return redirect(request.META.get('HTTP_REFERER'))
