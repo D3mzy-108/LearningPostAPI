@@ -1,5 +1,9 @@
 from django.urls import path
-from .views import *
+from .api_views.auth_views import login_endpoint, get_logged_in_user, edit_profile
+from .api_views.quest_views import quests, questions, answer
+from .api_views.library_views import library, chapters
+from .api_views.bookmarks_views import bookmarks, add_quest_to_bookmark, add_book_to_bookmark
+
 
 urlpatterns = [
     # ========================================================================================================
@@ -25,4 +29,6 @@ urlpatterns = [
     path('get-bookmarks/<str:username>/', bookmarks),
     path('add-quest-to-bookmarks/<str:username>/<int:testid>/<str:is_adding>/',
          add_quest_to_bookmark),
+    path('add-book-to-bookmarks/<str:username>/<int:bookid>/<str:is_adding>/',
+         add_book_to_bookmark),
 ]

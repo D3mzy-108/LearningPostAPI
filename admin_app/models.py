@@ -22,7 +22,7 @@ class Quest(models.Model):
         return self.title
 
     def average_rating(self):
-        return self.rated_quests.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0.0
+        return self.rated_quests.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 5.0
 
 
 class Question(models.Model):
@@ -57,7 +57,7 @@ class Library(models.Model):
         return self.title
 
     def average_rating(self):
-        return self.rated_books.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0.0
+        return self.rated_books.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 5.0
 
 
 class Chapter(models.Model):
