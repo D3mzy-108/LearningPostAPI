@@ -50,7 +50,8 @@ class AnsweredBy(models.Model):
 class Library(models.Model):
     cover = models.ImageField(upload_to='book_covers/')
     title = models.CharField(max_length=100)
-    about = models.TextField()
+    about = models.TextField(blank=True, null=True)
+    about_author = models.TextField(blank=True, null=True)
     bookmarked = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
@@ -79,7 +80,7 @@ class LibraryRating(models.Model):
     rating = models.FloatField()
 
     def __str__(self):
-        return f"{self.user.username} - {self.quest.title} - Rating: {self.rating}"
+        return f"{self.user.username} - {self.book.title} - Rating: {self.rating}"
 
 
 class QuestRating(models.Model):

@@ -99,3 +99,21 @@ def answer(request, questionid, username):
             question=get_object_or_404(Question, id=questionid)
         )
     return JsonResponse({'success': True})
+
+
+def rate_quest(request, username, testid, rating):
+    user = get_object_or_404(User, username=username)
+    quest = get_object_or_404(Quest, id=testid)
+    quest_rating = float(rating)
+    if QuestRating.objects.filter(user__username=username, quest__id=testid).exists():
+        for m_rating in QuestRating.objects.filter(user__username=username, quest__id=testid):
+            m_rating.rating = quest_rating
+            m_rating.save()
+        return JsonResponse({'success': True, 'message': 'Rating has been updated'})
+    else:
+        instance = QuestRating()
+        instance.user = user
+        instance.quest = quest
+        instance.rating = quest_rating
+        instance.save()
+        return JsonResponse({'success': True, 'message': 'Rating has been saved'})

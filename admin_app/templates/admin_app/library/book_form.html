@@ -27,8 +27,16 @@
 
     <div class="w-full">
         <label for="about" class="text-[var(--fg)] font-medium">Book Summary</label>
-        <textarea name="about" id="about" rows="7" placeholder="Provide a short description or summary of this book"
-            class="w-full mt-3 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold">{{instance.about}}</textarea>
+        <textarea name="about" id="about" rows="7"
+            placeholder="Provide a short description or summary of this book (Optional)"
+            class="w-full mt-3 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold">{% if instance.about %}{{instance.about}}{% endif %}</textarea>
+    </div>
+
+    <div class="w-full">
+        <label for="about_author" class="text-[var(--fg)] font-medium">About Author</label>
+        <textarea name="about_author" id="about_author" rows="7"
+            placeholder="Provide some information about the author of this book (Optional)"
+            class="w-full mt-3 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold">{% if instance.about_author %}{{instance.about_author}}{% endif %}</textarea>
     </div>
 
     <div class="w-full text-center px-4 mt-4">

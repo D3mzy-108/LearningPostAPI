@@ -261,11 +261,13 @@ def create_book(request):
         except:
             return redirect('create_quest')
         about = request.POST['about']
+        about_author = request.POST['about_author']
 
         instance = Library()
         instance.title = title
         instance.cover = cover
         instance.about = about
+        instance.about_author = about_author
         instance.save()
         return redirect('library')
     context = {}
@@ -281,6 +283,7 @@ def edit_book(request, pk):
         if cover is not None:
             instance.cover = cover
         instance.about = request.POST['about']
+        instance.about_author = request.POST['about_author']
         instance.save()
         return redirect('library')
     context = {

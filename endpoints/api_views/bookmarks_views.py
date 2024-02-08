@@ -81,6 +81,7 @@ def bookmarks(request, username):
             'cover': book.cover.url,
             'title': book.title,
             'about': book.about,
+            'about_author': book.about_author,
             'bookmarked': book.bookmarked.filter(username=username).exists(),
             'chapters_count': book.chapters.count(),
             'rating': rating,

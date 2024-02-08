@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from admin_app.models import *
@@ -36,6 +37,7 @@ def library(request, username):
             'cover': book.cover.url,
             'title': book.title,
             'about': book.about,
+            'about_author': book.about_author,
             'bookmarked': book.bookmarked.filter(username=username).exists(),
             'chapters_count': Chapter.objects.filter(book__id=book.id).count(),
             'rating': rating,
@@ -60,3 +62,21 @@ def chapters(request, username, bookid):
         'chapters': list_of_chapters,
     }
     return JsonResponse(context)
+
+
+def rate_book(request, username, bookid, rating):
+    user = get_object_or_404(User, username=username)
+    book = get_object_or_404(Library, id=bookid)
+    book_rating = float(rating)
+    if LibraryRating.objects.filter(user__username=username, book__id=bookid).exists():
+        for m_rating in LibraryRating.objects.filter(user__username=username, book__id=bookid):
+            m_rating.rating = book_rating
+            m_rating.save()
+        return JsonResponse({'success': True, 'message': 'Rating has been updated'})
+    else:
+        instance = LibraryRating()
+        instance.user = user
+        instance.book = book
+        instance.rating = book_rating
+        instance.save()
+        return JsonResponse({'success': True, 'message': 'Rating has been saved'})
