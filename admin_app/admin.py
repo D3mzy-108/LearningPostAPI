@@ -35,3 +35,8 @@ class QuestRatingAdmin(admin.ModelAdmin):
 @admin.register(LibraryRating)
 class LibraryRatingAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Leaderboard)
+class LeaderboardAdmin(admin.ModelAdmin):
+    pass

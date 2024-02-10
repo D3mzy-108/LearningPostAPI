@@ -90,15 +90,17 @@ def questions(request, testid, username):
     return JsonResponse(context)
 
 
-def answer(request, questionid, username):
-    exists = AnsweredBy.objects.filter(
-        user__username=username, question__id=questionid).exists()
-    if not exists:
-        AnsweredBy.objects.create(
-            user=get_object_or_404(User, username=username),
-            question=get_object_or_404(Question, id=questionid)
-        )
-    return JsonResponse({'success': True})
+def answer(request, questionids, username):
+    for questionid in questionids:
+        exists = AnsweredBy.objects.filter(
+            user__username=username, question__id=int(questionid)).exists()
+        if not exists:
+            AnsweredBy.objects.create(
+                user=get_object_or_404(User, username=username),
+                question=get_object_or_404(Question, id=int(questionid))
+            )
+    else:
+        return JsonResponse({'success': True})
 
 
 def rate_quest(request, username, testid, rating):

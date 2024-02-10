@@ -92,3 +92,16 @@ class QuestRating(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.quest.title} - Rating: {self.rating}"
+
+
+class Leaderboard(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='user_rankings')
+    quest = models.ForeignKey(
+        Quest, on_delete=models.CASCADE, related_name='quest_rankings')
+    streak = models.IntegerField(default=0)
+    questions_answered = models.IntegerField(default=0)
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} | {self.streak} streak | {self.questions_answered} questions"
