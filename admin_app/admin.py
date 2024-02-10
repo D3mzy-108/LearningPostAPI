@@ -9,7 +9,8 @@ class QuestAdmin(admin.ModelAdmin):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('question', 'answer')
+    search_fields = ('question',)
 
 
 @admin.register(AnsweredBy)
