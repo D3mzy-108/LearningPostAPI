@@ -91,7 +91,7 @@ def questions(request, testid, username):
 
 
 def answer(request, questionids, username):
-    for questionid in questionids:
+    for questionid in questionids.split(','):
         exists = AnsweredBy.objects.filter(
             user__username=username, question__id=int(questionid)).exists()
         if not exists:
