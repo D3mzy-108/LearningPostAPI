@@ -84,6 +84,8 @@ def get_top_10(request, username, testid):
                 break
     context = {
         'success': True,
+        'region': state,
+        'country': country,
         'streaks': streak_leaderboard_list,
         'questions': questions_leaderboard_list,
     }
