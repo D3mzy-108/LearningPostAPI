@@ -101,7 +101,7 @@ def update_rank(request, username, testid):
             date=datetime.date.today(),
             user__username=username,
             quest__id=testid).first()
-        if streak > instance.streak:
+        if int(streak) > instance.streak:
             instance.streak = int(streak)
         instance.questions_answered += int(questions)
         instance.save()
