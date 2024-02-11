@@ -102,8 +102,8 @@ def update_rank(request, username, testid):
             user__username=username,
             quest__id=testid).first()
         if streak > instance.streak:
-            instance.streak = streak
-        instance.questions_answered += questions
+            instance.streak = int(streak)
+        instance.questions_answered += int(questions)
         instance.save()
         context = {
             'success': True,
