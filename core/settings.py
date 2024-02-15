@@ -26,10 +26,15 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 if config('DEBUG') == 'True':
     DEBUG = True
+    ALLOWED_HOSTS = ['*']
 else:
     DEBUG = False
-
-ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = [
+        "https://learningpost.ng",
+        "https://app.learningpost.ng",
+        "http://learningpost.ng",
+        "http://app.learningpost.ng",
+    ]
 
 CORS_ALLOWED_ORIGINS = [
     "https://learningpost.ng",
@@ -52,6 +57,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'website',
     'admin_app',
+    'akada',
     'endpoints',
 ]
 

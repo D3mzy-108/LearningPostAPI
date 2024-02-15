@@ -11,7 +11,6 @@ def get_top_10(request, username, testid):
     state = request.GET.get('state') or user.profile.state
     country = request.GET.get('country') or user.profile.country
     if not Leaderboard.objects.filter(
-            date=datetime.date.today(),
             user__pk=user.pk,
             quest__id=testid).exists():
         instance = Leaderboard()
@@ -19,7 +18,6 @@ def get_top_10(request, username, testid):
         instance.quest = get_object_or_404(Quest, pk=testid)
         instance.save()
     leaderboard = Leaderboard.objects.filter(
-        date=datetime.date.today(),
         user__profile__state=state,
         user__profile__country=country,
         quest__id=testid)
@@ -98,7 +96,6 @@ def update_rank(request, username, testid):
         streak = request.POST['streak']
         questions = request.POST['questions']
         instance = Leaderboard.objects.filter(
-            date=datetime.date.today(),
             user__username=username,
             quest__id=testid).first()
         if int(streak) > instance.streak:

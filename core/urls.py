@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('website.urls')),
     path('portal/admin/', include('admin_app.urls')),
+    path('akada/', include('akada.urls')),
     path('api/', include('endpoints.urls'))
 ]
 
