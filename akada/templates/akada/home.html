@@ -38,11 +38,12 @@ Admin Portal
                 class="w-full border border-[var(--lightgray)] rounded-md py-4 h-[90vh] flex flex-col gap-4 conversation-box">
                 <div class="flex-1 w-full overflow-auto px-4 py-2 relative" id="conversationWrapper">
                     <ul id="conversation" class="flex flex-col gap-6">
-                        <li class="w-full flex gap-4 items-start text-[var(--fg)] replies">
+                        <li class="w-full flex gap-4 items-start text-[var(--fg)]">
                             <img src="{% static 'assets/images/akada_avatar.png' %}" alt=""
                                 class="w-[30px] h-[30px] rounded-full sticky top-0">
                             <div class="flex-1 pr-[15px] sm:pr-[30px]">
-                                <div class="w-fit max-w-full p-3 rounded-md border border-black/50">
+                                <div
+                                    class="w-fit max-w-full p-3 rounded-md border border-[var(--highlight)] bg-[var(--highlight)]">
                                     <div class="mb-1">Tips!</div>
                                     <div class="w-full flex gap-2">
                                         <span>-</span>
@@ -91,6 +92,9 @@ Admin Portal
     .replies {
         opacity: 0;
         transition: .5s;
+    }
+
+    .replies div div {
         background: var(--highlight) !important;
     }
 
@@ -137,7 +141,7 @@ Admin Portal
                         <img src="{% static 'assets/images/akada_avatar.png' %}" alt=""
                             class="w-[30px] h-[30px] rounded-full sticky top-0">
                         <div class="flex-1 pr-[15px] sm:pr-[30px]">
-                            <div class="w-fit max-w-full p-3 rounded-md border border-black/50">
+                            <div class="w-fit max-w-full p-3 rounded-md border border-[var(--highlight)]">
                                 Wait a moment...
                             </div>
                         </div>
