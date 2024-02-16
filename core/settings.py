@@ -30,10 +30,8 @@ if config('DEBUG') == 'True':
 else:
     DEBUG = False
     ALLOWED_HOSTS = [
-        "https://learningpost.ng",
-        "https://app.learningpost.ng",
-        "http://learningpost.ng",
-        "http://app.learningpost.ng",
+        "learningpost.ng",
+        "app.learningpost.ng",
     ]
 
 CORS_ALLOWED_ORIGINS = [
