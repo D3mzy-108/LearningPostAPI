@@ -96,7 +96,11 @@ class AIModel:
             response = "Sorry, I couldn't find any information matching your query. Please provide a more detailed question."
 
         # conversation_history.append((query, response))
-        return response
+        nlg_pipeline = pipeline("text2text-generation",
+                                model="facebook/bart-large-cnn")
+        generated_response = nlg_pipeline(response)
+        generated_text = generated_response[0]['generated_text']
+        return generated_text
 
     def process_follow_up_query(self, query, last_response):
         # Sample implementation for handling follow-up questions
