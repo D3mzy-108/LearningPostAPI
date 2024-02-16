@@ -18,8 +18,6 @@ from website.models import User
 
 nlp = spacy.load("en_core_web_sm")
 # Load BERT tokenizer and model
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertModel.from_pretrained('bert-base-uncased')
 
 
 def loadDependencies():
@@ -27,11 +25,15 @@ def loadDependencies():
     nltk.download('punkt')
     nltk.download('stopwords')
     nltk.download('wordnet')
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    model = BertModel.from_pretrained('bert-base-uncased')
+
+# loadDependencies()
 
 
 class AIModel:
     def _init_(self):
-        loadDependencies()
+        pass
 
     def read_pdf(self, pdf_file):
         text = ""
