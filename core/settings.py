@@ -32,13 +32,16 @@ else:
     ALLOWED_HOSTS = [
         "learningpost.ng",
         "app.learningpost.ng",
+        "portal.admin.learningpost.ng"
     ]
 
 CORS_ALLOWED_ORIGINS = [
     "https://learningpost.ng",
     "https://app.learningpost.ng",
+    "https://portal.admin.learningpost.ng",
     "http://learningpost.ng",
     "http://app.learningpost.ng",
+    "http://portal.admin.learningpost.ng",
     "http://localhost:5000",
 ]
 
