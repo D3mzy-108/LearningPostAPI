@@ -15,25 +15,23 @@ from summarizer import Summarizer
 from akada.models import AkadaKnowledgeBank
 from website.models import User
 
-# Load spaCy English language model
-nlp = spacy.load("en_core_web_sm")
-nlp.max_length = 10000000
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
 
+nlp = spacy.load("en_core_web_sm")
 # Load BERT tokenizer and model
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertModel.from_pretrained('bert-base-uncased')
 
-# Global variables
-knowledge_base = {}
-conversation_history = []
+
+def loadDependencies():
+    # Load spaCy English language model
+    nltk.download('punkt')
+    nltk.download('stopwords')
+    nltk.download('wordnet')
 
 
 class AIModel:
     def _init_(self):
-        pass
+        loadDependencies()
 
     def read_pdf(self, pdf_file):
         text = ""
