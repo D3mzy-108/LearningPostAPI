@@ -7,9 +7,10 @@ Admin Portal
 <div class="w-full flex max-sm:flex-col gap-0 relative">
     {% include 'partials/admin_nav.html' %}
     <div class="p-3 md:p-6 flex-1 w-full">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <form action="" method="post" enctype="multipart/form-data" id="trainModelForm"
                 class="w-full border border-[var(--lightgray)] rounded-md p-4 h-fit">
+                {% csrf_token %}
                 <!-- COVER -->
                 <div class="w-fit">
                     <label for="m_file" class="text-[var(--fg)] font-medium">Train AI Model*</label>
@@ -40,37 +41,41 @@ Admin Portal
                         <li class="w-full flex gap-4 items-start text-[var(--fg)]">
                             <img src="{% static 'assets/images/akada_avatar.png' %}" alt=""
                                 class="w-[30px] h-[30px] rounded-full sticky top-0">
-                            <div class="flex-1 p-3 rounded-md border border-black/50">
-                                <div class="mb-1">Tips!</div>
-                                <div class="w-full flex gap-2">
-                                    <span>-</span>
-                                    <span class="text-sm">Ensure you mentain proper grammar when asking questions</span>
+                            <div class="flex-1 pr-[15px] sm:pr-[30px]">
+                                <div class="w-fit max-w-full p-3 rounded-md border border-black/50">
+                                    <div class="mb-1">Tips!</div>
+                                    <div class="w-full flex gap-2">
+                                        <span>-</span>
+                                        <span class="text-sm">Ensure you mentain proper grammar when asking
+                                            questions</span>
+                                    </div>
+                                    <div class="w-full flex gap-2">
+                                        <span>-</span>
+                                        <span class="text-sm">Do not forget to start all your nouns with capital
+                                            letters</span>
+                                    </div>
+                                    <div class="mt-2 mb-1">Limitations!</div>
+                                    <div class="w-full flex gap-2">
+                                        <span>-</span>
+                                        <span class="text-sm">Responses may not be 100% accurate.</span>
+                                    </div>
+                                    <div class="w-full flex gap-2">
+                                        <span>-</span>
+                                        <span class="text-sm">Akada is only able to answer simple questions a single
+                                            subject
+                                            in the sentence</span>
+                                    </div>
+                                    <!-- <div class="w-full flex gap-2">
+                                            <span>-</span>
+                                            <span class="text-sm"></span>
+                                        </div> -->
                                 </div>
-                                <div class="w-full flex gap-2">
-                                    <span>-</span>
-                                    <span class="text-sm">Do not forget to start all your nouns with capital
-                                        letters</span>
-                                </div>
-                                <div class="mt-2 mb-1">Limitations!</div>
-                                <div class="w-full flex gap-2">
-                                    <span>-</span>
-                                    <span class="text-sm">Responses may not be 100% accurate.</span>
-                                </div>
-                                <div class="w-full flex gap-2">
-                                    <span>-</span>
-                                    <span class="text-sm">Akada is only able to answer simple questions a single subject
-                                        in the sentence</span>
-                                </div>
-                                <!-- <div class="w-full flex gap-2">
-                                    <span>-</span>
-                                    <span class="text-sm"></span>
-                                </div> -->
                             </div>
                         </li>
                     </ul>
                 </div>
                 <form method="get" class="flex gap-4 px-4 items-end" id="questionForm">
-                    <textarea rows="2" name="query" id="query" placeholder="Type a question here..."
+                    <textarea rows="2" name="query" id="query" placeholder="Type a question here..." required
                         class="py-3 px-4 rounded-md bg-black/10 border-none outline-none flex-1 text-[var(--fg)]"></textarea>
                     <button type="submit"
                         class="rounded-full bg-[var(--highlight)] px-3 aspect-square text-[var(--fg)] h-fit grid place-items-center">
@@ -93,71 +98,72 @@ Admin Portal
     }
 </style>
 <script>
-    var scrollPosition = 0;
+    var windowHeight = window.innerHeight;
     $('#questionForm').submit((e) => {
         e.preventDefault();
-
-        // APPEND USER QUERY AS HTML ITEM
-        var userQuery = $('#query').val();
-        var userQueryTextContent = '';
-        userQuery.split('\n').forEach((line, index) => {
-            userQueryTextContent += `${index > 0 ? '<br>' : ''}${line}`
-        });
-        var userLI = document.createElement('li');
-        $(userLI).addClass('w-full flex gap-4 items-start text-[var(--fg)]');
-        userLI.innerHTML = `
-        <li class="w-full flex gap-4 items-start text-[var(--fg)]">
-            <img src="{% static 'assets/images/no_cover.png' %}" alt=""
-                class="w-[30px] h-[30px] rounded-full">
-            <div class="flex-1 p-3 rounded-md border border-black/50">
-                ${userQueryTextContent}
-            </div>
-        </li>`;
-        $('#conversation').append(userLI);
-        $('#conversationWrapper').scrollTop($('#conversationWrapper')[0].scrollHeight);
-
-
-        // ===============================================================================
-        // APPEND AI RESPONSE AS HTML ITEM
-        var akadaLI = document.createElement('li');
-        $(akadaLI).addClass('w-full flex gap-4 items-start text-[var(--fg)]');
-        akadaLI.innerHTML = `
-        <li class="w-full flex gap-4 items-start text-[var(--fg)] replies">
-            <img src="{% static 'assets/images/akada_avatar.png' %}" alt=""
-                class="w-[30px] h-[30px] rounded-full sticky top-0">
-            <div class="flex-1 p-3 rounded-md border border-black/50">
-                Wait a moment...
-            </div>
-        </li>`;
-        $('#conversation').append(akadaLI);
-        setTimeout(() => {
-            $('.replies').addClass('active')
-        }, 500)
-        setInterval(() => {
-            var maxScroll = $('#conversationWrapper')[0].scrollHeight
-            var scrolled = $('#conversationWrapper')[0].scrollTop
-            if (scrolled == maxScroll) {
-                clearInterval();
-
-            } else {
-                $('#conversationWrapper').scrollTop(scrolled + 1);
-            }
-        }, 1)
-        const form = document.getElementById('questionForm');
-        fetch("{% url 'chat_with_akada' %}", {
-            method: 'POST',
-            body: new FormData(form),
-        })
-            .then(response => response.json())
-            .then(data => {
-                var responseTextContent = '';
-                for (var i = 0; i < data.response.length; i++) {
-                    responseTextContent += data.response[i].toString().replace('\n\n', '<br>').replace('\n', ' ')
-                }
-
-                $('.replies:last-child div').text(`${responseTextContent}`)
+        if ($('#query').attr('disabled') != 'disabled') {
+            // ===============================================================================
+            // APPEND USER QUERY AS HTML ITEM
+            // ===============================================================================
+            var userQuery = $('#query').val();
+            var userQueryTextContent = '';
+            userQuery.split('\n').forEach((line, index) => {
+                userQueryTextContent += `${index > 0 ? '<br>' : ''}${line}`
             });
-        $('#query').val('');
+            var userLI = document.createElement('li');
+            $(userLI).addClass('w-full flex gap-4 items-start text-[var(--fg)]');
+            userLI.innerHTML = `
+                    <li class="w-full flex gap-4 items-start text-[var(--fg)]">
+                        <div class="flex-1 pl-[15px] sm:pl-[30px]">
+                            <div class="w-fit max-w-full p-3 rounded-md border border-black/50 ml-auto">
+                                ${userQueryTextContent}
+                            </div>
+                        </div>
+                        <img src="{% static 'assets/images/no_cover.png' %}" alt=""
+                            class="w-[30px] h-[30px] rounded-full">
+                    </li>`;
+            $('#conversation').append(userLI);
+            $('#conversationWrapper').scrollTop($('#conversationWrapper')[0].scrollHeight);
+
+
+            // ===============================================================================
+            // APPEND AI RESPONSE AS HTML ITEM
+            // ===============================================================================
+            var akadaLI = document.createElement('li');
+            $(akadaLI).addClass('w-full flex gap-4 items-start text-[var(--fg)]');
+            akadaLI.innerHTML = `
+                    <li class="w-full flex gap-4 items-start text-[var(--fg)] replies" id="reply${$('.replies').length + 1}">
+                        <img src="{% static 'assets/images/akada_avatar.png' %}" alt=""
+                            class="w-[30px] h-[30px] rounded-full sticky top-0">
+                        <div class="flex-1 pr-[15px] sm:pr-[30px]">
+                            <div class="w-fit max-w-full p-3 rounded-md border border-black/50">
+                                Wait a moment...
+                            </div>
+                        </div>
+                    </li>`;
+            $('#conversation').append(akadaLI);
+            setTimeout(() => {
+                $('.replies').addClass('active')
+            }, 500)
+            $('#conversationWrapper').scrollTop($('#conversationWrapper')[0].scrollHeight);
+            const form = document.getElementById('questionForm');
+            fetch("{% url 'chat_with_akada' request.user.username %}", {
+                method: 'POST',
+                body: new FormData(form),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var responseTextContent = '';
+                    for (var i = 0; i < data.response.length; i++) {
+                        responseTextContent += data.response[i].toString().replace('\n\n', '<br>').replace('.\n', ' ').replace('\n', '')
+                    }
+
+                    $(`#reply${$('.replies').length} div div`).text(`${responseTextContent}`)
+                    $('#query').removeAttr('disabled');
+                });
+            $('#query').val('');
+            $('#query').attr('disabled', 'true');
+        }
     })
 </script>
 {% endblock content %}
