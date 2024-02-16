@@ -16,10 +16,7 @@ from akada.models import AkadaKnowledgeBank
 from website.models import User
 
 
-nlp = spacy.load("en_core_web_sm")
 # Load BERT tokenizer and model
-
-
 def loadDependencies():
     # Load spaCy English language model
     nltk.download('punkt')
@@ -33,7 +30,7 @@ def loadDependencies():
 
 class AIModel:
     def _init_(self):
-        pass
+        self.nlp = spacy.load("en_core_web_sm")
 
     def read_pdf(self, pdf_file):
         text = ""
@@ -44,7 +41,7 @@ class AIModel:
         return text
 
     def add_to_knowledge_base(self, content):
-        doc = nlp(content)
+        doc = self.nlp(content)
 
         for sentence in doc.text.split('\n\n'):
             AkadaKnowledgeBank.objects.create(content=sentence)
@@ -60,14 +57,14 @@ class AIModel:
 
         response = ""
         best_score = 0
-        query_doc = nlp(query)
+        query_doc = self.nlp(query)
         query_keywords = [
             token.lemma_ for token in query_doc if not token.is_stop and not token.is_punct]
 
         # Check if there's context in the conversation history
         # if conversation_history:
         #     last_query, last_response = conversation_history[-1]
-        #     last_query_doc = nlp(last_query)
+        #     last_query_doc = self.nlp(last_query)
         #     similarity_score = query_doc.similarity(last_query_doc)
 
         #     # If similarity is high, consider it as a follow-up question
@@ -78,12 +75,12 @@ class AIModel:
 
         # If no context or not a follow-up question, search knowledge base
         for item in AkadaKnowledgeBank.objects.all():
-            doc = nlp(item.content)
+            doc = self.nlp(item.content)
             for sentence in doc.sents:
                 if any(keyword.lower() in sentence.text.lower() for keyword in query_keywords):
                     try:
                         similarity_score = query_doc.similarity(
-                            nlp(sentence.text))
+                            self.nlp(sentence.text))
                         if similarity_score > best_score:
                             response = sentence.text
                             best_score = similarity_score
@@ -106,11 +103,11 @@ class AIModel:
         # Sample implementation for handling follow-up questions
 
         # Extract entities from the current query
-        query_doc = nlp(query)
+        query_doc = self.nlp(query)
         entities = [ent.text.lower() for ent in query_doc.ents]
 
         # Extract entities from the last response
-        last_response_doc = nlp(last_response)
+        last_response_doc = self.nlp(last_response)
         last_response_entities = [ent.text.lower()
                                   for ent in last_response_doc.ents]
 

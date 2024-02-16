@@ -42,8 +42,7 @@ Admin Portal
                             <img src="{% static 'assets/images/akada_avatar.png' %}" alt=""
                                 class="w-[30px] h-[30px] rounded-full sticky top-0">
                             <div class="flex-1 pr-[15px] sm:pr-[30px]">
-                                <div
-                                    class="w-fit max-w-full p-3 rounded-md border border-[var(--highlight)] bg-[var(--highlight)]">
+                                <div class="w-fit max-w-full p-3 rounded-md border border-black/50">
                                     <div class="mb-1">Tips!</div>
                                     <div class="w-full flex gap-2">
                                         <span>-</span>
@@ -94,10 +93,6 @@ Admin Portal
         transition: .5s;
     }
 
-    .replies div div {
-        background: var(--highlight) !important;
-    }
-
     .replies.active {
         opacity: 1;
     }
@@ -120,7 +115,7 @@ Admin Portal
             userLI.innerHTML = `
                     <li class="w-full flex gap-4 items-start text-[var(--fg)]">
                         <div class="flex-1 pl-[15px] sm:pl-[30px]">
-                            <div class="w-fit max-w-full p-3 rounded-md border border-black/50 ml-auto">
+                            <div class="w-fit max-w-full p-3 rounded-md border border-[var(--highlight)] bg-[var(--highlight)] ml-auto">
                                 ${userQueryTextContent}
                             </div>
                         </div>
@@ -141,7 +136,7 @@ Admin Portal
                         <img src="{% static 'assets/images/akada_avatar.png' %}" alt=""
                             class="w-[30px] h-[30px] rounded-full sticky top-0">
                         <div class="flex-1 pr-[15px] sm:pr-[30px]">
-                            <div class="w-fit max-w-full p-3 rounded-md border border-[var(--highlight)]">
+                            <div class="w-fit max-w-full p-3 rounded-md border border-black/50">
                                 Wait a moment...
                             </div>
                         </div>
