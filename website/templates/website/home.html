@@ -36,4 +36,10 @@
         </a>
     </form>
 </main>
+
+<script>
+    if (window.location.hostname == 'learningpost.ng' || window.location.hostname == '127.0.0.1') {
+        window.location.replace("{% url 'about' %}");
+    };
+</script>
 {% endblock content %}

@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'website',
     'admin_app',
-    'akada',
+    # 'akada',
     'endpoints',
 ]
 
