@@ -95,9 +95,17 @@ def update_rank(request, username, testid):
     if request.method == 'POST':
         streak = request.POST['streak']
         questions = request.POST['questions']
-        instance = Leaderboard.objects.filter(
+        m_instances = Leaderboard.objects.filter(
             user__username=username,
-            quest__id=testid).first()
+            quest__id=testid)
+        if not m_instances.exists():
+            instance = Leaderboard()
+            instance.user = get_object_or_404(User, username=username)
+            instance.quest = get_object_or_404(Quest, pk=testid)
+            instance.streak = 0
+            instance.questions_answered = 0
+        else:
+            instance = m_instances.first()
         if int(streak) > instance.streak:
             instance.streak = int(streak)
         instance.questions_answered += int(questions)

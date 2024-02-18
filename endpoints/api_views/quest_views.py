@@ -119,3 +119,31 @@ def rate_quest(request, username, testid, rating):
         instance.rating = quest_rating
         instance.save()
         return JsonResponse({'success': True, 'message': 'Rating has been saved'})
+
+
+def download_questions(request, testid, username):
+    all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
+    random_items = all_questions[:300]
+    selected_questions = []
+
+    for question in random_items:
+        diagram_url = None
+        if question.diagram:
+            diagram_url = question.diagram.url
+        selected_questions.append({
+            'questionid': question.pk,
+            'comprehension': question.comprehension,
+            'diagram': diagram_url,
+            'question': question.question,
+            'a': question.a,
+            'b': question.b,
+            'c': question.c,
+            'd': question.d,
+            'answer': question.answer,
+            'explanation': question.explanation,
+        })
+    context = {
+        'success': True,
+        'questions': selected_questions,
+    }
+    return JsonResponse(context)
