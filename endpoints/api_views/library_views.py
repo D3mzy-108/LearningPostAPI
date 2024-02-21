@@ -37,6 +37,7 @@ def library(request, username):
             'cover': book.cover.url,
             'title': book.title,
             'about': book.about,
+            'author': book.author,
             'about_author': book.about_author,
             'bookmarked': book.bookmarked.filter(username=username).exists(),
             'chapters_count': Chapter.objects.filter(book__id=book.id).count(),
