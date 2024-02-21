@@ -45,3 +45,8 @@ class LibraryRatingAdmin(admin.ModelAdmin):
 @admin.register(Leaderboard)
 class LeaderboardAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(UserFeedback)
+class UserFeedbackAdmin(admin.ModelAdmin):
+    pass

@@ -104,3 +104,22 @@ class Leaderboard(models.Model):
 
     def __str__(self):
         return f"{self.user.username} | {self.streak} streak | {self.questions_answered} questions"
+
+
+class UserFeedback(models.Model):
+    feedback_choices = [
+        ('question_report', 'question_report'),
+        ('help_desk', 'help_desk'),
+    ]
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='m_feedbacks')
+    message = models.TextField()
+    is_viewed = models.BooleanField(default=False)
+    feedback_type = models.CharField(
+        max_length=20, choices=feedback_choices, null=True)
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, blank=True, null=True)
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.message}\n~ {self.user.first_name}'
