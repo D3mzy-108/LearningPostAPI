@@ -33,6 +33,13 @@
     </div>
 
     <div class="w-full">
+        <label for="author" class="text-[var(--fg)] font-medium">Book Author*</label>
+        <input type="text" name="author" id="author"
+            class="w-full mt-3 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+            maxlength="200" placeholder="Name of the author of the book*" required value="{{instance.author}}">
+    </div>
+
+    <div class="w-full">
         <label for="about_author" class="text-[var(--fg)] font-medium">About Author</label>
         <textarea name="about_author" id="about_author" rows="7"
             placeholder="Provide some information about the author of this book (Optional)"

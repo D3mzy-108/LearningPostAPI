@@ -41,12 +41,14 @@ def create_book(request):
         except:
             return redirect('create_quest')
         about = request.POST['about']
+        author = request.POST['author']
         about_author = request.POST['about_author']
 
         instance = Library()
         instance.title = title
         instance.cover = cover
         instance.about = about
+        instance.author = author
         instance.about_author = about_author
         instance.save()
         return redirect('library')
@@ -62,10 +64,12 @@ def edit_book(request, pk):
         cover = request.FILES.get('cover')
         if cover is not None:
             instance.cover = cover
-        instance.about = request.POST['about']
-        instance.about_author = request.POST['about_author']
-        instance.save()
-        return redirect('library')
+        if request.POST['author'] is not None and request.POST['author'] != 'None':
+            instance.about = request.POST['about']
+            instance.author = request.POST['author']
+            instance.about_author = request.POST['about_author']
+            instance.save()
+            return redirect('library')
     context = {
         'instance': instance
     }

@@ -50,6 +50,7 @@ class AnsweredBy(models.Model):
 class Library(models.Model):
     cover = models.ImageField(upload_to='book_covers/')
     title = models.CharField(max_length=100)
+    author = models.CharField(max_length=200, null=True)
     about = models.TextField(blank=True, null=True)
     about_author = models.TextField(blank=True, null=True)
     bookmarked = models.ManyToManyField(User, blank=True)

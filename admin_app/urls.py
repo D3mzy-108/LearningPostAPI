@@ -2,7 +2,7 @@ from django.urls import path
 from .admin_app_views.quests_views import quests, create_quest, edit_quest, delete_quest, view_questions, bulk_upload, single_upload, edit_question, delete_question
 from .admin_app_views.library_views import create_book, delete_book, delete_chapter, edit_book, library, upload_chapter, view_book
 from .admin_app_views.classifications_views import classifications, delete_code, generate_new_code
-from .admin_app_views.reports_views import user_feedback
+from .admin_app_views.reports_views import send_report, user_feedback
 
 urlpatterns = [
     # ========================================================================================================
@@ -44,4 +44,5 @@ urlpatterns = [
     # FEEDBACK & REPORTS
     # ========================================================================================================
     path('feedback/', user_feedback, name='user_feedback'),
+    path('feedback/<str:username>/send/', send_report),
 ]
