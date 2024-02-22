@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from admin_app.models import Question, UserFeedback
 from website.models import User
+from django.views.decorators.csrf import csrf_exempt
 
 
 def user_feedback(request):
@@ -26,6 +27,7 @@ def user_feedback(request):
     return render(request, 'admin_app/reports/user_reports.html', context)
 
 
+@csrf_exempt
 def send_report(request, username):
     if request.method == 'POST':
         questionid = request.POST.get('questionId') or ''
