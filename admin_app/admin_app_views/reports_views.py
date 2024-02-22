@@ -37,8 +37,9 @@ def send_report(request, username):
             if report_type == choice[0]:
                 report_type_is_valid = True
         if report_type_is_valid:
-            feedback_instance.question = get_object_or_404(
-                Question, id=questionid)
+            if questionid != '':
+                feedback_instance.question = get_object_or_404(
+                    Question, id=questionid)
             feedback_instance.feedback_type = report_type
             feedback_instance.message = message
             feedback_instance.user = get_object_or_404(User, username=username)
