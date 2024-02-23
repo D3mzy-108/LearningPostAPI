@@ -124,3 +124,16 @@ class UserFeedback(models.Model):
 
     def __str__(self):
         return f'{self.message}\n~ {self.user.first_name}'
+
+
+class MPerformance(models.Model):
+    total_answered = models.IntegerField()
+    correctly_answered = models.IntegerField()
+    wrongly_answered = models.IntegerField()
+    date = models.DateField()
+    quest = models.ForeignKey(Quest, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='m_performance')
+
+    def __str__(self):
+        return f"{self.user.first_name} {self.date}"

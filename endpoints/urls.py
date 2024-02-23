@@ -1,4 +1,6 @@
 from django.urls import path
+
+from .api_views.performance_views import get_performance, save_performance
 from .api_views.auth_views import login_endpoint, get_logged_in_user, edit_profile
 from .api_views.quest_views import quests, questions, answer, rate_quest, download_questions
 from .api_views.library_views import library, chapters, rate_book
@@ -40,4 +42,9 @@ urlpatterns = [
     # ========================================================================================================
     path('top-ten-leaderboard/<str:username>/<int:testid>/', get_top_10),
     path('update-rank/<str:username>/<int:testid>/', update_rank),
+    # ========================================================================================================
+    # PERFORMANCE
+    # ========================================================================================================
+    path('save-performance/<str:username>/', save_performance),
+    path('get-performance/<str:username>/', get_performance),
 ]

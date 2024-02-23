@@ -50,3 +50,8 @@ class LeaderboardAdmin(admin.ModelAdmin):
 @admin.register(UserFeedback)
 class UserFeedbackAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(MPerformance)
+class MPerformanceAdmin(admin.ModelAdmin):
+    pass
