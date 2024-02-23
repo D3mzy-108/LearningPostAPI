@@ -6,6 +6,7 @@ from admin_app.models import MPerformance, Quest
 from website.models import User
 
 
+@csrf_exempt
 def save_performance(request, username):
     if request.method == 'POST':
         quest_id = request.POST.get('testid')
