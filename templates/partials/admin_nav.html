@@ -57,7 +57,7 @@
                 </div>
                 <a href="{% url 'user_feedback' %}" class="flex-1 font-semibold">User Feedback</a>
                 {% if ttl_unread_count > 0 %}
-                <div class="px-[8px] py-[2px] text-[10px] bg-[var(--bg)] text-white font-bold rounded-full">
+                <div class="h-fit px-[8px] py-[2px] text-[14px] bg-[var(--bg)] text-white font-bold rounded-full">
                     {{ttl_unread_count}}</div>
                 {% endif %}
             </li>
@@ -89,7 +89,8 @@
     var a = $('nav a')
     for (let i = 0; i < a.length; i++) {
         if (window.location.pathname.includes($(a[i]).attr('href'))) {
-            $(a[i].parentElement).removeClass('text-[var(--fg2)]').addClass('bg-[var(--highlight)] text-[#FFF]')
+            $(a[i].parentElement).removeClass('text-[var(--fg2)] rounded-md').addClass('bg-white/10 text-[#FFF] border-l-[2px] border-l-[var(--highlight)]')
+            //.addClass('bg-[var(--highlight)] text-[#FFF]')
         }
     }
 </script>

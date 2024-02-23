@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from website.models import User, UserProfile, BetaReferal
+from website.models import SubAccounts, User, UserProfile, BetaReferal
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 
@@ -153,16 +153,48 @@ def get_logged_in_user(request, username):
                 'guardian_email': profile.first().guardian_email,
                 'guardian_phone': profile.first().guardian_phone,
             }
+        sub_accounts = []
+        for account in SubAccounts.objects.filter(parent__pk=m_user.pk):
+            sub_accounts.append({
+                'profileURL': account.child.profile_photo,
+                'displayName': account.child.first_name,
+                'username': account.child.username,
+            })
     else:
         userid = None
         display_name = 'Guest User'
         email = None
         profile_url = ''
+        sub_accounts = []
     context = {
         'userId': userid,
         'displayName': display_name,
         'email': email,
         'profileURL': profile_url,
         'userProfile': user_profile,
+        'sub_accounts': sub_accounts,
     }
     return JsonResponse(context)
+
+
+@csrf_exempt
+def add_sub_account(request, username):
+    if request.method == 'POST':
+        code = request.POST.get('ref_code')
+        referral = get_object_or_404(BetaReferal, code=code)
+        if referral.profile is not None:
+            child = referral.profile.user
+            parent = get_object_or_404(User, username=username)
+            if not SubAccounts.objects.filter(parent__pk=parent.pk, child__pk=child.pk).exists():
+                account_instance = SubAccounts()
+                account_instance.parent = parent
+                account_instance.child = child
+                account_instance.save()
+            return JsonResponse({
+                'success': True,
+                'message': 'Account has been linked!'
+            })
+    return JsonResponse({
+        'success': False,
+        'message': 'Invalid Request!'
+    })

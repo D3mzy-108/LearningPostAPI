@@ -10,7 +10,7 @@ class User(AbstractUser):
     profile_photo = models.URLField(null=True, blank=True)
 
     def __str__(self):
-        return self.username
+        return f"{self.username} ~ {self.first_name}"
 
     def save(self, *args, **kwargs):
         if not self.username:
@@ -42,3 +42,12 @@ class BetaReferal(models.Model):
 
     def __str__(self):
         return self.code
+
+
+class SubAccounts(models.Model):
+    parent = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='sub_accounts')
+    child = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.parent.first_name} -> {self.child.first_name}"
