@@ -57,6 +57,42 @@ def quests(request, username):
     return JsonResponse(context)
 
 
+def get_quest(request, testid, username):
+    quest = get_object_or_404(Quest, id=testid)
+    if User.objects.filter(username=username).exists():
+        answered_count = get_object_or_404(User, username=username).answered.filter(
+            question__quest__pk=quest.pk).count()
+    else:
+        answered_count = 0
+    avg_rating = quest.rated_quests.aggregate(avg_rating=ExpressionWrapper(
+        Avg('rating'),
+        output_field=fields.FloatField()
+    ))['avg_rating']
+    if avg_rating is not None:
+        rating = f'{round(avg_rating, 1)}'
+    else:
+        rating = '5.0'
+
+    quest_obj = {
+        'testid': quest.pk,
+        'cover': quest.cover.url,
+        'title': quest.title,
+        'grade': quest.grade,
+        'time': quest.time,
+        'about': quest.about,
+        'instructions': quest.instructions,
+        'bookmarked': quest.bookmarked.filter(username=username).exists(),
+        'question_count': quest.questions.count(),
+        'answered_count': answered_count,
+        'rating': rating,
+    }
+    context = {
+        'success': True,
+        'quest': quest_obj,
+    }
+    return JsonResponse(context)
+
+
 def questions(request, testid, username):
     all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
     unanswered_questions = all_questions.exclude(
