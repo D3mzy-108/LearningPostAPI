@@ -56,12 +56,21 @@ def get_performance(request, username):
                                                  start_date, end_date]).order_by('id', 'date')
     performance_list = []
     for stats in mperformance:
-        performance_list.append({
-            'total_answered': stats.total_answered,
-            'correctly_answered': stats.correctly_answered,
-            'wrongly_answered': stats.wrongly_answered,
-            'date': stats.date,
-        })
+        list_length = len(performance_list)
+        if stats.date == performance_list[list_length-1]['date']:
+            performance_list[list_length -
+                             1]['total_answered'] += stats.total_answered
+            performance_list[list_length -
+                             1]['correctly_answered'] += stats.correctly_answered
+            performance_list[list_length -
+                             1]['wrongly_answered'] += stats.wrongly_answered
+        else:
+            performance_list.append({
+                'total_answered': stats.total_answered,
+                'correctly_answered': stats.correctly_answered,
+                'wrongly_answered': stats.wrongly_answered,
+                'date': stats.date,
+            })
     if len(performance_list) == 0:
         performance_list.append({
             'total_answered': 0,
