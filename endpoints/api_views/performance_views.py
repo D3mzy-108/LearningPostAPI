@@ -55,7 +55,31 @@ def get_performance(request, username):
         mperformance = user.m_performance.filter(quest__id=questid, date__range=[
                                                  start_date, end_date]).order_by('id', 'date')
     performance_list = []
+    quest_performance_list = []
     for stats in mperformance:
+        if len(quest_performance_list) > 0:
+            quest_added = False
+            for quest_stats in quest_performance_list:
+                if quest_stats['quest'] == stats.quest.title:
+                    quest_stats['total_answered'] += stats.total_answered
+                    quest_stats['correctly_answered'] += stats.correctly_answered
+                    quest_stats['wrongly_answered'] += stats.wrongly_answered
+                    quest_added = True
+            else:
+                if quest_added == False:
+                    quest_performance_list.append({
+                        'quest': stats.quest.title,
+                        'total_answered': stats.total_answered,
+                        'correctly_answered': stats.correctly_answered,
+                        'wrongly_answered': stats.wrongly_answered,
+                    })
+        else:
+            quest_performance_list.append({
+                'quest': stats.quest.title,
+                'total_answered': stats.total_answered,
+                'correctly_answered': stats.correctly_answered,
+                'wrongly_answered': stats.wrongly_answered,
+            })
         list_length = len(performance_list)
         if list_length > 0 and stats.date == performance_list[list_length-1]['date']:
             performance_list[list_length -
@@ -81,4 +105,5 @@ def get_performance(request, username):
     return JsonResponse({
         'success': True,
         'performance': performance_list,
+        'quest_performance': quest_performance_list,
     })
