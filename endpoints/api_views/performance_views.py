@@ -57,7 +57,7 @@ def get_performance(request, username):
     performance_list = []
     for stats in mperformance:
         list_length = len(performance_list)
-        if stats.date == performance_list[list_length-1]['date']:
+        if list_length > 0 and stats.date == performance_list[list_length-1]['date']:
             performance_list[list_length -
                              1]['total_answered'] += stats.total_answered
             performance_list[list_length -
