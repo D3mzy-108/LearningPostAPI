@@ -16,12 +16,14 @@ def save_performance(request, username):
         total_answered = request.POST.get('total_answered')
         correctly_answered = request.POST.get('correctly_answered')
         wrongly_answered = request.POST.get('wrongly_answered')
+        time = request.POST.get('time')
         if MPerformance.objects.filter(date=date, quest__id=quest_id).exists():
             mperformance = MPerformance.objects.filter(
                 date=date, quest__id=quest_id, user__username=username).first()
             mperformance.total_answered += int(total_answered)
             mperformance.correctly_answered += int(correctly_answered)
             mperformance.wrongly_answered += int(wrongly_answered)
+            mperformance.time += int(time)
             mperformance.save()
         else:
             mperformance = MPerformance()
@@ -31,6 +33,7 @@ def save_performance(request, username):
             mperformance.total_answered = total_answered
             mperformance.correctly_answered = correctly_answered
             mperformance.wrongly_answered = wrongly_answered
+            mperformance.time = time
             mperformance.save()
         return JsonResponse({
             'success': True,
@@ -64,6 +67,10 @@ def get_performance(request, username):
                     quest_stats['total_answered'] += stats.total_answered
                     quest_stats['correctly_answered'] += stats.correctly_answered
                     quest_stats['wrongly_answered'] += stats.wrongly_answered
+                    try:
+                        quest_stats['time'] += stats.time
+                    except:
+                        pass
                     quest_added = True
             else:
                 if quest_added == False:
@@ -72,6 +79,7 @@ def get_performance(request, username):
                         'total_answered': stats.total_answered,
                         'correctly_answered': stats.correctly_answered,
                         'wrongly_answered': stats.wrongly_answered,
+                        'time': stats.time,
                     })
         else:
             quest_performance_list.append({
@@ -79,6 +87,7 @@ def get_performance(request, username):
                 'total_answered': stats.total_answered,
                 'correctly_answered': stats.correctly_answered,
                 'wrongly_answered': stats.wrongly_answered,
+                'time': stats.time,
             })
         list_length = len(performance_list)
         if list_length > 0 and stats.date == performance_list[list_length-1]['date']:
@@ -88,11 +97,17 @@ def get_performance(request, username):
                              1]['correctly_answered'] += stats.correctly_answered
             performance_list[list_length -
                              1]['wrongly_answered'] += stats.wrongly_answered
+            try:
+                performance_list[list_length -
+                                 1]['time'] += stats.time
+            except:
+                pass
         else:
             performance_list.append({
                 'total_answered': stats.total_answered,
                 'correctly_answered': stats.correctly_answered,
                 'wrongly_answered': stats.wrongly_answered,
+                'time': stats.time,
                 'date': stats.date,
             })
     if len(performance_list) == 0:
@@ -100,6 +115,7 @@ def get_performance(request, username):
             'total_answered': 0,
             'correctly_answered': 0,
             'wrongly_answered': 0,
+            'time': 0,
             'date': datetime.date.today(),
         })
     return JsonResponse({

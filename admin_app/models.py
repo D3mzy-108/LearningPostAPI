@@ -130,6 +130,7 @@ class MPerformance(models.Model):
     total_answered = models.IntegerField()
     correctly_answered = models.IntegerField()
     wrongly_answered = models.IntegerField()
+    time = models.IntegerField(null=True)
     date = models.DateField()
     quest = models.ForeignKey(Quest, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(
