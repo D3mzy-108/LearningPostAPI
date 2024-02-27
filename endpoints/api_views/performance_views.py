@@ -17,7 +17,7 @@ def save_performance(request, username):
         correctly_answered = request.POST.get('correctly_answered')
         wrongly_answered = request.POST.get('wrongly_answered')
         time = request.POST.get('time')
-        if MPerformance.objects.filter(date=date, quest__id=quest_id).exists():
+        if MPerformance.objects.filter(date=date, quest__id=quest_id, user__username=username).exists():
             mperformance = MPerformance.objects.filter(
                 date=date, quest__id=quest_id, user__username=username).first()
             mperformance.total_answered += int(total_answered)
