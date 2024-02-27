@@ -120,8 +120,8 @@
                     <!-- ACTION BUTTONS -->
                     <div class="w-full flex gap-2 py-4 bg-[var(--bg2)] sticky top-0">
                         <div class="flex-1 text-[var(--fg2)] text-sm">
-                            Question Key:
-                            <span class="font-semibold text-[var(--fg)]">#{{selected_feedback.question.pk}}</span>
+                            <span
+                                class="font-semibold text-[var(--fg)]">{{selected_feedback.question.quest.title}}</span>
                         </div>
                         <div class="flex gap-2 formActions active">
                             <button type="button" data-key="{{forloop.counter}}"

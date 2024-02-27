@@ -10,7 +10,7 @@ class QuestAdmin(admin.ModelAdmin):
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('question', 'answer')
-    search_fields = ('question', 'answered_by__user__username',
+    search_fields = ('quest__title', 'question', 'answered_by__user__username',
                      'answered_by__user__first_name',
                      'answered_by__date')
 
