@@ -1,5 +1,5 @@
 from django.urls import path
-from .admin_app_views.quests_views import quests, create_quest, edit_quest, delete_quest, view_questions, bulk_upload, single_upload, edit_question, delete_question
+from .admin_app_views.quests_views import download_quest, quests, create_quest, edit_quest, delete_quest, view_questions, bulk_upload, single_upload, edit_question, delete_question
 from .admin_app_views.library_views import create_book, delete_book, delete_chapter, edit_book, library, upload_chapter, view_book
 from .admin_app_views.classifications_views import classifications, delete_code, generate_new_code
 from .admin_app_views.reports_views import send_report, user_feedback
@@ -13,6 +13,8 @@ urlpatterns = [
     path('quests/edit/<int:pk>/', edit_quest, name='edit_quest'),
     path('quests/delete/<int:pk>/', delete_quest, name='delete_quest'),
     path('quests/<int:pk>/questions/', view_questions, name='view_questions'),
+    path('quest/<int:testid>/questions/download/',
+         download_quest, name='download_quest'),
     path('quests/<int:pk>/questions/upload/bulk/',
          bulk_upload, name='bulk_upload'),
     path('quests/<int:pk>/questions/upload/single/',

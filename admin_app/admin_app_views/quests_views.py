@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from ..models import *
 import csv
@@ -185,3 +186,35 @@ def delete_question(request, pk):
     question = get_object_or_404(Question, pk=pk)
     question.delete()
     return redirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def download_quest(request, testid):
+    quest = get_object_or_404(Quest, id=testid)
+    questions = Question.objects.filter(quest__id=quest.pk)
+    # Set the response content type to TSV
+    response = HttpResponse(content_type='text/tab-separated-values')
+    # Set the Content-Disposition header to force download
+    response['Content-Disposition'] = f'attachment; filename="{quest.title}.tsv"'
+    # Write the header
+    if questions.count() > 0:
+        # Create a TSV writer
+        tsv_writer = csv.writer(response, delimiter='\t')
+        header = ['comprehension', 'diagram', 'question',
+                  'a', 'b', 'c', 'd', 'answer', 'explanation']
+        tsv_writer.writerow(header)
+        # Write the data
+        for item in questions.values():
+            tsv_writer.writerow([
+                item['comprehension'],
+                item['diagram'],
+                item['question'],
+                item['a'],
+                item['b'],
+                item['c'],
+                item['d'],
+                item['answer'],
+                item['explanation'],
+            ])
+
+    return response

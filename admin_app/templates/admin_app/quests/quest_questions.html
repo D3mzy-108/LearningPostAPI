@@ -6,6 +6,10 @@
         <ion-icon name="cloud-upload" class="text-[var(--fg2)]"></ion-icon>
         <span class="text-[var(--fg)]">Upload Questions</span>
     </button>
+    <a href="{% url 'download_quest' quest.pk %}" target="_blank"
+        class="p-3 bg-[var(--bg2)] rounded-md grid place-items-center w-fit ml-auto">
+        <ion-icon name="cloud-download" class="text-[var(--fg2)]"></ion-icon>
+    </a>
     <a href="{% url 'quests' %}" class="p-3 bg-[var(--bg2)] rounded-md grid place-items-center w-fit ml-auto">
         <ion-icon name="close-sharp" class="text-[var(--fg2)] text-2xl"></ion-icon>
     </a>
