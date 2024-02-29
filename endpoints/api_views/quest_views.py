@@ -54,8 +54,10 @@ def quests(request, username):
             'answered_count': answered_count,
             'rating': rating,
         })
-    grade_list = Quest.objects.values_list('grade', flat=True).distinct()
-    category_list = Quest.objects.values_list('category', flat=True).distinct()
+    grade_list = Quest.objects.all().order_by(
+        'grade').values_list('grade', flat=True).distinct()
+    category_list = Quest.objects.all().order_by(
+        'category').values_list('category', flat=True).distinct()
     list_of_grades = []
     list_of_categories = []
     for grade in grade_list:
