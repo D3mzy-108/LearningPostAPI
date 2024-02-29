@@ -12,6 +12,7 @@ class Quest(models.Model):
     cover = models.ImageField(upload_to='quest_covers/')
     title = models.CharField(max_length=100)
     grade = models.CharField(max_length=100)
+    category = models.CharField(max_length=100, null=True)
     time = models.IntegerField(verbose_name='Time per Question')
     about = models.TextField(blank=True, null=True)
     instructions = models.TextField(blank=True, null=True)

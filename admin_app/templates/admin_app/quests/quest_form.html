@@ -38,6 +38,12 @@
                 placeholder="Time per Question*" required value="{{instance.time}}">
             <label for="time" class="text-[var(--fg)] text-sm font-medium">Seconds</label>
         </div>
+        <div class="w-full flex items-center rounded-md bg-[var(--bg2)] pl-4">
+            <label for="category" class="text-[var(--fg)] text-sm font-medium">Category</label>
+            <input type="text" name="category" id="category"
+                class="w-full py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+                placeholder="E.g. science, art, or humanitarian*" required value="{{instance.category}}">
+        </div>
     </div>
 
     <div class="w-full">

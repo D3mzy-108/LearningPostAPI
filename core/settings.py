@@ -56,8 +56,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'channels',
     'website',
     'admin_app',
+    'challenge_app',
     # 'akada',
     'endpoints',
 ]

@@ -43,6 +43,7 @@ def create_quest(request):
         except:
             return redirect('create_quest')
         grade = request.POST['grade']
+        category = request.POST['category']
         time = request.POST['time']
         about = request.POST['about']
         instructions = request.POST['instructions']
@@ -52,6 +53,7 @@ def create_quest(request):
         instance.title = title
         instance.cover = cover
         instance.grade = grade
+        instance.category = category
         instance.time = time
         instance.about = about
         instance.instructions = instructions
@@ -71,6 +73,7 @@ def edit_quest(request, pk):
         if cover is not None:
             instance.cover = cover
         instance.grade = request.POST['grade']
+        instance.category = request.POST['category']
         instance.time = request.POST['time']
         instance.about = request.POST['about']
         instance.instructions = request.POST['instructions']

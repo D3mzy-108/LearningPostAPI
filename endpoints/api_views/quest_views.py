@@ -11,8 +11,11 @@ from django.db.models import Avg, ExpressionWrapper, fields
 def quests(request, username):
     quests = Quest.objects.all().order_by('?')
     search = request.GET.get('search')
+    grade = request.GET.get('grade')
+    category = request.GET.get('category')
     if search is not None:
-        quests = quests.filter(title__icontains=search)
+        quests = quests.filter(
+            title__icontains=search, grade__icontains=grade, category__icontains=category)
     paginator = Paginator(quests, 50)
     page = request.GET.get('page')
     if page == None:
@@ -50,9 +53,19 @@ def quests(request, username):
             'answered_count': answered_count,
             'rating': rating,
         })
+    grade_list = Quest.objects.values_list('grade', flat=True).distinct()
+    category_list = Quest.objects.values_list('category', flat=True).distinct()
+    list_of_grades = []
+    list_of_categories = []
+    for grade in grade_list:
+        list_of_grades.append(grade)
+    for category in category_list:
+        list_of_categories.append(category)
     context = {
         'success': True,
         'quests': quests_list,
+        'grades': list_of_grades,
+        'categories': list_of_categories,
     }
     return JsonResponse(context)
 
