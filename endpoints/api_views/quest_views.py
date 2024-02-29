@@ -10,8 +10,8 @@ from django.db.models import Avg, ExpressionWrapper, fields
 # ========================================================================================================
 def quests(request, username):
     search = request.GET.get('search')
-    grade = request.GET.get('grade')
-    category = request.GET.get('category')
+    grade = request.GET.get('grade') or ''
+    category = request.GET.get('category') or ''
     quests = Quest.objects.filter(
         grade__icontains=grade, category__icontains=category).order_by('?')
     if search is not None:
