@@ -9,13 +9,14 @@ from django.db.models import Avg, ExpressionWrapper, fields
 # QUESTS
 # ========================================================================================================
 def quests(request, username):
-    quests = Quest.objects.all().order_by('?')
     search = request.GET.get('search')
     grade = request.GET.get('grade')
     category = request.GET.get('category')
+    quests = Quest.objects.filter(
+        grade__icontains=grade, category__icontains=category).order_by('?')
     if search is not None:
         quests = quests.filter(
-            title__icontains=search, grade__icontains=grade, category__icontains=category)
+            title__icontains=search)
     paginator = Paginator(quests, 50)
     page = request.GET.get('page')
     if page == None:
