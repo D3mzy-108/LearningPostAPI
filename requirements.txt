@@ -3,7 +3,7 @@ annotated-types==0.6.0
 asgiref==3.7.2
 astunparse==1.6.3
 attrs==23.2.0
-autobahn==23.6.2
+autobahn==23.1.2
 Automat==22.10.0
 bert-extractive-summarizer==0.10.1
 blis==0.7.11
