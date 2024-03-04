@@ -19,6 +19,7 @@ click==8.1.7
 cloudpathlib==0.16.0
 colorama==0.4.6
 confection==0.1.4
+Cython==0.29.24
 constantly==23.10.4
 cryptography==42.0.5
 cymem==2.0.8
