@@ -5,7 +5,7 @@ from django.utils.text import slugify
 
 class User(AbstractUser):
     first_name = models.CharField(max_length=100, blank=False, null=False)
-    last_name = models.CharField(max_length=100, blank=False, null=False)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True)
     profile_photo = models.URLField(null=True, blank=True)
 
@@ -35,7 +35,7 @@ class UserProfile(models.Model):
 
 
 class BetaReferal(models.Model):
-    code = models.CharField(max_length=100, unique=True)
+    code = models.SlugField(unique=True)
     is_used = models.BooleanField(default=False)
     profile = models.OneToOneField(
         UserProfile, on_delete=models.CASCADE, related_name='referral', blank=True, null=True)
