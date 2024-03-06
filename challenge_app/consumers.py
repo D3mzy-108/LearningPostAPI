@@ -40,24 +40,22 @@ class WaitingRoom(AsyncWebsocketConsumer):
         await self.accept()
 
         # SETUP DEFAULT VARIABLES FOR USER INSTANCE
-        await self.send(text_data=json.dumps({
-            "type": 'connectionStatus',
-            "message": 'Connected to socket',
-        }))
         user = await self.get_user(self.username)
         self.connected_user = {
             'profilePhoto': user.profile_photo,
             'displayName': user.first_name,
             'username': user.username,
         }
-        await self.request_users_info()
+        await self.send(text_data=json.dumps({
+            "type": 'socket_connected',
+            "connected_user": self.connected_user,
+        }))
 
     @database_sync_to_async
     def get_user(self, username):
         return get_object_or_404(User, username=username)
 
     async def disconnect(self, close_code):
-        await self.leave_room()
         await self.channel_layer.group_discard(
             self.room_name,
             self.channel_name
@@ -104,10 +102,10 @@ class WaitingRoom(AsyncWebsocketConsumer):
                     "config": text_data_json["config"],
                 })
 
-    async def leave_room(self):
+    async def leave_room(self, event):
         await self.send(text_data=json.dumps({
             "type": "leave_room",
-            "connected_user": self.connected_user,
+            "connected_user": event['connected_user'],
         }))
 
     async def kick_user(self, event):
@@ -117,10 +115,10 @@ class WaitingRoom(AsyncWebsocketConsumer):
             "user": user,
         }))
 
-    async def request_users_info(self):
+    async def request_users_info(self, event):
         await self.send(text_data=json.dumps({
             "type": "request_users_info",
-            "connected_user": self.connected_user,
+            "connected_user": event['connected_user'],
         }))
 
     async def send_user_list_from_host(self, event):
@@ -136,6 +134,7 @@ class WaitingRoom(AsyncWebsocketConsumer):
             "type": "receive_message",
             "message": message,
             "user": displayName,
+            "isSender": self.connected_user['displayName'] == displayName,
         }))
 
     async def set_room_config(self, event):
