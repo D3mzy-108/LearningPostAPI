@@ -20,7 +20,7 @@ def login_endpoint(request):
 
         # Check if the user already exists
         user, created = User.objects.get_or_create(
-            username=user_id, defaults={'email': email})
+            username=user_id, defaults={'email': email, 'last_name': ''})
 
         # If the user is newly created, set additional attributes
         if created:
