@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import ChallengeRoom
 
-# Register your models here.
+
+@admin.register(ChallengeRoom)
+class ChallengeRoomAdmin(admin.ModelAdmin):
+    pass
