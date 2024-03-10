@@ -57,28 +57,33 @@ def delete_room(request, slug):
 
 
 def get_challenge_questions(request, testid, limit):
-    all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
-    random_items = all_questions[:limit]
+    questions = []
     selected_questions = []
+    rounds = request.GET.get('rounds')
 
-    for question in random_items:
-        diagram_url = None
-        if question.diagram:
-            diagram_url = question.diagram.url
-        selected_questions.append({
-            'questionid': question.pk,
-            'comprehension': question.comprehension,
-            'diagram': diagram_url,
-            'question': question.question,
-            'a': question.a,
-            'b': question.b,
-            'c': question.c,
-            'd': question.d,
-            'answer': question.answer,
-        })
+    for _ in range(rounds):
+        all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
+        random_items = all_questions[:limit]
+        for question in random_items:
+            diagram_url = None
+            if question.diagram:
+                diagram_url = question.diagram.url
+            selected_questions.append({
+                'questionid': question.pk,
+                'comprehension': question.comprehension,
+                'diagram': diagram_url,
+                'question': question.question,
+                'a': question.a,
+                'b': question.b,
+                'c': question.c,
+                'd': question.d,
+                'answer': question.answer,
+            })
+        else:
+            questions.append(selected_questions)
     context = {
         'success': True,
-        'questions': selected_questions,
+        'questions': questions,
     }
     return JsonResponse(context)
 
