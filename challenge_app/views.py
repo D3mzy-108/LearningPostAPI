@@ -103,14 +103,13 @@ def save_score(request):
         return JsonResponse({'success': True})
     else:
         username = request.GET.get('username')
-        room_name = request.GET.get('room_name')
+        room_slug = request.GET.get('room_name')
         score_1 = request.GET.get('score_1')
         score_2 = request.GET.get('score_2')
         score_3 = request.GET.get('score_3')
         score_4 = request.GET.get('score_4')
         score_5 = request.GET.get('score_5')
-        room = ChallengeRoom.objects.filter(
-            room_name=room_name, is_active=True).first()
+        room = ChallengeRoom.objects.get(room_slug=room_slug)
         room.is_active = False
         room.save()
         user_score = ChallengeScore.objects.get(
