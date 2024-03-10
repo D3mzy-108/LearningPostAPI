@@ -61,7 +61,7 @@ def get_challenge_questions(request, testid, limit):
     selected_questions = []
     rounds = request.GET.get('rounds')
 
-    for _ in range(rounds):
+    for _ in range(int(rounds)):
         all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
         random_items = all_questions[:limit]
         for question in random_items:
