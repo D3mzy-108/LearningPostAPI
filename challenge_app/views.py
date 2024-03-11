@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
-from admin_app.models import Question
+from admin_app.models import Quest, Question
 from challenge_app.models import ChallengeRoom, ChallengeScore
 from django.views.decorators.csrf import csrf_exempt
 
@@ -9,10 +9,12 @@ from website.models import User
 
 def create_room(request):
     room_name = request.GET.get('room_name')
+    testid = request.GET.get('testid')
     # CREATE ROOM INSTANCE
     if not ChallengeRoom.objects.filter(room_name=room_name, is_active=True).exists():
         room_instance = ChallengeRoom()
         room_instance.room_name = room_name
+        room_instance.quest = get_object_or_404(Quest, id=testid)
         room_instance.save()
         return JsonResponse({
             'success': True,
