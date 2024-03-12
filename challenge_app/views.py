@@ -129,10 +129,12 @@ def get_challenge_scores(request, room_slug):
     room = get_object_or_404(ChallengeRoom, room_slug=room_slug)
     scores = []
     for score in room.scores.all():
+        ttl_score = score.score_1 + score.score_2 + \
+            score.score_3 + score.score_4 + score.score_5
         scores.append({
             'profilePhoto': score.user.profile_photo,
             'displayName': score.user.first_name,
-            'score': score.score_1 + score.score_2 + score.score_3 + score.score_4 + score.score_5,
+            'score': ttl_score,
         })
     return JsonResponse({
         'success': True,
