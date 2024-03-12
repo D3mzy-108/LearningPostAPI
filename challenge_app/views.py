@@ -58,12 +58,12 @@ def delete_room(request, slug):
         })
 
 
-def get_challenge_questions(request, testid, limit):
+def get_challenge_questions(request, testid: int, limit: int):
     questions = []
-    selected_questions = []
     rounds = request.GET.get('rounds')
 
     for _ in range(int(rounds)):
+        selected_questions = []
         all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
         random_items = all_questions[:limit]
         for question in random_items:
