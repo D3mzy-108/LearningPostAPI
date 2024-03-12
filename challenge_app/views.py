@@ -123,3 +123,18 @@ def save_score(request):
         user_score.score_5 = score_5
         user_score.save()
         return JsonResponse({'success': True})
+
+
+def get_challenge_scores(request, room_slug):
+    room = get_object_or_404(ChallengeRoom, room_slug=room_slug)
+    scores = []
+    for score in room.scores.all():
+        scores.append({
+            'profilePhoto': score.user.profile_photo,
+            'displayName': score.user.first_name,
+            'score': score.score_1 + score.score_2 + score.score_3 + score.score_4 + score.score_5,
+        })
+    return JsonResponse({
+        'success': True,
+        'scores': scores,
+    })
