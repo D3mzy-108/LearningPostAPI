@@ -138,5 +138,5 @@ def get_challenge_scores(request, room_slug):
         })
     return JsonResponse({
         'success': True,
-        'scores': scores,
+        'scores': sorted(scores, key=lambda x: x['score'], reverse=True),
     })
