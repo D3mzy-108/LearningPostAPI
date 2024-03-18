@@ -1,8 +1,10 @@
 import datetime
+from turtle import position
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from admin_app.models import MPerformance, Quest
+from challenge_app.models import ChallengeScore
 from website.models import User
 
 
@@ -122,4 +124,40 @@ def get_performance(request, username):
         'success': True,
         'performance': performance_list,
         'quest_performance': quest_performance_list,
+    })
+
+
+def get_challenge_performance(request, username):
+    end_date = datetime.date.today()
+    start_date = end_date - datetime.timedelta(days=30)
+    challenges = ChallengeScore.objects.filter(
+        user__username=username, room__created_date__range=[start_date, end_date], room__is_active=False).order_by('-id', '-room__created_date')
+    challenge_list = []
+    for challenge in challenges:
+        recorded_scores = []
+        for score in challenge.room.scores.all():
+            recorded_scores.append({
+                'isUser': score.user.username == username,
+                'score': score.score_1 + score.score_2 + score.score_3 + score.score_4 + score.score_5,
+            })
+        sorted_scores = sorted(
+            recorded_scores, key=lambda x: x['score'], reverse=True)
+        position = 1
+        user_score = 0
+        for sorted_score in sorted_scores:
+            if sorted_score['isUser']:
+                user_score = sorted_score['score']
+                break
+            else:
+                position += 1
+        challenge_list.append({
+            'room_slug': challenge.room.room_slug,
+            'quest_cover': challenge.room.quest.cover.url,
+            'quest_title': challenge.room.quest.title,
+            'position': position,
+            'score': user_score
+        })
+    return JsonResponse({
+        'success': True,
+        'challenges': challenge_list,
     })
