@@ -1,5 +1,4 @@
 import datetime
-from turtle import position
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -142,19 +141,19 @@ def get_challenge_performance(request, username):
             })
         sorted_scores = sorted(
             recorded_scores, key=lambda x: x['score'], reverse=True)
-        position = 1
+        rank = 1
         user_score = 0
         for sorted_score in sorted_scores:
             if sorted_score['isUser']:
                 user_score = sorted_score['score']
                 break
             else:
-                position += 1
+                rank += 1
         challenge_list.append({
             'room_slug': challenge.room.room_slug,
             'quest_cover': challenge.room.quest.cover.url,
             'quest_title': challenge.room.quest.title,
-            'position': position,
+            'rank': rank,
             'score': user_score
         })
     return JsonResponse({
