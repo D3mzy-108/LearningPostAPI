@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from admin_app.models import MPerformance, Quest
 from challenge_app.models import ChallengeScore
 from website.models import User
+from django.utils import timezone
 
 
 @csrf_exempt
@@ -127,10 +128,14 @@ def get_performance(request, username):
 
 
 def get_challenge_performance(request, username):
-    end_date = datetime.date.today()
+    end_date = timezone.now().date()
     start_date = end_date - datetime.timedelta(days=30)
     challenges = ChallengeScore.objects.filter(
-        user__username=username, room__created_date__range=[start_date, end_date], room__is_active=False).order_by('-id', '-room__created_date')
+        user__username=username,
+        room__created_date__range=[timezone.make_aware(
+            start_date), timezone.make_aware(end_date)],
+        room__is_active=False
+    ).order_by('-id', '-room__created_date')
     challenge_list = []
     for challenge in challenges:
         recorded_scores = []
