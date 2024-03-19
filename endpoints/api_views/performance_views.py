@@ -168,7 +168,7 @@ def get_challenge_performance(request, username):
             'quest_title': challenge.room.quest.title,
             'rank': rank,
             'score': user_score,
-            'date': challenge.room.created_date.date,
+            'date': challenge.room.created_date.date(),
         })
     return JsonResponse({
         'success': True,
