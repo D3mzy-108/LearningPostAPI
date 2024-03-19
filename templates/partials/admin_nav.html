@@ -8,7 +8,7 @@
             </button>
         </div>
         <ul id="navbarNav"
-            class="w-full pb-0 px-2 m-0 pt-24 sm:pt-6 bg-[var(--bg2)] flex flex-col gap-2 overflow-auto max-sm:absolute max-sm:-left-full max-sm:top-0 max-sm:-z-10 max-sm:h-screen">
+            class="w-full pb-0 m-0 pt-24 sm:pt-6 bg-[var(--bg2)] flex flex-col gap-0 overflow-auto max-sm:absolute max-sm:-left-full max-sm:top-0 max-sm:-z-10 max-sm:h-screen">
             <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
                     <ion-icon name="grid-outline"></ion-icon>
@@ -44,6 +44,12 @@
                     <ion-icon name="rocket-outline"></ion-icon>
                 </div>
                 <a href="{% url 'quests' %}" class="flex-1 font-semibold">Quests</a>
+            </li>
+            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+                <div class="w-fit text-2xl">
+                    <ion-icon name="link-outline"></ion-icon>
+                </div>
+                <a href="{% url 'smartlinks' %}" class="flex-1 font-semibold">SmartLinks</a>
             </li>
             <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
@@ -89,7 +95,7 @@
     var a = $('nav a')
     for (let i = 0; i < a.length; i++) {
         if (window.location.pathname.includes($(a[i]).attr('href'))) {
-            $(a[i].parentElement).removeClass('text-[var(--fg2)] rounded-md').addClass('bg-white/10 text-[#FFF] border-l-[2px] border-l-[var(--highlight)]')
+            $(a[i].parentElement).removeClass('text-[var(--fg2)] rounded-md').addClass('bg-white/10 text-[#FFF] border-l-[3px] border-l-[var(--highlight)]')
             //.addClass('bg-[var(--highlight)] text-[#FFF]')
         }
     }

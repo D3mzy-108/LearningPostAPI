@@ -13,8 +13,15 @@ from django.core.paginator import Paginator
 @login_required
 def classifications(request):
     referrals = BetaReferal.objects.all().order_by('-id')
+    paginator = Paginator(referrals, 50)
+    page = request.GET.get('page')
+    if page == None or int(page) > paginator.num_pages:
+        page = 1
+    displayed_refs = paginator.page(page)
     context = {
-        'referrals': referrals,
+        'referrals': displayed_refs,
+        'paginator': displayed_refs,
+        'page': page,
     }
     return render(request, 'admin_app/classifications/classifications.html', context)
 

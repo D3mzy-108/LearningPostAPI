@@ -21,7 +21,7 @@ def quests(request):
         quests = Quest.objects.all().order_by('-id')
     paginator = Paginator(quests, 30)
     page = request.GET.get('page')
-    if page == None:
+    if page == None or int(page) > paginator.num_pages:
         page = 1
     displayed_quests = paginator.page(page)
 

@@ -19,7 +19,7 @@ def library(request):
         books = Library.objects.all().order_by('-id')
     paginator = Paginator(books, 30)
     page = request.GET.get('page')
-    if page == None:
+    if page == None or int(page) > paginator.num_pages:
         page = 1
     displayed_books = paginator.page(page)
 

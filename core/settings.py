@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'challenge_app',
     # 'akada',
     'endpoints',
+    'smartlink',
 ]
 
 MIDDLEWARE = [

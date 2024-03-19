@@ -25,25 +25,13 @@
             <div class="px-[8px] py-[2px] text-[10px] bg-[var(--bg2)] text-white rounded-full">
                 {{q_count}}</div>
         </a>
-        {% else %}
-        <a href="?q=help_desk" class="text-[var(--lightgray)] font-semibold flex items-center gap-1">
-            Help Desk
-            <div class="px-[8px] py-[2px] text-[10px] bg-[var(--bg2)] text-white rounded-full">
-                {{h_count}}</div>
-        </a>
-        <a href="?q=question_report" class="text-[var(--lightgray)] font-semibold flex items-center gap-1">
-            Question Reports
-            <div class="px-[8px] py-[2px] text-[10px] bg-[var(--bg2)] text-white rounded-full">
-                {{q_count}}</div>
-        </a>
         {% endif %}
     </div>
 </div>
 
 <div class="w-full flex max-lg:hidden">
     <!-- LIST OF QUERIES -->
-    <div
-        class="w-full max-w-[450px] mt-3 md:mt-6 flex flex-wrap gap-4 border-r border-r-black/50 h-[85vh] overflow-auto">
+    <div class="w-full max-w-[450px] mt-3 md:mt-6 border-r border-r-black/50 h-[85vh] overflow-auto">
         {% if not feedbacks %}
         <div class="w-full text-center text-[var(--fg)] text-lg font-medium mt-8">No Reports from user</div>
         {% else %}
@@ -83,6 +71,35 @@
                 {% endif %}
             </a>
             {% endfor %}
+        </div>
+
+        <!-- PAGINATOR -->
+        <div class="w-full flex justify-center items-center gap-3 mt-6">
+            <!-- PREV -->
+            {% if paginator.has_previous %}
+            <a href="?page={{paginator.previous_page_number}}"
+                class="py-2 px-3 grid place-items-center gap-2 bg-[var(--bg2)] rounded-md text-[var(--fg)]">
+                <ion-icon name="chevron-back"></ion-icon>
+            </a>
+            {% else %}
+            <span class="py-2 px-3 grid place-items-center gap-2 bg-[var(--bg2)] rounded-md text-[var(--fg)]">
+                <ion-icon name="chevron-back"></ion-icon>
+            </span>
+            {% endif %}
+
+            <small class="text-[var(--fg2)]">Page {{page}}</small>
+
+            <!-- NEXT -->
+            {% if paginator.has_next %}
+            <a href="?page={{paginator.next_page_number}}"
+                class="py-2 px-3 grid place-items-center gap-2 bg-[var(--bg2)] rounded-md text-[var(--fg)]">
+                <ion-icon name="chevron-forward"></ion-icon>
+            </a>
+            {% else %}
+            <span class="py-2 px-3 grid place-items-center gap-2 bg-[var(--bg2)] rounded-md text-[var(--fg)]">
+                <ion-icon name="chevron-forward"></ion-icon>
+            </span>
+            {% endif %}
         </div>
         {% endif %}
     </div>
