@@ -131,8 +131,8 @@ def get_challenge_performance(request, username):
     end_date = timezone.now().date()
     start_date = end_date - datetime.timedelta(days=30)
 
-    start_datetime = datetime.combine(start_date, datetime.min.time())
-    end_datetime = datetime.combine(end_date, datetime.max.time())
+    start_datetime = datetime.datetime.combine(start_date, datetime.min.time())
+    end_datetime = datetime.datetime.combine(end_date, datetime.max.time())
 
     start_aware = timezone.make_aware(start_datetime)
     end_aware = timezone.make_aware(end_datetime)
