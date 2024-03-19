@@ -131,8 +131,10 @@ def get_challenge_performance(request, username):
     end_date = timezone.now().date()
     start_date = end_date - datetime.timedelta(days=30)
 
-    start_datetime = datetime.datetime.combine(start_date, datetime.datetime.min.time())
-    end_datetime = datetime.datetime.combine(end_date, datetime.datetime.max.time())
+    start_datetime = datetime.datetime.combine(
+        start_date, datetime.datetime.min.time())
+    end_datetime = datetime.datetime.combine(
+        end_date, datetime.datetime.max.time())
 
     start_aware = timezone.make_aware(start_datetime)
     end_aware = timezone.make_aware(end_datetime)
@@ -165,7 +167,8 @@ def get_challenge_performance(request, username):
             'quest_cover': challenge.room.quest.cover.url,
             'quest_title': challenge.room.quest.title,
             'rank': rank,
-            'score': user_score
+            'score': user_score,
+            'date': challenge.room.created_date,
         })
     return JsonResponse({
         'success': True,
