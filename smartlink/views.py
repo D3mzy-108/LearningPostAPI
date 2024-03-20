@@ -1,10 +1,13 @@
 import csv
 import json
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from .models import SmartLinkKB
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def smartlinks(request):
     search_val = request.GET.get('s') or ''
     smartlinks = SmartLinkKB.objects.filter(statement__icontains=search_val)
@@ -21,6 +24,7 @@ def smartlinks(request):
     return render(request, 'smartlink/smartlinks.html', context)
 
 
+@login_required
 def bulk_upload_smartlinks(request):
     if request.method == 'POST' and request.FILES['sl_upload_file']:
         uploaded_file = request.FILES['sl_upload_file']
@@ -45,3 +49,18 @@ def bulk_upload_smartlinks(request):
         return redirect('smartlinks')
     else:
         return redirect(request.META.get('HTTP_REFERER'))
+
+
+def find_smartlinks(request):
+    search_val = request.GET.get('s') or ''
+    smartlinks = SmartLinkKB.objects.filter(statement__icontains=search_val)
+    smartlink_list = []
+    for sl in smartlinks:
+        smartlink_list.append({
+            'term': sl.statement,
+            'definition': sl.definition,
+        })
+    context = {
+        'smartlinks': smartlink_list,
+    }
+    return JsonResponse(context)
