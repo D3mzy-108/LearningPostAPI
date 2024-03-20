@@ -61,7 +61,7 @@ def login_endpoint(request):
         context = {
             'success': True,
             'message': 'Login Successful!',
-            'isNewUser': not profile.exists(),
+            'isNewUser': not profile.exists() or profile.referral is None,
             'userProfile': user_profile,
         }
         return JsonResponse(context)
