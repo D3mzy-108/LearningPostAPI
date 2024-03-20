@@ -53,7 +53,7 @@ def bulk_upload_smartlinks(request):
 
 def find_smartlinks(request):
     search_val = request.GET.get('s') or ''
-    smartlinks = SmartLinkKB.objects.filter(statement__icontains=search_val)
+    smartlinks = SmartLinkKB.objects.filter(statement__iexact=search_val)
     smartlink_list = []
     for sl in smartlinks:
         smartlink_list.append({
