@@ -40,8 +40,8 @@ def generate_new_code(request):
 @login_required
 def delete_code(request, id):
     referral = get_object_or_404(BetaReferal, id=id)
-    profile = referral.profile
-    if profile is not None:
-        profile.delete()
+    # profile = referral.profile
+    # if profile is not None:
+    #     profile.delete()
     referral.delete()
     return redirect(request.META.get('HTTP_REFERER'))
