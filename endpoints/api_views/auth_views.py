@@ -33,10 +33,12 @@ def login_endpoint(request):
         auth.login(request, user)
 
         profile = UserProfile.objects.filter(user__pk=user.pk)
+        account_activated = False
         if profile.exists():
             rc = ''
-            if BetaReferal.objects.filter(profile__pk=profile.first().pk):
+            if BetaReferal.objects.filter(profile__pk=profile.first().pk).exists():
                 rc = profile.first().referral.code
+                account_activated = True
             user_profile = {
                 'phone': profile.first().phone,
                 'date_of_birth': profile.first().date_of_birth,
@@ -61,7 +63,7 @@ def login_endpoint(request):
         context = {
             'success': True,
             'message': 'Login Successful!',
-            'isNewUser': not profile.exists() or profile.referral is None,
+            'isNewUser': not profile.exists() or not account_activated,
             'userProfile': user_profile,
         }
         return JsonResponse(context)
