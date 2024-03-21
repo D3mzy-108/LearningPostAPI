@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<div class="w-screen h-fit relative" style="background: radial-gradient(#FFFFFF20, #00000000 90%);">
+<div class="w-screen h-fit relative overflow-auto" style="background: radial-gradient(#FFFFFF20, #00000000 90%);">
     {% include 'partials/home_nav.html' %}
     <div class="px-6 pt-6 pb-12 md:px-12 lg:px-24 mx-auto">
         <div class="w-full h-full flex max-sm:flex-col items-center gap-6">
@@ -53,33 +53,25 @@
         </h1>
         <div class="mt-12 lg:mt-18">
             <div class="w-full flex flex-wrap gap-6 justify-center">
-                <div class="w-full max-w-xs px-3 py-6 rounded-lg bg-[var(--bg2)] text-center elevated-box">
-                    <!-- <div
-                        class="text-3xl text-[var(--fg2)] w-[50px] aspect-square rounded-lg bg-[#00000015] mx-auto mb-3 grid place-items-center">
-                        <ion-icon name="help-circle-outline"></ion-icon>
-                    </div> -->
-                    <div class="h-[50px] mb-3 py-[5px]">
-                        <img src="{% static 'assets/images/quest-logo.png' %}" alt="" class="h-full mx-auto">
+                <div class="w-full max-w-xs px-3 py-6 rounded-lg bg-[var(--bg2)] elevated-box">
+                    <div class="h-[40px] mb-3 py-[5px]">
+                        <img src="{% static 'assets/images/quest-logo.png' %}" alt="" class="h-full">
                     </div>
                     <p class="text-white text-lg">
                         Thousands of questions and solutions on any subject
                     </p>
                 </div>
-                <div class="w-full max-w-xs px-3 py-6 rounded-lg bg-[var(--bg2)] text-center elevated-box">
-                    <!-- <div
-                        class="text-3xl text-[var(--fg2)] w-[50px] aspect-square rounded-lg bg-[#00000015] mx-auto mb-3 grid place-items-center">
-                        <ion-icon name="library-outline"></ion-icon>
-                    </div> -->
-                    <div class="h-[50px] mb-3 ">
-                        <img src="{% static 'assets/images/bookee-logo.png' %}" alt="" class="h-full mx-auto">
+                <div class="w-full max-w-xs px-3 py-6 rounded-lg bg-[var(--bg2)] elevated-box">
+                    <div class="h-[40px] mb-3 ">
+                        <img src="{% static 'assets/images/bookee-logo.png' %}" alt="" class="h-full">
                     </div>
                     <p class="text-white text-lg">
                         Hundreds of books for you to study in your leisure
                     </p>
                 </div>
-                <div class="w-full max-w-xs px-3 py-6 rounded-lg bg-[var(--bg2)] text-center elevated-box">
+                <div class="w-full max-w-xs px-3 py-6 rounded-lg bg-[var(--bg2)] elevated-box">
                     <div
-                        class="text-3xl text-[var(--fg2)] w-[50px] aspect-square rounded-lg bg-[#00000015] mx-auto mb-3 grid place-items-center">
+                        class="text-3xl text-[var(--fg2)] w-[40px] aspect-square rounded-lg bg-[#00000015] mb-3 grid place-items-center">
                         <ion-icon name="glasses-outline"></ion-icon>
                     </div>
                     <p class="text-white text-lg">
@@ -214,9 +206,42 @@
     <div class="px-6 py-12 md:px-24">
         {% include './partials/download_section.html' %}
     </div>
+
+    <!-- FOOTER -->
+    <div class="py-12 px-3 md:px-8 lg:px-18 flex max-sm:flex-col items-center gap-3">
+        <img src="{% static 'assets/images/logo_white.png' %}" alt="logo"
+            class="max-sm:w-4/6 lg:h-[50px] rounded-md -ml-3">
+        <dic class="mx-auto text-[var(--fg)]">&copy; 2024, LearningPost</dic>
+        <div class="flex gap-2 mt-3">
+            <a href=""
+                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg">
+                <ion-icon name="call-outline"></ion-icon>
+            </a>
+            <a href=""
+                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg">
+                <ion-icon name="logo-whatsapp"></ion-icon>
+            </a>
+            <a href="{% url 'faq' %}"
+                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg">
+                <ion-icon name="help-circle-outline"></ion-icon>
+            </a>
+            <a href="{% url 'pp' %}"
+                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg">
+                <ion-icon name="shield-outline"></ion-icon>
+            </a>
+            <a href="{% url 'tc' %}"
+                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg">
+                <ion-icon name="document-text-outline"></ion-icon>
+            </a>
+        </div>
+    </div>
 </div>
 
 <style>
+    * {
+        user-select: none;
+    }
+
     .blue-text {
         color: #79adf9;
     }
