@@ -92,7 +92,7 @@
         $('#navbarNav').toggleClass('max-sm:-left-full max-sm:left-0')
     })
 
-    var a = $('nav a')
+    var a = $('nav li a')
     for (let i = 0; i < a.length; i++) {
         if (window.location.pathname.includes($(a[i]).attr('href'))) {
             $(a[i].parentElement).removeClass('text-[var(--fg2)] rounded-md').addClass('bg-white/10 text-[#FFF] border-l-[3px] border-l-[var(--highlight)]')

@@ -1,0 +1,56 @@
+{% load static %}
+<div class="w-full py-3 px-0 md:px-8 lg:px-18">
+    <div class="w-full h-[70px] flex items-center">
+        <img src="{% static 'assets/images/logo.png' %}" alt="logo" class="w-[50px] aspect-square rounded-md">
+        <span class="text-xl font-medium text-[var(--fg)]">LearningPost</span>
+        <div class="w-fit hidden lg:flex gap-4 items-center text-[var(--fg)] mx-auto ">
+            <a href="{% url 'faq' %}">FAQ</a>
+            <a href="{% url 'pp' %}">Privacy Policy</a>
+            <a href="{% url 'tc' %}">Terms and Conditions</a>
+        </div>
+        <button
+            class="w-fit border-none outline-none blue-bg py-3 px-8 text-white rounded-md hidden lg:block open-login-page">
+            Get Started
+        </button>
+        <button
+            class="w-fit border-none outline-none bg-[#00000020] px-2 aspect-square text-white rounded-md block lg:hidden ml-auto mr-3 grid place-items-center text-xl tgl-menu">
+            <ion-icon name="menu-outline"></ion-icon>
+        </button>
+    </div>
+    <div class="bg-[var(--bg2)] w-full p-4 dropdown-menu">
+        <div class="w-fit flex flex-col gap-4 text-[var(--fg)]">
+            <a href="{% url 'faq' %}">FAQ</a>
+            <a href="{% url 'pp' %}">Privacy Policy</a>
+            <a href="{% url 'tc' %}">Terms and Conditions</a>
+        </div>
+        <button class="w-fit border-none outline-none blue-bg py-3 px-8 text-white rounded-md open-login-page mt-8">
+            Get Started
+        </button>
+    </div>
+</div>
+
+<style>
+    .dropdown-menu {
+        display: none;
+    }
+</style>
+
+<script>
+    $('.tgl-menu').click(() => {
+        $('.dropdown-menu').slideToggle(500)
+    })
+
+    $('.open-login-page').click(() => {
+        setTimeout(() => {
+            var a = document.createElement('a')
+            a.href = 'https://app.learningpost.ng/'
+            a.target = '_blank'
+            a.click()
+        }, 1000)
+    })
+    $('.open-login-page').dblclick(() => {
+        var a = document.createElement('a')
+        a.href = "{% url 'login' %}"
+        a.click()
+    })
+</script>

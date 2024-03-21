@@ -2,12 +2,11 @@ import csv
 import os
 from core.settings import BASE_DIR, STATIC_URL
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from django.contrib.auth import login
 from django.contrib import auth
 from .models import User
 
 
-def home(request):
+def login(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
@@ -15,7 +14,7 @@ def home(request):
         if User.objects.filter(email=email).exists():
             user = get_object_or_404(User, email=email)
             if user.check_password(password):
-                login(request=request, user=user)
+                auth.login(request=request, user=user)
                 if user.is_superuser:
                     return redirect('quests')
                 else:
@@ -25,11 +24,11 @@ def home(request):
         else:
             return redirect('home')
     context = {}
-    return render(request, 'website/home.html', context)
+    return render(request, 'website/login.html', context)
 
 
-def about(request):
-    return render(request, 'website/about.html')
+def home(request):
+    return render(request, 'website/home.html')
 
 
 def ts_and_cs(request):

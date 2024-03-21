@@ -1,40 +1,271 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<header class="p-6 flex justify-between items-center w-screen overflow-hidden">
-    {% include 'partials/logo.html' %}
-</header>
 
-<main class="w-full p-6">
-    <form method="post" action="" class="w-full max-w-md mx-auto flex flex-col items-center gap-4">
-        {% csrf_token %}
-        <legend class="font-medium text-3xl text-[var(--fg2)]">Continue with Email</legend>
-        <div class="w-full mt-6">
-            <input type="email" name="email" id="email"
-                class="rounded-md w-full p-4 text-[var(--fg)] placeholder:text-[var(--fg2)] bg-[var(--bg2)]"
-                placeholder="Email Address:">
+<div class="w-screen h-fit relative" style="background: radial-gradient(#FFFFFF20, #00000000 90%);">
+    {% include 'partials/home_nav.html' %}
+    <div class="px-6 pt-6 pb-12 md:px-12 lg:px-24 mx-auto">
+        <div class="w-full h-full flex max-sm:flex-col items-center gap-6">
+            <div class="w-full md:w-3/6">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl text-white font-semibold">
+                    Transform Your <br><span class="blue-text">Learning Experience</span> with<br>
+                    <img src="{% static 'assets/images/logo_white.png' %}" alt=""
+                        class="h-[3rem] md:h-[4rem] lg:h-[5rem] -ml-[1rem] md:-ml-[1.5rem] lg:-ml-[1.8rem] -mt[2rem]">
+                </h1>
+                <p class="text-[var(--fg2)] text-xl md:text-2xl" style="font-style: italic;">
+                    #where fun meets brain power
+                </p>
+                <div class="w-full mt-8">
+                    <button
+                        class="w-fit border-none outline-none blue-bg py-3 px-8 text-white rounded-md open-login-page">
+                        Get Started
+                    </button>
+                </div>
+            </div>
+            <div class="w-full md:w-3/6 max-sm:pt-6">
+                <img src="{% static 'assets/images/banner_img.svg' %}" alt="" class="w-full">
+            </div>
         </div>
-        <div class="w-full">
-            <input type="password" name="password" id="password"
-                class="rounded-md w-full p-4 text-[var(--fg)] placeholder:text-[var(--fg2)] bg-[var(--bg2)]"
-                placeholder="Password:">
-        </div>
-        <div class="w-full mt-2 text-center px-6">
-            <button type="submit"
-                class="w-full max-w-xs p-4 text-[var(--fg)] bg-[var(--highlight)] font-semibold rounded-md">
-                Submit
-            </button>
-        </div>
-        <div class="my-3 flex items-center gap-2 px-8 w-full">
-            <div class="h-[1px] flex-1 bg-gray-500"></div>
-            <span class="text-[var(--fg2)]">or</span>
-            <div class="h-[1px] flex-1 bg-gray-500"></div>
-        </div>
-        <a href="https://app.learningpost.ng/"
-            class="w-full py-3 px-6 text-center border border-gray-200 text-gray-200 rounded-md">
-            Other sign in options
-        </a>
-    </form>
-</main>
+    </div>
 
+    <!-- ABOUT SECTION -->
+    <div class="px-6 py-12 md:px-12 lg:px-24">
+        <h1 class="text-2xl lg:text-4xl text-white text-center font-semibold">
+            Find your <span class="blue-text">Personalized <br>Learning</span> pathway.
+        </h1>
+        <div class="text-[var(--fg2)] text-lg lg:text-xl mt-6 lg:mt-12 text-center w-full md:w-4/6 lg:w-4/5 mx-auto">
+            At LearningPost, we believe that every student deserves access to quality education tailored to their
+            individual needs. <span class="md:hidden"><br><br></span>Our platform is designed to empower learners of all
+            ages and backgrounds to unlock
+            their
+            full potential and achieve academic success. <span class="md:hidden"><br><br></span>Whether you're a
+            student, teacher, or parent,
+            LearningPost
+            provides the tools, resources, and support you need to thrive in today's rapidly changing educational
+            landscape.
+        </div>
+    </div>
+
+    <!-- BEST LEARNING MATERIALS SECTION -->
+    <div class="px-6 py-12 md:px-12 lg:px-24">
+        <h1 class="text-2xl lg:text-4xl text-white text-center font-semibold">
+            Elevate learning experiences <br>with <span class="blue-text">Innovative Tools.</span>
+        </h1>
+        <div class="mt-12 lg:mt-18">
+            <div class="w-full flex flex-wrap gap-6 justify-center">
+                <div class="w-full max-w-xs px-3 py-6 rounded-lg bg-[var(--bg2)] text-center elevated-box">
+                    <!-- <div
+                        class="text-3xl text-[var(--fg2)] w-[50px] aspect-square rounded-lg bg-[#00000015] mx-auto mb-3 grid place-items-center">
+                        <ion-icon name="help-circle-outline"></ion-icon>
+                    </div> -->
+                    <div class="h-[50px] mb-3 py-[5px]">
+                        <img src="{% static 'assets/images/quest-logo.png' %}" alt="" class="h-full mx-auto">
+                    </div>
+                    <p class="text-white text-lg">
+                        Thousands of questions and solutions on any subject
+                    </p>
+                </div>
+                <div class="w-full max-w-xs px-3 py-6 rounded-lg bg-[var(--bg2)] text-center elevated-box">
+                    <!-- <div
+                        class="text-3xl text-[var(--fg2)] w-[50px] aspect-square rounded-lg bg-[#00000015] mx-auto mb-3 grid place-items-center">
+                        <ion-icon name="library-outline"></ion-icon>
+                    </div> -->
+                    <div class="h-[50px] mb-3 ">
+                        <img src="{% static 'assets/images/bookee-logo.png' %}" alt="" class="h-full mx-auto">
+                    </div>
+                    <p class="text-white text-lg">
+                        Hundreds of books for you to study in your leisure
+                    </p>
+                </div>
+                <div class="w-full max-w-xs px-3 py-6 rounded-lg bg-[var(--bg2)] text-center elevated-box">
+                    <div
+                        class="text-3xl text-[var(--fg2)] w-[50px] aspect-square rounded-lg bg-[#00000015] mx-auto mb-3 grid place-items-center">
+                        <ion-icon name="glasses-outline"></ion-icon>
+                    </div>
+                    <p class="text-white text-lg">
+                        And a personal tutor to help you out whenever you're stuck
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COOL FEATURES TO HELP YOU LEARN -->
+    <div class="px-6 py-12 md:px-12 lg:px-24">
+        <h1 class="text-2xl lg:text-4xl text-white text-center font-semibold">
+            Discover the magic of <br><span class="blue-text">Cool & Exciting</span> features!
+        </h1>
+        <div class="mt-12 lg:mt-18">
+            <div class="w-full flex flex-col lg:flex-row gap-6 justify-center items-center">
+                <div class="w-full h-fit overflow-auto lg:overflow-visible lg:max-w-xs flex lg:flex-col gap-3 lg:gap-6">
+                    <button data-image="{% static 'assets/images/app-quest.png' %}"
+                        class="min-w-[200px] p-3 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
+                        <div class="font-semibold text-white text-lg mb-2">
+                            Quests
+                        </div>
+                        <p class="text-[var(--fg2)] text-[14px]">
+                            Interactive modules with quizzes, activities, and assessments to guide learning, and
+                            SmartLinks to help delve into concepts deeper.
+                        </p>
+                    </button>
+                    <button data-image="{% static 'assets/images/app-challenge.png' %}"
+                        class="min-w-[200px] p-3 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
+                        <div class="font-semibold text-white text-lg mb-2">
+                            Challenge
+                        </div>
+                        <p class="text-[var(--fg2)] text-md text-[14px]">
+                            Test your knowledge and compete with friends in fun and interactive quizzes and
+                            competitions.
+                        </p>
+                    </button>
+                    <button data-image="{% static 'assets/images/app-performance.png' %}"
+                        class="min-w-[200px] p-3 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
+                        <div class="font-semibold text-white text-lg mb-2">
+                            Performance Analytics
+                        </div>
+                        <p class="text-[var(--fg2)] text-md text-[14px]">
+                            Track your progress, identify areas for improvement, and celebrate your achievements
+                            with detailed performance analytics and certificates of completion.
+                        </p>
+                    </button>
+                </div>
+
+                <div class="flex-1">
+                    <img src="{% static 'assets/images/logo.png' %}" alt="" class="w-4/6 feature-img mx-auto">
+                </div>
+
+                <div class="w-full h-fit overflow-auto lg:overflow-visible lg:max-w-xs flex lg:flex-col gap-3 lg:gap-6">
+                    <button data-image="{% static 'assets/images/app-bookee.png' %}"
+                        class="min-w-[200px] p-3 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
+                        <div class="font-semibold text-white text-lg mb-2">
+                            Bookee
+                        </div>
+                        <p class="text-[var(--fg2)] text-md text-[14px]">
+                            Access hundreds of books, magazines, and newspapers, and enhance your reading experience
+                            with text-to-speech features.
+                        </p>
+                    </button>
+                    <button data-image=""
+                        class="min-w-[200px] p-3 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
+                        <div class="font-semibold text-white text-lg mb-2">
+                            Akada AI
+                        </div>
+                        <p class="text-[var(--fg2)] text-md text-[14px]">
+                            Get personalized recommendations, feedback, and support from our AI study companion to
+                            master tough concepts and reach your learning goals.
+                        </p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WHAT SETS US APART SECTION -->
+    <div class="px-6 py-12 md:px-12 lg:px-24">
+        <h1 class="text-2xl lg:text-4xl text-white text-center font-semibold">
+            We're <span class="blue-text">Leaving No One</span> behind! <br>Every learner is <span
+                class="blue-text">Center Stage.</span>
+        </h1>
+        <div class="mt-12 lg:mt-18">
+            <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="w-full">
+                    <div class="font-semibold text-white text-lg mb-3">
+                        Personalized Learning
+                    </div>
+                    <p class="text-[var(--fg2)] text-md">
+                        Our adaptive learning algorithms analyze each student's strengths, weaknesses, and learning
+                        style to deliver personalized learning experiences that maximize engagement and retention.
+                    </p>
+                </div>
+                <div class="w-full">
+                    <div class="font-semibold text-white text-lg mb-3">
+                        Comprehensive Content
+                    </div>
+                    <p class="text-[var(--fg2)] text-md">
+                        From interactive lessons and practice exercises to multimedia resources and simulations,
+                        LearningPost offers a wide range of educational content covering various subjects and learning
+                        levels.
+                    </p>
+                </div>
+                <div class="w-full">
+                    <div class="font-semibold text-white text-lg mb-3">
+                        Expert Guidance
+                    </div>
+                    <p class="text-[var(--fg2)] text-md">
+                        Our team of experienced educators and subject matter experts curate and create content that
+                        aligns with curriculum standards and promotes critical thinking, problem-solving, and
+                        creativity.
+                    </p>
+                </div>
+                <div class="w-full">
+                    <div class="font-semibold text-white text-lg mb-3">
+                        Community Collaboration
+                    </div>
+                    <p class="text-[var(--fg2)] text-md">
+                        Join a vibrant community of learners, educators, and parents where you can share ideas, ask
+                        questions, and collaborate on projects to enhance the learning experience for everyone.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOWNLOAD APP SECTION -->
+    <div class="px-6 py-12 md:px-24">
+        {% include './partials/download_section.html' %}
+    </div>
+</div>
+
+<style>
+    .blue-text {
+        color: #79adf9;
+    }
+
+    .blue-bg {
+        background: #5F89C4;
+    }
+
+    .elevated-box {
+        box-shadow: 0 6px 8px #11111150;
+    }
+
+    .feature-btn {
+        border: 2px solid transparent;
+        transition: .5s;
+        outline: none !important;
+    }
+
+    .feature-btn.active {
+        border: 2px solid #5F89C4;
+    }
+
+    .feature-btn * {
+        pointer-events: none;
+    }
+</style>
+
+<script>
+    $('.feature-btn').click((e) => {
+        $('.feature-img').attr('src', $(e.target).attr('data-image'))
+        $('.feature-btn').removeClass('active').addClass('elevated-box')
+        $(e.target).addClass('active').removeClass('elevated-box')
+    })
+    $('.open-login-page').click(() => {
+        setTimeout(() => {
+            var a = document.createElement('a')
+            a.href = 'https://app.learningpost.ng/'
+            a.target = '_blank'
+            a.click()
+        }, 500)
+    })
+    $('.open-login-page').dblclick(() => {
+        var a = document.createElement('a')
+        if ("{{request.user.is_authenticated}}" == 'True') {
+            a.href = "{% url 'quests' %}"
+        } else {
+            a.href = "{% url 'login' %}"
+        }
+        a.click()
+    })
+</script>
 {% endblock content %}
