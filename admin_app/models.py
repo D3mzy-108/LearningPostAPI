@@ -1,4 +1,3 @@
-from email.policy import default
 from django.db import models
 from django.db.models import Avg
 from website.models import User
