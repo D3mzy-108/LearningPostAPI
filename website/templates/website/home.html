@@ -275,26 +275,30 @@
     </div>
 
     <!-- FOOTER -->
-    <div class="py-12 px-3 md:px-8 lg:px-18 flex max-sm:flex-col items-center gap-3">
+    <div class="py-12 px-3 md:px-8 lg:px-18 flex flex-col items-center gap-3">
         <img src="{% static 'assets/images/logo_white.png' %}" alt="logo"
-            class="max-sm:w-4/6 lg:h-[50px] rounded-md -ml-3">
+            class="max-lg:w-4/6 lg:h-[50px] rounded-md -ml-3">
         <dic class="mx-auto text-[var(--fg)]">&copy; 2024, LearningPost</dic>
         <div class="flex gap-2 mt-3">
             <a href="mailto:support@learningpost.ng"
-                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg">
-                <ion-icon name="mail-outline" title="Mail Support"></ion-icon>
-            </a>
-            <a href="{% url 'faq' %}"
-                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg">
-                <ion-icon name="help-circle-outline" title="FAQ"></ion-icon>
+                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg"
+                title="Mail Support">
+                <ion-icon name="mail-outline" class="pointer-events-none"></ion-icon>
             </a>
             <a href="{% url 'pp' %}"
-                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg">
-                <ion-icon name="shield-outline" title="Privacy"></ion-icon>
+                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg"
+                title="Privacy">
+                <ion-icon name="shield-outline" class="pointer-events-none"></ion-icon>
             </a>
             <a href="{% url 'tc' %}"
-                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg">
-                <ion-icon name="document-text-outline" title="T&C"></ion-icon>
+                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg"
+                title="T&C">
+                <ion-icon name="document-text-outline" class="pointer-events-none"></ion-icon>
+            </a>
+            <a href="{% url 'faq' %}"
+                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-xl"
+                title="FAQ">
+                <ion-icon name="help-circle-outline" class="pointer-events-none"></ion-icon>
             </a>
         </div>
     </div>

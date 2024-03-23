@@ -3,9 +3,9 @@
     <div class="w-full h-[70px] flex items-center">
         <img src="{% static 'assets/images/logo_white.png' %}" alt="logo" class="h-[50px] rounded-md">
         <div class="w-fit hidden lg:flex gap-4 items-center text-[var(--fg2)] text-sm ml-auto mr-6">
+            <a href="{% url 'pp' %}">Privacy</a>
+            <a href="{% url 'tc' %}">T&C</a>
             <a href="{% url 'faq' %}">FAQ</a>
-            <a href="{% url 'pp' %}">Privacy Policy</a>
-            <a href="{% url 'tc' %}">Terms and Conditions</a>
         </div>
         <button
             class="w-fit border-none outline-none blue-bg py-3 px-8 text-white rounded-md hidden lg:block open-login-page">
@@ -18,9 +18,9 @@
     </div>
     <div class="bg-[var(--bg2)] w-full p-4 dropdown-menu">
         <div class="w-fit flex flex-col gap-4 text-[var(--fg)]">
+            <a href="{% url 'pp' %}">Privacy</a>
+            <a href="{% url 'tc' %}">T&C</a>
             <a href="{% url 'faq' %}">FAQ</a>
-            <a href="{% url 'pp' %}">Privacy Policy</a>
-            <a href="{% url 'tc' %}">Terms and Conditions</a>
         </div>
         <button class="w-fit border-none outline-none blue-bg py-3 px-8 text-white rounded-md open-login-page mt-8">
             Get Started

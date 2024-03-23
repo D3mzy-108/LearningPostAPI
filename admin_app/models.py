@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.db.models import Avg
 from website.models import User
@@ -38,6 +39,7 @@ class Question(models.Model):
     d = models.TextField()
     answer = models.TextField()
     explanation = models.TextField()
+    topic = models.TextField(default='')
 
 
 class AnsweredBy(models.Model):

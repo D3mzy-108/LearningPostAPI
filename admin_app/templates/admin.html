@@ -11,4 +11,23 @@ Admin Portal
         {% endblock screen %}
     </div>
 </div>
+
+<script>
+    // QUESTION EDIT FORM CTRL
+    $('.toggleQuestionWrapper').click((e) => {
+        var questions = $('.questionForm');
+        for (let i = 0; i < questions.length; i++) {
+            var question = questions[i];
+            var actionKey = $(question.getElementsByClassName('formActions')[0].children[0]).attr('data-key');
+            if ($(e.target).attr('data-key') == actionKey) {
+                $(`#question${actionKey} .questionWrapper`).slideToggle();
+                $(question.getElementsByClassName('formActions')).toggleClass('active');
+                $(question.getElementsByClassName('formActions')).fadeOut(200);
+                setTimeout(() => {
+                    $(`.formActions.active`).fadeIn(200);
+                }, 300);
+            }
+        }
+    });
+</script>
 {% endblock content %}

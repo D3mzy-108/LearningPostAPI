@@ -128,18 +128,20 @@ def bulk_upload(request, pk):
         reader = csv.DictReader(decoded_file, delimiter=delimiter)
         table_heads = next(csv.reader(decoded_file, delimiter=delimiter), None)
         rows = list(reader)
-        for row in rows:
-            question = Question()
-            question.quest = get_object_or_404(Quest, pk=pk)
-            question.comprehension = row[table_heads[0]]
-            question.question = row[table_heads[1]]
-            question.a = row[table_heads[2]]
-            question.b = row[table_heads[3]]
-            question.c = row[table_heads[4]]
-            question.d = row[table_heads[5]]
-            question.answer = row[table_heads[6]]
-            question.explanation = row[table_heads[7]]
-            question.save()
+        if len(table_heads == 9):
+            for row in rows:
+                question = Question()
+                question.quest = get_object_or_404(Quest, pk=pk)
+                question.comprehension = row[table_heads[0]]
+                question.question = row[table_heads[1]]
+                question.a = row[table_heads[2]]
+                question.b = row[table_heads[3]]
+                question.c = row[table_heads[4]]
+                question.d = row[table_heads[5]]
+                question.answer = row[table_heads[6]]
+                question.explanation = row[table_heads[7]]
+                question.topic = row[table_heads[8]]
+                question.save()
     return redirect('view_questions', pk=pk)
 
 
@@ -159,6 +161,7 @@ def single_upload(request, pk):
         question.d = request.POST['d']
         question.answer = request.POST['answer']
         question.explanation = request.POST['explanation']
+        question.topic = request.POST['topic']
         question.save()
     return redirect('view_questions', pk=pk)
 
@@ -180,6 +183,7 @@ def edit_question(request, quest_pk, pk):
         question.d = request.POST['d']
         question.answer = request.POST['answer']
         question.explanation = request.POST['explanation']
+        question.topic = request.POST['topic']
         question.save()
     return redirect(request.META.get('HTTP_REFERER'))
 
@@ -204,7 +208,7 @@ def download_quest(request, testid):
         # Create a TSV writer
         tsv_writer = csv.writer(response, delimiter='\t')
         header = ['comprehension', 'diagram', 'question',
-                  'a', 'b', 'c', 'd', 'answer', 'explanation']
+                  'a', 'b', 'c', 'd', 'answer', 'explanation', 'topic']
         tsv_writer.writerow(header)
         # Write the data
         for item in questions.values():
@@ -218,6 +222,7 @@ def download_quest(request, testid):
                 item['d'],
                 item['answer'],
                 item['explanation'],
+                item['topic'],
             ])
 
     return response

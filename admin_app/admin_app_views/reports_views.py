@@ -21,12 +21,15 @@ def user_feedback(request):
         selected_feedback = UserFeedback.objects.get(pk=selected_item)
         selected_feedback.is_viewed = True
         selected_feedback.save()
+        question = selected_feedback.question
     except:
         selected_feedback = None
+        question = None
     context = {
         'q': query,
         'selected_item': selected_item,
         'selected_feedback': selected_feedback,
+        'question': question,
         'feedbacks': displayed_feeds,
         'paginator': displayed_feeds,
         'page': page,

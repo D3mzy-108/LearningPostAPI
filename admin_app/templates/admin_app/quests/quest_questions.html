@@ -59,109 +59,7 @@
     {% endif %}
 
     {% for question in questions %}
-    <div class="w-full lg:w-4/5 rounded-lg px-4 pb-6 bg-[var(--bg2)] relative questionForm"
-        id="question{{forloop.counter}}">
-        <form action="{% url 'edit_question' quest_pk=quest.pk pk=question.pk %}" method="post"
-            enctype="multipart/form-data">
-            {% csrf_token %}
-            <!-- ACTION BUTTONS -->
-            <div class="w-full flex gap-2 py-4 bg-[var(--bg2)] sticky top-0">
-                <div class="flex-1 text-[var(--fg2)] text-sm">
-                    Question Key:
-                    <span class="font-semibold text-[var(--fg)]">#{{question.pk}}</span>
-                </div>
-                <div class="flex gap-2 formActions active">
-                    <button type="button" data-key="{{forloop.counter}}"
-                        class="w-fit py-2 px-4 rounded-md bg-[#FFFFFF20] text-[#FFF] font-semibold toggleQuestionWrapper">
-                        Edit
-                    </button>
-                    <button type="button"
-                        onclick="confirm('Are you sure you want to delete #{{question.pk}}') ? window.location.replace(`{% url 'delete_question' pk=question.pk %}`) : null"
-                        class="w-fit py-2 px-4 rounded-md bg-[var(--red)] text-[#FFF] font-semibold">
-                        Delete
-                    </button>
-                </div>
-                <div class="flex gap-2 formActions">
-                    <button type="button" data-key="{{forloop.counter}}"
-                        class="w-fit py-2 px-4 rounded-md bg-[#FFFFFF20] text-[#FFF] font-semibold toggleQuestionWrapper">
-                        Cancel
-                    </button>
-                    <button type="submit"
-                        class="w-fit py-2 px-4 rounded-md bg-[var(--highlight)] text-[#FFF] font-semibold">
-                        Save
-                    </button>
-                </div>
-            </div>
-
-            <!-- Default Displayed Question Data -->
-            <div class="w-full questionWrapper flex flex-col gap-2">
-                <span class="text-[var(--fg2)]">Question</span>
-                <span class="text-[var(--fg)]">{{question.question}}</span>
-                <div></div>
-                <span class="text-[var(--fg2)]">Answer</span>
-                <span class="text-[var(--fg)]">{{question.answer}}</span>
-            </div>
-
-            <!-- EDIT QUESTION FORM -->
-            <div class="w-full questionWrapper">
-                <div class="w-full">
-                    <label for="comprehension" class="text-[var(--fg2)] font-medium">Comprehension</label>
-                    <textarea name="comprehension" id="comprehension" rows="4"
-                        class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{question.comprehension}}</textarea>
-                </div>
-                <div class="w-full mt-4">
-                    <label for="diagram" class="text-[var(--fg2)] font-medium">Diagram</label>
-                    {% if question.diagram %}
-                    <div class="w-full flex flex-wrap gap-4">
-                        <a href="{{question.diagram.url}}"
-                            class="text-[12px] text-blue-500">{{question.diagram.url}}</a>
-                        <div class="w-full flex gap-2 text-sm text-[var(--fg)]">
-                            <input type="checkbox" name="clear_diagram" id="clear_diagram">
-                            <label for="clear_diagram">Remove diagram</label>
-                        </div>
-                    </div>
-                    {% endif %}
-                    <input type="file" name="diagram" id="diagram" accept="image/*"
-                        class="w-full mt-2 text-[var(--fg)] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#FFFFFF10] file:text-[var(--fg2)]">
-                </div>
-                <div class="w-full mt-4">
-                    <label for="question" class="text-[var(--fg2)] font-medium">Question*</label>
-                    <textarea name="question" id="question" rows="2" required
-                        class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{question.question}}</textarea>
-                </div>
-                <div class="w-full mt-4">
-                    <label for="a" class="text-[var(--fg2)] font-medium">Option A*</label>
-                    <textarea name="a" id="a" rows="2" required
-                        class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{question.a}}</textarea>
-                </div>
-                <div class="w-full mt-4">
-                    <label for="b" class="text-[var(--fg2)] font-medium">Option B*</label>
-                    <textarea name="b" id="b" rows="2" required
-                        class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{question.b}}</textarea>
-                </div>
-                <div class="w-full mt-4">
-                    <label for="c" class="text-[var(--fg2)] font-medium">Option C*</label>
-                    <textarea name="c" id="c" rows="2" required
-                        class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{question.c}}</textarea>
-                </div>
-                <div class="w-full mt-4">
-                    <label for="d" class="text-[var(--fg2)] font-medium">Option D*</label>
-                    <textarea name="d" id="d" rows="2" required
-                        class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{question.d}}</textarea>
-                </div>
-                <div class="w-full mt-4">
-                    <label for="answer" class="text-[var(--fg2)] font-medium">Answer*</label>
-                    <textarea name="answer" id="answer" rows="2" required
-                        class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{question.answer}}</textarea>
-                </div>
-                <div class="w-full mt-4">
-                    <label for="explanation" class="text-[var(--fg2)] font-medium">Explanation*</label>
-                    <textarea name="explanation" id="explanation" rows="2" required
-                        class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{question.explanation}}</textarea>
-                </div>
-            </div>
-        </form>
-    </div>
+    {% include './edit_question_form.html' %}
     {% endfor %}
 </div>
 
@@ -170,7 +68,7 @@
 
 <!-- UPLOAD DIALOG -->
 <div class="w-screen h-screen fixed top-0 left-0 z-[60] bg-[#00000050] uploadQuestionsDialog">
-    <div class="w-full max-w-md h-screen bg-[var(--bg)] mx-auto overflow-auto relative">
+    <div class="w-full max-w-2xl h-screen bg-[var(--bg)] mx-auto overflow-auto relative">
         <div class="w-full sticky top-0 z-10 bg-[var(--bg)]">
             <div class="p-4 flex items-center">
                 <span class="text-xl font-semibold text-[var(--fg2)]">Upload questions</span>
@@ -236,6 +134,11 @@
                         <textarea name="explanation" id="explanation" rows="4" required
                             class="w-full mt-2 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]"></textarea>
                     </div>
+                    <div class="w-full mt-4">
+                        <label for="topic" class="text-[var(--fg2)] font-medium">Topic*</label>
+                        <input type="text" name="topic" id="topic" required
+                            class="w-full mt-2 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">
+                    </div>
                     <div class="w-full pt-8 pb-4 text-center px-6">
                         <button type="submit"
                             class="w-full max-w-sm py-3 px-4 rounded-md bg-[var(--highlight)] text-[#FFF] font-semibold">
@@ -283,22 +186,6 @@
         $('.uploadQuestionsDialog').fadeToggle(300);
     });
 
-    $('.toggleQuestionWrapper').click((e) => {
-        var questions = $('.questionForm');
-        for (let i = 0; i < questions.length; i++) {
-            var question = questions[i];
-            var actionKey = $(question.getElementsByClassName('formActions')[0].children[0]).attr('data-key');
-            if ($(e.target).attr('data-key') == actionKey) {
-                $(`#question${actionKey} .questionWrapper`).slideToggle();
-                $(question.getElementsByClassName('formActions')).toggleClass('active');
-                $(question.getElementsByClassName('formActions')).fadeOut(200);
-                setTimeout(() => {
-                    $(`.formActions.active`).fadeIn(200);
-                }, 300);
-            }
-        }
-    });
-
     function showBulkUploadForm() {
         $('#singleUpload').fadeOut(300);
         setTimeout(() => {
@@ -319,7 +206,9 @@
         '3rd, 4th, 5th, and 6th columns must contain the answer options',
         '7th column must contain the exact same content as the correct answer. If there are any differences, it may cause the system to read all the answers as incorrect.Only differences in upper and lower cases will be ignored.<br>- For the sake of easier content creation, you can place all the correct answers on the 6th column, then duplicate it on the 7th.This will not affect the output in the test area as all options will be shuffled for each question',
         '8th column must contain an explanation for the correct answer',
-        'The first row of the csv file will always be ignored as it is assumed to be the table head of the csv file.'
+        '9th column must contain the topic that the question comes from',
+        'The first row of the csv file must contain the table head of the file, as they would be used to map the content of the file.',
+        'Each table head must not be repeated on the first row. i.e. Each table head on the first row must be unique.',
     ];
 
     bulkUploadInstructions.forEach((instruction) => {

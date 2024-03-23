@@ -126,111 +126,10 @@
 
 
         <!-- QUESTION TIED TO REPORT -->
-        <div class="mt-3 w-full">
-            {% if selected_feedback.question is not None %}
-            <div class="w-full rounded-lg px-4 pb-6 bg-[var(--bg2)] relative questionForm"
-                id="question{{forloop.counter}}">
-                <form
-                    action="{% url 'edit_question' quest_pk=selected_feedback.question.quest.pk pk=selected_feedback.question.pk %}"
-                    method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <!-- ACTION BUTTONS -->
-                    <div class="w-full flex gap-2 py-4 bg-[var(--bg2)] sticky top-0">
-                        <div class="flex-1 text-[var(--fg2)] text-sm">
-                            <span
-                                class="font-semibold text-[var(--fg)]">{{selected_feedback.question.quest.title}}</span>
-                        </div>
-                        <div class="flex gap-2 formActions active">
-                            <button type="button" data-key="{{forloop.counter}}"
-                                class="w-fit py-2 px-4 rounded-md bg-[#FFFFFF20] text-[#FFF] font-semibold toggleQuestionWrapper">
-                                Edit
-                            </button>
-                            <button type="button"
-                                onclick="confirm('Are you sure you want to delete #{{selected_feedback.question.pk}}') ? window.location.replace(`{% url 'delete_question' pk=selected_feedback.question.pk %}`) : null"
-                                class="w-fit py-2 px-4 rounded-md bg-[var(--red)] text-[#FFF] font-semibold">
-                                Delete
-                            </button>
-                        </div>
-                        <div class="flex gap-2 formActions">
-                            <button type="button" data-key="{{forloop.counter}}"
-                                class="w-fit py-2 px-4 rounded-md bg-[#FFFFFF20] text-[#FFF] font-semibold toggleQuestionWrapper">
-                                Cancel
-                            </button>
-                            <button type="submit"
-                                class="w-fit py-2 px-4 rounded-md bg-[var(--highlight)] text-[#FFF] font-semibold">
-                                Save
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Default Displayed Question Data -->
-                    <div class="w-full questionWrapper flex flex-col gap-2">
-                        <span class="text-[var(--fg2)]">Question</span>
-                        <span class="text-[var(--fg)]">{{selected_feedback.question.question}}</span>
-                        <div></div>
-                        <span class="text-[var(--fg2)]">Answer</span>
-                        <span class="text-[var(--fg)]">{{selected_feedback.question.answer}}</span>
-                    </div>
-
-                    <!-- EDIT QUESTION FORM -->
-                    <div class="w-full questionWrapper">
-                        <div class="w-full">
-                            <label for="comprehension" class="text-[var(--fg2)] font-medium">Comprehension</label>
-                            <textarea name="comprehension" id="comprehension" rows="4"
-                                class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{selected_feedback.question.comprehension}}</textarea>
-                        </div>
-                        <div class="w-full mt-4">
-                            <label for="diagram" class="text-[var(--fg2)] font-medium">Diagram</label>
-                            {% if selected_feedback.question.diagram %}
-                            <div class="w-full flex flex-wrap gap-4">
-                                <a href="{{selected_feedback.question.diagram.url}}"
-                                    class="text-[12px] text-blue-500">{{selected_feedback.question.diagram.url}}</a>
-                                <div class="w-full flex gap-2 text-sm text-[var(--fg)]">
-                                    <input type="checkbox" name="clear_diagram" id="clear_diagram">
-                                    <label for="clear_diagram">Remove diagram</label>
-                                </div>
-                            </div>
-                            {% endif %}
-                            <input type="file" name="diagram" id="diagram" accept="image/*"
-                                class="w-full mt-2 text-[var(--fg)] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#FFFFFF10] file:text-[var(--fg2)]">
-                        </div>
-                        <div class="w-full mt-4">
-                            <label for="question" class="text-[var(--fg2)] font-medium">Question*</label>
-                            <textarea name="question" id="question" rows="2" required
-                                class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{selected_feedback.question.question}}</textarea>
-                        </div>
-                        <div class="w-full mt-4">
-                            <label for="a" class="text-[var(--fg2)] font-medium">Option A*</label>
-                            <textarea name="a" id="a" rows="2" required
-                                class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{selected_feedback.question.a}}</textarea>
-                        </div>
-                        <div class="w-full mt-4">
-                            <label for="b" class="text-[var(--fg2)] font-medium">Option B*</label>
-                            <textarea name="b" id="b" rows="2" required
-                                class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{selected_feedback.question.b}}</textarea>
-                        </div>
-                        <div class="w-full mt-4">
-                            <label for="c" class="text-[var(--fg2)] font-medium">Option C*</label>
-                            <textarea name="c" id="c" rows="2" required
-                                class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{selected_feedback.question.c}}</textarea>
-                        </div>
-                        <div class="w-full mt-4">
-                            <label for="d" class="text-[var(--fg2)] font-medium">Option D*</label>
-                            <textarea name="d" id="d" rows="2" required
-                                class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{selected_feedback.question.d}}</textarea>
-                        </div>
-                        <div class="w-full mt-4">
-                            <label for="answer" class="text-[var(--fg2)] font-medium">Answer*</label>
-                            <textarea name="answer" id="answer" rows="2" required
-                                class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{selected_feedback.question.answer}}</textarea>
-                        </div>
-                        <div class="w-full mt-4">
-                            <label for="explanation" class="text-[var(--fg2)] font-medium">Explanation*</label>
-                            <textarea name="explanation" id="explanation" rows="2" required
-                                class="w-full mt-2 py-3 px-4 rounded-md bg-[#FFFFFF10] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)]">{{selected_feedback.question.explanation}}</textarea>
-                        </div>
-                    </div>
-                </form>
+        <div class="mt-6 w-full">
+            {% if question is not None %}
+            <div class="w-full grid place-items-center">
+                {% include '../quests/edit_question_form.html' %}
             </div>
             {% endif %}
         </div>
@@ -260,21 +159,4 @@
     }
 </style>
 
-<script>
-    $('.toggleQuestionWrapper').click((e) => {
-        var questions = $('.questionForm');
-        for (let i = 0; i < questions.length; i++) {
-            var question = questions[i];
-            var actionKey = $(question.getElementsByClassName('formActions')[0].children[0]).attr('data-key');
-            if ($(e.target).attr('data-key') == actionKey) {
-                $(`#question${actionKey} .questionWrapper`).slideToggle();
-                $(question.getElementsByClassName('formActions')).toggleClass('active');
-                $(question.getElementsByClassName('formActions')).fadeOut(200);
-                setTimeout(() => {
-                    $(`.formActions.active`).fadeIn(200);
-                }, 300);
-            }
-        }
-    });
-</script>
 {% endblock screen %}
