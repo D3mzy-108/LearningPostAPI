@@ -128,7 +128,7 @@ def bulk_upload(request, pk):
         reader = csv.DictReader(decoded_file, delimiter=delimiter)
         table_heads = next(csv.reader(decoded_file, delimiter=delimiter), None)
         rows = list(reader)
-        if len(table_heads == 9):
+        if len(table_heads) == 9:
             for row in rows:
                 question = Question()
                 question.quest = get_object_or_404(Quest, pk=pk)
