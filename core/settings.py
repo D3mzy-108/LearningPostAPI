@@ -26,17 +26,19 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 if config('DEBUG') == 'True':
     DEBUG = True
-    ALLOWED_HOSTS = ['*']
 else:
     DEBUG = False
-    ALLOWED_HOSTS = [
-        "learningpost.ng",
-        "www.learningpost.ng",
-        "app.learningpost.ng",
-        "www.app.learningpost.ng",
-        "portal.admin.learningpost.ng",
-        "www.portal.admin.learningpost.ng",
-    ]
+
+ALLOWED_HOSTS = [
+    "learningpost.ng",
+    "www.learningpost.ng",
+    "app.learningpost.ng",
+    "www.app.learningpost.ng",
+    "portal.admin.learningpost.ng",
+    "www.portal.admin.learningpost.ng",
+    "localhost",
+    "127.0.0.1"
+]
 
 CORS_ALLOWED_ORIGINS = [
     "https://learningpost.ng",
