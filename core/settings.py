@@ -32,10 +32,6 @@ else:
 ALLOWED_HOSTS = [
     "learningpost.ng",
     "www.learningpost.ng",
-    "app.learningpost.ng",
-    "www.app.learningpost.ng",
-    "portal.admin.learningpost.ng",
-    "www.portal.admin.learningpost.ng",
     "localhost",
     "127.0.0.1"
 ]
