@@ -31,8 +31,11 @@ else:
     DEBUG = False
     ALLOWED_HOSTS = [
         "learningpost.ng",
+        "www.learningpost.ng",
         "app.learningpost.ng",
+        "www.app.learningpost.ng",
         "portal.admin.learningpost.ng"
+        "www.portal.admin.learningpost.ng"
     ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -60,8 +63,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'website',
     'admin_app',
-    'challenge_app',
     # 'akada',
+    'challenge_app',
     'endpoints',
     'smartlink',
 ]
@@ -161,9 +164,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'website.user'
 LOGIN_URL = 'home'
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-    },
-}
