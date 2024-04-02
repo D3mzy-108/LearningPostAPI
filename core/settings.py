@@ -34,8 +34,8 @@ else:
         "www.learningpost.ng",
         "app.learningpost.ng",
         "www.app.learningpost.ng",
-        "portal.admin.learningpost.ng"
-        "www.portal.admin.learningpost.ng"
+        "portal.admin.learningpost.ng",
+        "www.portal.admin.learningpost.ng",
     ]
 
 CORS_ALLOWED_ORIGINS = [
