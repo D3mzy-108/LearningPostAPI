@@ -5,10 +5,6 @@ from django.core.validators import FileExtensionValidator
 
 
 class Quest(models.Model):
-    quest_types = [
-        ('mc', 'Multi-choice'),
-        ('th', 'Theory'),
-    ]
     cover = models.ImageField(upload_to='quest_covers/')
     title = models.CharField(max_length=100)
     grade = models.CharField(max_length=100)
@@ -16,8 +12,8 @@ class Quest(models.Model):
     time = models.IntegerField(verbose_name='Time per Question')
     about = models.TextField(blank=True, null=True)
     instructions = models.TextField(blank=True, null=True)
-    quest_type = models.CharField(max_length=100, choices=quest_types)
     bookmarked = models.ManyToManyField(User, blank=True)
+    is_premium = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -56,6 +52,7 @@ class Library(models.Model):
     about = models.TextField(blank=True, null=True)
     about_author = models.TextField(blank=True, null=True)
     bookmarked = models.ManyToManyField(User, blank=True)
+    is_premium = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

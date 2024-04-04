@@ -20,10 +20,10 @@
 <div class="text-center text-[var(--fg)] text-lg font-medium mt-8">No Books Uploaded</div>
 {% endif %}
 
-<div class="w-full mt-3 md:mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+<div class="w-full mt-3 md:mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-4">
     {% for book in library %}
     <div class="w-full relative">
-        <img src="{{book.cover.url}}" alt="" class="w-full aspect-[4/6]">
+        <img src="{{book.cover.url}}" alt="" class="w-full aspect-[4/5] rounded-lg">
         <div class="w-full py-3">
             <div class="flex items-start">
                 <div class="flex-1 truncate text-white">
@@ -44,19 +44,32 @@
                 </div>
             </div>
         </div>
-        <div class="absolute top-0 right-0 z-20 p-1 w-fit flex flex-col gap-3">
-            <button
-                onclick="confirm('Are you sure you want to delete {{book.title}}') ? window.location.replace(`{% url 'delete_book' pk=book.pk %}`) : null"
-                class="w-fit px-2 aspect-square grid place-items-center rounded-full bg-red-500/50 text-[#FFFFFF]"
-                title="Delete">
-                <ion-icon name="trash" class="pointer-events-none"></ion-icon>
-            </button>
-            <a href="{% url 'edit_book' pk=book.pk %}"
-                class="w-fit px-2 aspect-square grid place-items-center rounded-full bg-[#00000040] text-[var(--fg)]"
-                title="Edit Quest">
-                <ion-icon name="create" class="pointer-events-none"></ion-icon>
-            </a>
+
+        <div
+            class="absolute top-0 right-0 z-20 p-2 w-full aspect-[4/5] bg-gradient-to-b from-black/50 to-black/50 via-transparent rounded-lg">
+            <div class="w-full h-full flex flex-col justify-between">
+                {% if book.is_premium %}
+                <div class="w-full flex gap-1">
+                    <img src="{% static 'assets/icons/crown.svg' %}" alt="" class="w-[18px] h-[18px]">
+                    <span class="w-fit text-xs text-white">Premium</span>
+                </div>
+                {% else %}
+                <span class="w-fit text-xs text-white py-[2px] px-2 bg-gray-500/30 rounded-full">Free</span>
+                {% endif %}
+                <div class="w-full flex justify-end gap-2">
+                    <a href="{% url 'edit_book' pk=book.pk %}"
+                        class="w-fit grid place-items-center rounded-full text-[var(--fg)]" title="Edit Quest">
+                        <ion-icon name="create" class="pointer-events-none"></ion-icon>
+                    </a>
+                    <button
+                        onclick="confirm('Are you sure you want to delete {{book.title}}') ? window.location.replace(`{% url 'delete_book' pk=book.pk %}`) : null"
+                        class="w-fit grid place-items-center rounded-full text-red-500" title="Delete">
+                        <ion-icon name="trash" class="pointer-events-none"></ion-icon>
+                    </button>
+                </div>
+            </div>
         </div>
+
         <a href="{% url 'view_book' book.pk %}" class="absolute top-0 left-0 w-full h-full"></a>
     </div>
     {% endfor %}

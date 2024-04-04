@@ -1,0 +1,70 @@
+{% extends 'admin.html' %}
+{% load static %}
+{% block screen %}
+<div class="w-full">
+    <span class="mr-auto text-xl text-[var(--fg)] font-bold">Subscription Plans</span>
+    <div class="mt-8 border border-white/10 rounded-lg">
+        <button type="button" onclick="$('#createPlanForm').slideToggle(300)"
+            class="w-full bg-white/10 border-none outline-none py-4 px-4 text-[var(--fg2)] text-start flex gap-2 items-center justify-between rounded-lg">
+            Create Plan
+            <ion-icon name="add-circle-outline" class="text-2xl"></ion-icon>
+        </button>
+        <div id="createPlanForm" class="w-full py-6 px-4">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="flex max-sm:flex-col gap-4">
+                    <div class="w-full md:flex-1">
+                        <label for="plan" class="text-[var(--fg)] font-medium">Plan Name*</label>
+                        <input type="text" name="plan" id="plan"
+                            class="w-full py-2 px-3 mt-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+                            required>
+                    </div>
+                    <div class="w-full md:flex-1">
+                        <label for="duration" class="text-[var(--fg)] font-medium">Duration*</label>
+                        <div class="w-full flex items-center rounded-md bg-[var(--bg2)] pr-3 mt-2">
+                            <input type="number" name="duration" id="duration"
+                                class="w-full py-2 px-3 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+                                required>
+                            <label for="duration" class="text-[var(--fg)] text-sm font-medium">days</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex max-sm:flex-col gap-4 my-6">
+                    <div class="w-full md:flex-1">
+                        <label for="q_cost" class="text-[var(--fg)] font-medium">Quest Cost*</label>
+                        <input type="number" name="q_cost" id="q_cost"
+                            class="w-full py-2 px-3 mt-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+                            required>
+                    </div>
+                    <div class="w-full md:flex-1">
+                        <label for="b_cost" class="text-[var(--fg)] font-medium">Bookee Cost*</label>
+                        <input type="number" name="b_cost" id="b_cost"
+                            class="w-full py-2 px-3 mt-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+                            required>
+                    </div>
+                    <div class="w-full md:flex-1">
+                        <label for="a_cost" class="text-[var(--fg)] font-medium">Akada Cost*</label>
+                        <input type="number" name="a_cost" id="a_cost"
+                            class="w-full py-2 px-3 mt-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+                            required>
+                    </div>
+                </div>
+                <div class="w-full text-center pt-4">
+                    <button type="submit"
+                        class="w-full max-w-sm rounded-md py-3 px-4 bg-[var(--highlight)] font-semibold">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    #createPlanForm {
+        display: none;
+    }
+</style>
+
+<script>
+</script>
+
+{% endblock screen %}

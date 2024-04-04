@@ -8,56 +8,44 @@
             </button>
         </div>
         <ul id="navbarNav"
-            class="w-full pb-0 m-0 pt-24 sm:pt-6 bg-[var(--bg2)] flex flex-col gap-0 overflow-auto max-sm:absolute max-sm:-left-full max-sm:top-0 max-sm:-z-10 max-sm:h-screen">
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+            class="w-full pb-0 m-0 pt-24 sm:pt-6 px-3 bg-[var(--bg2)] flex flex-col gap-2 overflow-auto max-sm:absolute max-sm:-left-full max-sm:top-0 max-sm:-z-10 max-sm:h-screen">
+            <li class="w-full py-2 px-3 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
                     <ion-icon name="grid-outline"></ion-icon>
                 </div>
                 <a href="#" class="flex-1 font-semibold">Dashboard</a>
             </li>
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
-                <div class="w-fit text-2xl">
-                    <ion-icon name="ribbon-outline"></ion-icon>
-                </div>
-                <a href="#" class="flex-1 font-semibold">Achievements</a>
-            </li>
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
-                <div class="w-fit text-2xl">
-                    <ion-icon name="glasses-outline"></ion-icon>
-                </div>
-                <a href="#" class="flex-1 font-semibold">Akada</a>
-            </li>
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+            <li class="w-full py-2 px-3 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
                     <ion-icon name="extension-puzzle-outline"></ion-icon>
                 </div>
                 <a href="{% url 'classifications' %}" class="flex-1 font-semibold">Classifications</a>
             </li>
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+            <li class="w-full py-2 px-3 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
                     <ion-icon name="library-outline"></ion-icon>
                 </div>
                 <a href="{% url 'library' %}" class="flex-1 font-semibold">Library</a>
             </li>
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+            <li class="w-full py-2 px-3 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
                     <ion-icon name="rocket-outline"></ion-icon>
                 </div>
                 <a href="{% url 'quests' %}" class="flex-1 font-semibold">Quests</a>
             </li>
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+            <li class="w-full py-2 px-3 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
                     <ion-icon name="link-outline"></ion-icon>
                 </div>
                 <a href="{% url 'smartlinks' %}" class="flex-1 font-semibold">SmartLinks</a>
             </li>
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+            <li class="w-full py-2 px-3 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
-                    <ion-icon name="people-outline"></ion-icon>
+                    <ion-icon name="diamond-outline"></ion-icon>
                 </div>
-                <a href="#" class="flex-1 font-semibold">Users</a>
+                <a href="{% url 'subscription_plans' %}" class="flex-1 font-semibold">Subscription Plans</a>
             </li>
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+            <li class="w-full py-2 px-3 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
                     <ion-icon name="alert-circle-outline"></ion-icon>
                 </div>
@@ -67,7 +55,13 @@
                     {{ttl_unread_count}}</div>
                 {% endif %}
             </li>
-            <li class="w-full py-3 px-4 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+            <li class="w-full py-2 px-3 flex gap-2 items-center rounded-md text-[var(--fg2)]">
+                <div class="w-fit text-2xl">
+                    <ion-icon name="people-outline"></ion-icon>
+                </div>
+                <a href="#" class="flex-1 font-semibold">Users</a>
+            </li>
+            <li class="w-full py-2 px-3 flex gap-2 items-center rounded-md text-[var(--fg2)]">
                 <div class="w-fit text-2xl">
                     <ion-icon name="log-out-outline"></ion-icon>
                 </div>
@@ -95,7 +89,7 @@
     var a = $('nav li a')
     for (let i = 0; i < a.length; i++) {
         if (window.location.pathname.includes($(a[i]).attr('href'))) {
-            $(a[i].parentElement).removeClass('text-[var(--fg2)] rounded-md').addClass('bg-white/10 text-[#FFF] border-l-[3px] border-l-[var(--highlight)]')
+            $(a[i].parentElement).removeClass('text-[var(--fg2)]').addClass('bg-white/10 text-[#FFF]')
             //.addClass('bg-[var(--highlight)] text-[#FFF]')
         }
     }

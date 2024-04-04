@@ -47,7 +47,6 @@ def create_quest(request):
         time = request.POST['time']
         about = request.POST['about']
         instructions = request.POST['instructions']
-        quest_type = request.POST['quest_type']
 
         instance = Quest()
         instance.title = title
@@ -57,7 +56,7 @@ def create_quest(request):
         instance.time = time
         instance.about = about
         instance.instructions = instructions
-        instance.quest_type = quest_type
+        instance.is_premium = bool(request.POST['is_premium'])
         instance.save()
         return redirect('quests')
     context = {}
@@ -77,7 +76,7 @@ def edit_quest(request, pk):
         instance.time = request.POST['time']
         instance.about = request.POST['about']
         instance.instructions = request.POST['instructions']
-        instance.quest_type = request.POST['quest_type']
+        instance.is_premium = bool(request.POST['is_premium'])
         instance.save()
         return redirect('quests')
     context = {

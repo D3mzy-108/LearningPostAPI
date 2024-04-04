@@ -77,7 +77,7 @@
         <div class="w-full flex justify-center items-center gap-3 mt-6">
             <!-- PREV -->
             {% if paginator.has_previous %}
-            <a href="?page={{paginator.previous_page_number}}"
+            <a href="?q={{q}}&page={{paginator.previous_page_number}}"
                 class="py-2 px-3 grid place-items-center gap-2 bg-[var(--bg2)] rounded-md text-[var(--fg)]">
                 <ion-icon name="chevron-back"></ion-icon>
             </a>
@@ -91,7 +91,7 @@
 
             <!-- NEXT -->
             {% if paginator.has_next %}
-            <a href="?page={{paginator.next_page_number}}"
+            <a href="?q={{q}}&page={{paginator.next_page_number}}"
                 class="py-2 px-3 grid place-items-center gap-2 bg-[var(--bg2)] rounded-md text-[var(--fg)]">
                 <ion-icon name="chevron-forward"></ion-icon>
             </a>

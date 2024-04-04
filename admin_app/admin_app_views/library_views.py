@@ -50,6 +50,7 @@ def create_book(request):
         instance.about = about
         instance.author = author
         instance.about_author = about_author
+        instance.is_premium = bool(request.POST['is_premium'])
         instance.save()
         return redirect('library')
     context = {}
@@ -68,6 +69,7 @@ def edit_book(request, pk):
             instance.about = request.POST['about']
             instance.author = request.POST['author']
             instance.about_author = request.POST['about_author']
+            instance.is_premium = bool(request.POST['is_premium'])
             instance.save()
             return redirect('library')
     context = {
