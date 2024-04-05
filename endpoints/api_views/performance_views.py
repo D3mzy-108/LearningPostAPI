@@ -65,7 +65,11 @@ def get_performance(request, username):
         if len(quest_performance_list) > 0:
             quest_added = False
             for quest_stats in quest_performance_list:
-                if quest_stats['quest'] == stats.quest.title:
+                if stats.quest is not None:
+                    quest_title = stats.quest.title
+                else:
+                    quest_title = 'Deleted Quest'
+                if quest_stats['quest'] == quest_title:
                     quest_stats['total_answered'] += stats.total_answered
                     quest_stats['correctly_answered'] += stats.correctly_answered
                     quest_stats['wrongly_answered'] += stats.wrongly_answered
