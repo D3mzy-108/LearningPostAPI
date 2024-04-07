@@ -137,3 +137,14 @@ class MPerformance(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.date}"
+
+
+class SubscriptionPlan(models.Model):
+    plan = models.CharField(max_length=20)
+    duration = models.IntegerField()
+    quest_price = models.IntegerField()
+    bookee_price = models.IntegerField()
+    akada_price = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.plan} ~ {self.quest_price + self.bookee_price + self.akada_price}'

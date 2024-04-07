@@ -55,3 +55,8 @@ class UserFeedbackAdmin(admin.ModelAdmin):
 @admin.register(MPerformance)
 class MPerformanceAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(SubscriptionPlan)
+class SubscriptionPlanAdmin(admin.ModelAdmin):
+    pass

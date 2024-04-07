@@ -2,8 +2,39 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
+from admin_app.models import SubscriptionPlan
+
 
 @login_required
 def plans(request):
-    context = {}
+    plans = SubscriptionPlan.objects.all()
+    context = {
+        'plans': plans,
+    }
     return render(request, 'admin_app/subscription_plans/plans.html', context)
+
+
+@login_required
+def add_plan(request):
+    if request.method == 'POST':
+        plan = SubscriptionPlan()
+        plan.plan = request.POST['plan']
+        plan.duration = request.POST['duration']
+        plan.quest_price = request.POST['q_cost']
+        plan.bookee_price = request.POST['b_cost']
+        plan.akada_price = request.POST['a_cost']
+        plan.save()
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def modify_plan(request, id):
+    if request.method == 'POST':
+        plan = get_object_or_404(SubscriptionPlan, id=id)
+        plan.plan = request.POST['plan']
+        plan.duration = request.POST['duration']
+        plan.quest_price = request.POST['q_cost']
+        plan.bookee_price = request.POST['b_cost']
+        plan.akada_price = request.POST['a_cost']
+        plan.save()
+    return redirect(request.META.get('HTTP_REFERER'))
