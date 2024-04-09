@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from admin_app.models import SubscriptionPlan
 from website.models import SubAccounts, User, UserProfile, BetaReferal
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
@@ -200,3 +201,22 @@ def add_sub_account(request, username):
         'success': False,
         'message': 'Invalid Request!'
     })
+
+
+def get_plans(request):
+    plans = SubscriptionPlan.objects.all()
+    plan_list = []
+    for plan in plans:
+        plan_list.append({
+            'plan': plan.plan,
+            'duration': plan.duration,
+            'quest_cost': plan.quest_price,
+            'bookee_cost': plan.bookee_price,
+            'akada_cost': plan.akada_price,
+        })
+
+    context = {
+        'success': True,
+        'plans': plan_list,
+    }
+    return JsonResponse(context)
