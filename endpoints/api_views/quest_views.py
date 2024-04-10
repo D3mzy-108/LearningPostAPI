@@ -174,3 +174,16 @@ def rate_quest(request, username, testid, rating):
         instance.rating = quest_rating
         instance.save()
         return JsonResponse({'success': True, 'message': 'Rating has been saved'})
+
+
+def get_grades(request):
+    grade_list = Quest.objects.all().order_by(
+        'grade').values_list('grade', flat=True).distinct()
+    list_of_grades = []
+    for grade in grade_list:
+        list_of_grades.append(grade)
+    context = {
+        'success': True,
+        'grades': list_of_grades,
+    }
+    return JsonResponse(context)

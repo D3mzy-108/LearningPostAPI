@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from admin_app.models import SubscriptionPlan
-from website.models import SubAccounts, User, UserProfile, BetaReferal
+from website.models import SubAccounts, User, UserProfile, BetaReferal, UserSubscription
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
+from datetime import date, timedelta
 
 
 # ========================================================================================================
@@ -82,8 +83,12 @@ def edit_profile(request, username):
     if not profiles.exists():
         profile = UserProfile()
         profile.user = user
+        subscription = UserSubscription()
+        trial_period = date.today() + timedelta(days=7)
+        subscription.expiry_date = trial_period.strftime('%Y-%m-%d')
     else:
         profile = profiles.first()
+        subscription = profile.subscription
     if request.method == 'POST':
         profile.phone = request.POST.get('phone')
         profile.date_of_birth = request.POST.get('dob')
@@ -92,12 +97,14 @@ def edit_profile(request, username):
         profile.state = request.POST.get('state')
         profile.guardian_email = request.POST.get('guardian_email')
         profile.guardian_phone = request.POST.get('guardian_phone')
+        subscription.supported_grades = request.POST.get('grades') or ''
         referal_code = request.POST.get('ref_code')
         referral = BetaReferal.objects.filter(code=referal_code)
         if referral.exists():
             m_ref = referral.first()
             if not m_ref.is_used:
                 profile.save()
+                subscription.save()
                 m_ref.is_used = True
                 m_ref.profile = profile
                 m_ref.save()
@@ -105,6 +112,7 @@ def edit_profile(request, username):
             else:
                 if m_ref.profile.user.pk == profile.user.pk:
                     profile.save()
+                    subscription.save()
                     message = 'Your profile has been updated!'
                 else:
                     message = 'Referral has already been used!'
@@ -218,5 +226,6 @@ def get_plans(request):
     context = {
         'success': True,
         'plans': plan_list,
+        'sign': '₦',
     }
     return JsonResponse(context)

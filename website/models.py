@@ -51,3 +51,20 @@ class SubAccounts(models.Model):
 
     def __str__(self):
         return f"{self.parent.first_name} -> {self.child.first_name}"
+
+
+class UserSubscription(models.Model):
+    expiry_date = models.DateField()
+    support_quest = models.BooleanField(default=True)
+    support_bookee = models.BooleanField(default=True)
+    support_akada = models.BooleanField(default=True)
+    supported_grades = models.TextField()
+    profile = models.OneToOneField(
+        UserProfile, on_delete=models.CASCADE, related_name='subscription')
+
+    def __str__(self):
+        return f"{self.profile.user.first_name} -> {self.expiry_date}"
+
+    def get_grades(self):
+        grades = self.supported_grades.split(' --- ')
+        return grades

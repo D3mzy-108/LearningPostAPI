@@ -2,7 +2,7 @@ from django.urls import path
 
 from .api_views.performance_views import get_challenge_performance, get_performance, save_performance
 from .api_views.auth_views import add_sub_account, login_endpoint, get_logged_in_user, edit_profile, get_plans
-from .api_views.quest_views import get_quest, quests, questions, answer, rate_quest
+from .api_views.quest_views import get_grades, get_quest, quests, questions, answer, rate_quest
 from .api_views.library_views import library, chapters, rate_book
 from .api_views.bookmarks_views import bookmarks, add_quest_to_bookmark, add_book_to_bookmark
 from .api_views.leaderboard_views import get_top_10, update_rank
@@ -21,6 +21,7 @@ urlpatterns = [
     # QUESTS
     # ========================================================================================================
     path('get-quests/<str:username>/', quests),
+    path('get-quest-grades/', get_grades),
     path('get-quest/<int:testid>/<str:username>/', get_quest),
     path('quest/<int:testid>/get-questions/<str:username>/', questions),
     path('question/<str:questionids>/answered/<str:username>/', answer),
