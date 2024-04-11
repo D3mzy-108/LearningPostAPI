@@ -51,6 +51,7 @@ def login_endpoint(request):
                 for grade in grade_list:
                     list_of_grades.append(grade)
                 subscription.supported_grades = (" --- ").join(list_of_grades)
+                subscription.profile = profile
                 subscription.save()
             user_profile = {
                 'phone': profile.first().phone,
@@ -97,6 +98,7 @@ def edit_profile(request, username):
         subscription = UserSubscription()
         trial_period = date.today() + timedelta(days=7)
         subscription.expiry_date = trial_period.strftime('%Y-%m-%d')
+        subscription.profile = profile
     else:
         profile = profiles.first()
         subscription = profile.subscription
