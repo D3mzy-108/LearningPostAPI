@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from admin_app.models import SubscriptionPlan
+from admin_app.models import Quest, SubscriptionPlan
 from website.models import SubAccounts, User, UserProfile, BetaReferal, UserSubscription
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
@@ -41,6 +41,17 @@ def login_endpoint(request):
             if BetaReferal.objects.filter(profile__pk=profile.first().pk).exists():
                 rc = profile.first().referral.code
                 account_activated = True
+            if not UserSubscription.objects.filter(profile__pk=profile.first().pk).exists():
+                subscription = UserSubscription()
+                trial_period = date.today() + timedelta(days=7)
+                subscription.expiry_date = trial_period.strftime('%Y-%m-%d')
+                grade_list = Quest.objects.all().order_by(
+                    'grade').values_list('grade', flat=True).distinct()
+                list_of_grades = []
+                for grade in grade_list:
+                    list_of_grades.append(grade)
+                subscription.supported_grades = list_of_grades.join(' --- ')
+                subscription.save()
             user_profile = {
                 'phone': profile.first().phone,
                 'date_of_birth': profile.first().date_of_birth,
@@ -97,7 +108,8 @@ def edit_profile(request, username):
         profile.state = request.POST.get('state')
         profile.guardian_email = request.POST.get('guardian_email')
         profile.guardian_phone = request.POST.get('guardian_phone')
-        subscription.supported_grades = request.POST.get('grades') or ''
+        if not profiles.exists():
+            subscription.supported_grades = request.POST.get('grades') or ''
         referal_code = request.POST.get('ref_code')
         referral = BetaReferal.objects.filter(code=referal_code)
         if referral.exists():
