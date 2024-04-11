@@ -50,7 +50,7 @@ def login_endpoint(request):
                 list_of_grades = []
                 for grade in grade_list:
                     list_of_grades.append(grade)
-                subscription.supported_grades = list_of_grades.join(' --- ')
+                subscription.supported_grades = (" --- ").join(list_of_grades)
                 subscription.save()
             user_profile = {
                 'phone': profile.first().phone,
