@@ -68,3 +68,15 @@ class UserSubscription(models.Model):
     def get_grades(self):
         grades = self.supported_grades.split(' --- ')
         return grades
+
+
+class SubscriptionLog(models.Model):
+    date = models.DateField(auto_now_add=True)
+    user = models.ForeignKey(
+        User, on_delete=models.SET_NULL, related_name='subscription_logs', null=True)
+    code = models.SlugField(unique=True)
+    amount = models.IntegerField()
+    currency = models.CharField(max_length=5, null=True)
+
+    def __str__(self):
+        return f"{self.code} >> {self.currency} {self.amount}"

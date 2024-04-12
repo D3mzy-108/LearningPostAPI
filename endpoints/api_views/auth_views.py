@@ -1,10 +1,11 @@
+import datetime
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from admin_app.models import Quest, SubscriptionPlan
-from website.models import SubAccounts, User, UserProfile, BetaReferal, UserSubscription
+from website.models import SubAccounts, SubscriptionLog, User, UserProfile, BetaReferal, UserSubscription
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 
 # ========================================================================================================
@@ -53,6 +54,8 @@ def login_endpoint(request):
                 subscription.supported_grades = (" --- ").join(list_of_grades)
                 subscription.profile = profile.first()
                 subscription.save()
+            else:
+                subscription = profile.first().subscription
             user_profile = {
                 'phone': profile.first().phone,
                 'date_of_birth': profile.first().date_of_birth,
@@ -62,6 +65,13 @@ def login_endpoint(request):
                 'state': profile.first().state,
                 'guardian_email': profile.first().guardian_email,
                 'guardian_phone': profile.first().guardian_phone,
+            }
+            user_subscription = {
+                'expiry_date': subscription.expiry_date,
+                'support_quest': subscription.support_quest,
+                'support_bookee': subscription.support_bookee,
+                'support_akada': subscription.support_akada,
+                'supported_grades': subscription.supported_grades.split(' --- '),
             }
         else:
             user_profile = {
@@ -79,6 +89,7 @@ def login_endpoint(request):
             'message': 'Login Successful!',
             'isNewUser': not profile.exists() or not account_activated,
             'userProfile': user_profile,
+            'subscription': user_subscription,
         }
         return JsonResponse(context)
     context = {
@@ -133,6 +144,13 @@ def edit_profile(request, username):
             return JsonResponse({
                 'success': True,
                 'message': message,
+                'user_subscription': {
+                    'expiry_date': subscription.expiry_date,
+                    'support_quest': subscription.support_quest,
+                    'support_bookee': subscription.support_bookee,
+                    'support_akada': subscription.support_akada,
+                    'supported_grades': subscription.supported_grades.split(' --- '),
+                },
             })
         else:
             return JsonResponse({
@@ -243,3 +261,33 @@ def get_plans(request):
         'sign': '₦',
     }
     return JsonResponse(context)
+
+
+def log_subscription(request):
+    username = request.GET.get('username')
+    amount = request.GET.get('amount')
+    currency = request.GET.get('currency')
+    sdate = datetime.now()
+    code = f'LearningPostSubscription-{username}-{sdate.year}{sdate.month}{sdate.day}-{sdate.time()}'
+    user = get_object_or_404(User, username=username)
+    if amount is not None and currency is not None:
+        subscription_log = SubscriptionLog()
+        subscription_log.user = user
+        subscription_log.amount = amount
+        subscription_log.code = code
+        subscription_log.currency = currency
+        subscription_log.save()
+        return JsonResponse({
+            'success': True,
+            'code': subscription_log.code,
+            'user': {
+                'username': user.username,
+                'email': user.email,
+                'phone': user.profile.phone,
+            },
+        })
+    else:
+        return JsonResponse({
+            'success': False,
+            'message': 'Required parameters not met!'
+        })
