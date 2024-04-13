@@ -77,6 +77,7 @@ class SubscriptionLog(models.Model):
     code = models.SlugField(unique=True)
     amount = models.IntegerField()
     currency = models.CharField(max_length=5, null=True)
+    is_successful = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.code} >> {self.currency} {self.amount}"

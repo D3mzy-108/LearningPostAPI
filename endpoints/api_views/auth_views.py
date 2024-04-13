@@ -268,7 +268,7 @@ def log_subscription(request):
     amount = request.GET.get('amount')
     currency = request.GET.get('currency')
     sdate = datetime.now()
-    code = f'LearningPostSubscription-{username}-{sdate.year}{sdate.month}{sdate.day}-{sdate.time()}'
+    code = f'LearningPostSubscription-{sdate.year}{sdate.month}{sdate.day}-{sdate.time()}'
     user = get_object_or_404(User, username=username)
     if amount is not None and currency is not None:
         subscription_log = SubscriptionLog()
@@ -282,6 +282,7 @@ def log_subscription(request):
             'code': subscription_log.code,
             'user': {
                 'username': user.username,
+                'name': user.first_name,
                 'email': user.email,
                 'phone': user.profile.phone,
             },

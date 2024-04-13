@@ -30,10 +30,14 @@ def classifications(request):
 def generate_new_code(request):
     characters = string.ascii_letters + string.digits
     random_string = ''.join(random.choice(characters) for _ in range(15))
-    if not BetaReferal.objects.filter(code=random_string).exists():
-        referal = BetaReferal()
+    referal = BetaReferal()
+    if not BetaReferal.objects.filter(code__icontains=random_string).exists():
         referal.code = random_string
-        referal.save()
+    else:
+        ref_count = BetaReferal.objects.filter(
+            code__icontains=random_string).count()
+        referal.code = f'{random_string}-{ref_count}'
+    referal.save()
     return redirect(request.META.get('HTTP_REFERER'))
 
 
