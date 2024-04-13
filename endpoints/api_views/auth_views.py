@@ -292,3 +292,28 @@ def log_subscription(request):
             'success': False,
             'message': 'Required parameters not met!'
         })
+
+
+def subscription_success(request, username, quest_support, bookee_support, akada_support, selected_grades, duration):
+    user = get_object_or_404(User, username=username)
+    # MAKE LAST FAILED LOG OF USER SUCCESSFUL
+    sub_log = SubscriptionLog.objects.filter(
+        user__pk=user.pk, is_successful=False).order_by('-date').first()
+    sub_log.is_successful = True
+    # UPDATE USER SUBSCRIPTION DETAILS
+    user_subscription = get_object_or_404(
+        UserSubscription, profile__pk=user.profile.pk)
+    user_subscription.support_quest = quest_support == 1
+    user_subscription.support_bookee = bookee_support == 1
+    user_subscription.support_akada = akada_support == 1
+    user_subscription.supported_grades = selected_grades
+    subscription_duration = duration
+    user_subscription.expiry_date = date.today(
+    ) + timedelta(days=int(subscription_duration))
+    # SAVE CHANGES
+    sub_log.save()
+    user_subscription.save()
+    return JsonResponse({
+        'success': True,
+        'message': 'Subscription successful!'
+    })

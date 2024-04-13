@@ -74,7 +74,7 @@ class SubscriptionLog(models.Model):
     date = models.DateField(auto_now_add=True)
     user = models.ForeignKey(
         User, on_delete=models.SET_NULL, related_name='subscription_logs', null=True)
-    code = models.SlugField(unique=True)
+    code = models.CharField(max_length=100, unique=True)
     amount = models.IntegerField()
     currency = models.CharField(max_length=5, null=True)
     is_successful = models.BooleanField(default=False)
