@@ -315,5 +315,13 @@ def subscription_success(request, username, quest_support, bookee_support, akada
     user_subscription.save()
     return JsonResponse({
         'success': True,
-        'message': 'Subscription successful!'
+        'message': 'Subscription successful!',
+        'user_subscription': {
+            'expiry_date': user_subscription.expiry_date,
+            'support_quest': user_subscription.support_quest,
+            'support_bookee': user_subscription.support_bookee,
+            'support_akada': user_subscription.support_akada,
+            'supported_grades': user_subscription.supported_grades.split(' --- '),
+        },
+
     })

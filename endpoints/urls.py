@@ -6,6 +6,7 @@ from .api_views.quest_views import get_grades, get_quest, quests, questions, ans
 from .api_views.library_views import library, chapters, rate_book
 from .api_views.bookmarks_views import bookmarks, add_quest_to_bookmark, add_book_to_bookmark
 from .api_views.leaderboard_views import get_top_10, update_rank
+from .api_views.home_views import home_endpoint
 
 
 urlpatterns = [
@@ -19,6 +20,10 @@ urlpatterns = [
     path('subscription-plans/', get_plans),
     path('log-subscription/', log_subscription),
     path('subscription-success/<str:username>/<int:quest_support>/<int:bookee_support>/<int:akada_support>/<str:selected_grades>/<int:duration>/', subscription_success),
+    # ========================================================================================================
+    # APPLICATION HOME PAGE
+    # ========================================================================================================
+    path('homepage/', home_endpoint),
     # ========================================================================================================
     # QUESTS
     # ========================================================================================================
