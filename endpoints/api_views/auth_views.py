@@ -84,6 +84,7 @@ def login_endpoint(request):
                 'guardian_email': '',
                 'guardian_phone': '',
             }
+            user_subscription = None
         context = {
             'success': True,
             'message': 'Login Successful!',
