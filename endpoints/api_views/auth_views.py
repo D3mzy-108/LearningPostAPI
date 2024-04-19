@@ -74,6 +74,11 @@ def login_endpoint(request):
                 'supported_grades': subscription.supported_grades.split(' --- '),
             }
         else:
+            grade_list = Quest.objects.all().order_by(
+                'grade').values_list('grade', flat=True).distinct()
+            list_of_grades = []
+            for grade in grade_list:
+                list_of_grades.append(grade)
             user_profile = {
                 'phone': '',
                 'date_of_birth': '',
@@ -84,7 +89,13 @@ def login_endpoint(request):
                 'guardian_email': '',
                 'guardian_phone': '',
             }
-            user_subscription = None
+            user_subscription = {
+                'expiry_date': date.today(),
+                'support_quest': True,
+                'support_bookee': True,
+                'support_akada': True,
+                'supported_grades': list_of_grades,
+            }
         context = {
             'success': True,
             'message': 'Login Successful!',
