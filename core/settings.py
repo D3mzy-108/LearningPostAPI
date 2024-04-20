@@ -163,3 +163,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'website.user'
 LOGIN_URL = 'login'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
