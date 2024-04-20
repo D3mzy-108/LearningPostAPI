@@ -38,15 +38,13 @@ def bulk_upload_smartlinks(request):
         if uploaded_file.name.lower().endswith('.json'):
             # Read and process the uploaded JSON file
             data = json.load(uploaded_file)
-            for chunk in chunks(data.items()):
+            data_list = [{"statement": statement, "definition": definition}
+                         for statement, definition in data.items()]
+            for chunk in chunks(data_list):
                 smartlink_objects = []
 
-                for statement, definition in chunk:
-                    mapped_data = {
-                        "statement": statement,
-                        "definition": definition,
-                    }
-                    smartlink_objects.append(SmartLinkKB(**mapped_data))
+                for item in chunk:
+                    smartlink_objects.append(SmartLinkKB(**item))
 
                 SmartLinkKB.objects.bulk_create(smartlink_objects)
 
