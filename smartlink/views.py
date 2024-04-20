@@ -52,7 +52,7 @@ def bulk_upload_smartlinks(request):
             decoded_file = uploaded_file.read().decode('utf-8').splitlines()
             reader = csv.reader(decoded_file, delimiter='\t')
             data_list = [row for row in reader]
-            for chunk in chunks(reader):
+            for chunk in chunks(data_list):
                 smartlink_objects = []
 
                 for statement, definition in chunk:
