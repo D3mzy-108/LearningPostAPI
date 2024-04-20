@@ -24,26 +24,54 @@ def smartlinks(request):
     return render(request, 'smartlink/smartlinks.html', context)
 
 
+def chunks(lst):
+    """Yields successive n-sized chunks from lst."""
+    for i in range(0, len(lst), 800):
+        yield lst[i:i + 800]
+
+
 @login_required
 def bulk_upload_smartlinks(request):
     if request.method == 'POST' and request.FILES['sl_upload_file']:
         uploaded_file = request.FILES['sl_upload_file']
 
-        # Check file extension to determine the file type
         if uploaded_file.name.lower().endswith('.json'):
             # Read and process the uploaded JSON file
             data = json.load(uploaded_file)
-            for statement, definition in data.items():
-                SmartLinkKB.objects.create(
-                    statement=statement, definition=definition)
+            for chunk in chunks(data):
+                smartlink_objects = []
+
+                for statement, definition in chunk.items():
+                    mapped_data = {
+                        "statement": statement,
+                        "definition": definition,
+                    }
+                    smartlink_objects.append(SmartLinkKB(**mapped_data))
+
+                SmartLinkKB.objects.bulk_create(smartlink_objects)
+
+            # for statement, definition in data.items():
+            #     SmartLinkKB.objects.create(
+            #         statement=statement, definition=definition)
         elif uploaded_file.name.lower().endswith('.tsv'):
             # Read and process the uploaded TSV file
             decoded_file = uploaded_file.read().decode('utf-8').splitlines()
             reader = csv.reader(decoded_file, delimiter='\t')
-            for row in reader:
-                statement, definition = row
-                SmartLinkKB.objects.create(
-                    statement=statement, definition=definition)
+            for chunk in chunks(reader):
+                smartlink_objects = []
+
+                for statement, definition in chunk:
+                    mapped_data = {
+                        "statement": statement,
+                        "definition": definition,
+                    }
+                    smartlink_objects.append(SmartLinkKB(**mapped_data))
+
+                SmartLinkKB.objects.bulk_create(smartlink_objects)
+            # for row in reader:
+            #     statement, definition = row
+            #     SmartLinkKB.objects.create(
+            #         statement=statement, definition=definition)
         else:
             return redirect(request.META.get('HTTP_REFERER'))
         return redirect('smartlinks')
