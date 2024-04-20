@@ -47,14 +47,11 @@ def bulk_upload_smartlinks(request):
                     smartlink_objects.append(SmartLinkKB(**item))
 
                 SmartLinkKB.objects.bulk_create(smartlink_objects)
-
-            # for statement, definition in data.items():
-            #     SmartLinkKB.objects.create(
-            #         statement=statement, definition=definition)
         elif uploaded_file.name.lower().endswith('.tsv'):
             # Read and process the uploaded TSV file
             decoded_file = uploaded_file.read().decode('utf-8').splitlines()
             reader = csv.reader(decoded_file, delimiter='\t')
+            data_list = [row for row in reader]
             for chunk in chunks(reader):
                 smartlink_objects = []
 
