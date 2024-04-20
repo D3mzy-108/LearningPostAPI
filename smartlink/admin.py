@@ -5,4 +5,4 @@ from smartlink.models import SmartLinkKB
 
 @admin.register(SmartLinkKB)
 class SmartLinkKBAdmin(admin.ModelAdmin):
-    list_per_page = 2000
+    list_per_page = 1000
