@@ -63,10 +63,6 @@ def bulk_upload_smartlinks(request):
                     smartlink_objects.append(SmartLinkKB(**mapped_data))
 
                 SmartLinkKB.objects.bulk_create(smartlink_objects)
-            # for row in reader:
-            #     statement, definition = row
-            #     SmartLinkKB.objects.create(
-            #         statement=statement, definition=definition)
         else:
             return redirect(request.META.get('HTTP_REFERER'))
         return redirect('smartlinks')

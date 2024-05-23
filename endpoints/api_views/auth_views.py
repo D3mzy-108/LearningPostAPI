@@ -337,3 +337,10 @@ def subscription_success(request, username, quest_support, bookee_support, akada
         },
 
     })
+
+
+def get_partnered_schools(request):
+    schools = UserProfile.school_choices
+    return JsonResponse({
+        'schools': schools,
+    })

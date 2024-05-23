@@ -20,11 +20,25 @@ class User(AbstractUser):
 
 
 class UserProfile(models.Model):
+    schools = [
+        {
+            'name': 'The African Church Model College',
+            'subscription_percentage': 17,
+        },
+        {
+            'name': 'Other',
+            'subscription_percentage': 0,
+        },
+    ]
+    school_choices = [
+        (school['name'], school['name']) for school in schools
+    ]
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='profile')
     phone = models.CharField(max_length=100, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    school = models.TextField(null=True, blank=True)
+    school = models.CharField(
+        max_length=200, null=True, choices=school_choices, default=school_choices[len(school_choices) - 1])
     country = models.CharField(max_length=100, null=True)
     state = models.CharField(max_length=100, null=True)
     guardian_email = models.EmailField(null=True, blank=True)
