@@ -344,3 +344,19 @@ def get_partnered_schools(request):
     return JsonResponse({
         'schools': schools,
     })
+
+
+def create_referral(request):
+    random_string = request.GET.get('random_string')
+    referral = BetaReferal()
+    if not BetaReferal.objects.filter(code__icontains=random_string).exists():
+        referral.code = random_string
+    else:
+        ref_count = BetaReferal.objects.filter(
+            code__icontains=random_string).count()
+        referral.code = f'{random_string}-{ref_count}'
+    referral.save()
+    return JsonResponse({
+        'success': True,
+        'referral': referral.code,
+    })
