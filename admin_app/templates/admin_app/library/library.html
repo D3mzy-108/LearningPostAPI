@@ -24,25 +24,19 @@
     {% for book in library %}
     <div class="w-full relative">
         <img src="{{book.cover.url}}" alt="" class="w-full aspect-[4/5] rounded-lg">
-        <div class="w-full py-3">
-            <div class="flex items-start">
-                <div class="flex-1 truncate text-white">
-                    <span class="font-semibold text-[var(--fg)]">{{book.title}}</span>
-                    <div class="flex flex-col gap-1 mt-1 text-[12px] text-[var(--fg2)] truncate">
-                        <span>{{book.chapters.count}} Chapters</span>
-                    </div>
-                </div>
-                <div class="w-fit flex flex-col items-end gap-1">
-                    <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
-                        <ion-icon name="bookmark" class="text-[var(--highlight)]"></ion-icon>
-                        <span>{{book.bookmarked.count}}</span>
-                    </div>
-                    <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
-                        <ion-icon name="star" class="text-[var(--orange)]"></ion-icon>
-                        <span>{{book.average_rating|floatformat:1}}</span>
-                    </div>
-                </div>
-            </div>
+        <div class="w-full flex gap-2 py-3">
+            <a href="{% url 'edit_book' pk=book.pk %}"
+                class="w-full flex-1 py-2 bg-[var(--fg)] flex items-center justify-center gap-2 rounded-full text-[var(--highlight)]"
+                title="Edit Quest">
+                <ion-icon name="cog-outline" class="text-lg pointer-events-none"></ion-icon>
+                <span class="text-sm">Settings</span>
+            </a>
+            <button
+                onclick="confirm('Are you sure you want to delete {{book.title}}') ? window.location.replace(`{% url 'delete_book' pk=book.pk %}`) : null"
+                class="w-fit grid place-items-center rounded-full bg-red-300 px-2 aspect-square text-red-700"
+                title="Delete">
+                <ion-icon name="trash-outline" class="pointer-events-none"></ion-icon>
+            </button>
         </div>
 
         <div
@@ -56,21 +50,24 @@
                 {% else %}
                 <span class="w-fit text-xs text-white py-[2px] px-2 bg-gray-500/30 rounded-full">Free</span>
                 {% endif %}
-                <div class="w-full flex justify-end gap-2">
-                    <a href="{% url 'edit_book' pk=book.pk %}"
-                        class="w-fit grid place-items-center rounded-full text-[var(--fg)]" title="Edit Quest">
-                        <ion-icon name="create" class="pointer-events-none"></ion-icon>
-                    </a>
-                    <button
-                        onclick="confirm('Are you sure you want to delete {{book.title}}') ? window.location.replace(`{% url 'delete_book' pk=book.pk %}`) : null"
-                        class="w-fit grid place-items-center rounded-full text-red-500" title="Delete">
-                        <ion-icon name="trash" class="pointer-events-none"></ion-icon>
-                    </button>
-                </div>
+                <a href="{% url 'view_book' book.pk %}" class="w-full">
+                    <div class="flex items-start">
+                        <div class="flex-1 truncate text-white">
+                            <span class="font-semibold text-[var(--fg)]">{{book.title}}</span>
+                            <div class="flex flex-col gap-1 mt-1 text-[12px] text-[var(--fg2)] truncate">
+                                <span>{{book.chapters.count}} Chapters</span>
+                            </div>
+                        </div>
+                        <div class="w-fit flex flex-col items-end gap-1">
+                            <div class="flex gap-1 items-center text-[12px] text-[var(--fg2)]">
+                                <ion-icon name="star" class="text-[var(--orange)]"></ion-icon>
+                                <span>{{book.average_rating|floatformat:1}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
-
-        <a href="{% url 'view_book' book.pk %}" class="absolute top-0 left-0 w-full h-full"></a>
     </div>
     {% endfor %}
 </div>
