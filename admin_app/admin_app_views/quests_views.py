@@ -56,7 +56,7 @@ def create_quest(request):
         instance.time = time
         instance.about = about
         instance.instructions = instructions
-        instance.is_premium = bool(request.POST['is_premium'])
+        instance.is_premium = request.POST['is_premium'] == 'True'
         instance.save()
         return redirect('quests')
     context = {}
@@ -76,7 +76,7 @@ def edit_quest(request, pk):
         instance.time = request.POST['time']
         instance.about = request.POST['about']
         instance.instructions = request.POST['instructions']
-        instance.is_premium = bool(request.POST['is_premium'])
+        instance.is_premium = request.POST['is_premium'] == 'True'
         instance.save()
         return redirect('quests')
     context = {
