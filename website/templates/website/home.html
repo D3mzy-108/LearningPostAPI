@@ -129,70 +129,59 @@
     </div>
 
     <!-- COOL FEATURES TO HELP YOU LEARN -->
-    <div class="px-6 py-12 md:px-12 lg:px-24">
+    <div class="px-6 pt-24 my-12 md:px-12 lg:px-24 bg-black/40">
         <h1 class="text-2xl lg:text-4xl text-white text-center font-semibold">
             Discover the magic of <br><span class="blue-text">Cool & Exciting</span> features!
         </h1>
         <div class="mt-12 lg:mt-18">
-            <div class="w-full flex flex-col lg:flex-row gap-6 justify-center items-center">
-                <div class="w-full h-fit overflow-auto lg:overflow-visible lg:max-w-xs flex lg:flex-col gap-3 lg:gap-6">
-                    <button data-image="{% static 'assets/images/app-quest.png' %}"
-                        class="min-w-[200px] p-3 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
-                        <div class="font-semibold text-white text-lg mb-2">
-                            Quests
-                        </div>
-                        <p class="text-[var(--fg2)] text-[14px]">
-                            Interactive modules with quizzes, activities, and assessments to guide learning, and
-                            SmartLinks to help delve into concepts deeper.
-                        </p>
-                    </button>
-                    <button data-image="{% static 'assets/images/app-challenge.png' %}"
-                        class="min-w-[200px] p-3 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
-                        <div class="font-semibold text-white text-lg mb-2">
-                            Challenge
-                        </div>
-                        <p class="text-[var(--fg2)] text-md text-[14px]">
-                            Test your knowledge and compete with friends in fun and interactive quizzes and
-                            competitions.
-                        </p>
-                    </button>
-                    <button data-image="{% static 'assets/images/app-performance.png' %}"
-                        class="min-w-[200px] p-3 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
-                        <div class="font-semibold text-white text-lg mb-2">
-                            Performance Analytics
-                        </div>
-                        <p class="text-[var(--fg2)] text-md text-[14px]">
-                            Track your progress, identify areas for improvement, and celebrate your achievements
-                            with detailed performance analytics and certificates of completion.
-                        </p>
-                    </button>
+            <div class="w-full flex flex-col gap-6 justify-center items-center">
+                <div class="w-full relative">
+                    <div class="w-fit max-w-full mx-auto h-fit overflow-auto flex gap-3 p-3 items-center">
+                        <button data-image="{% static 'assets/images/app-quest.png' %}"
+                            data-text="Interactive modules with quizzes, activities, and assessments to guide learning, and SmartLinks to help delve into concepts deeper."
+                            class="py-3 px-6 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
+                            <div class="font-semibold text-white text-lg text-center">
+                                Quests
+                            </div>
+                        </button>
+                        <button data-image="{% static 'assets/images/app-challenge.png' %}"
+                            data-text="Test your knowledge and compete with friends in fun and interactive quizzes and competitions."
+                            class="py-3 px-6 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
+                            <div class="font-semibold text-white text-lg text-center">
+                                Challenge
+                            </div>
+                        </button>
+                        <button data-image="{% static 'assets/images/app-performance.png' %}"
+                            data-text="Track your progress, identify areas for improvement, and celebrate your achievements with detailed performance analytics and certificates of completion."
+                            class="py-3 px-6 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
+                            <div class="font-semibold text-white text-lg text-center">
+                                Analytics
+                            </div>
+                        </button>
+                        <button data-image="{% static 'assets/images/app-bookee.png' %}"
+                            data-text="Access hundreds of books, magazines, and newspapers, and enhance your reading experience with text-to-speech features."
+                            class="py-3 px-6 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
+                            <div class="font-semibold text-white text-lg text-center">
+                                Bookee
+                            </div>
+                        </button>
+                        <button data-image="{% static 'assets/images/app-home.png' %}"
+                            data-text="Get personalized recommendations, feedback, and support from our AI study companion to master tough concepts and reach your learning goals."
+                            class="py-3 px-6 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
+                            <div class="font-semibold text-white text-lg text-center">
+                                Akada AI
+                            </div>
+                        </button>
+                    </div>
+                    <div class="w-full text-center text-white/30 text-xs absolute -bottom-3">Click for details</div>
                 </div>
 
-                <div class="flex-1">
-                    <img src="{% static 'assets/images/logo-on-phone.png' %}" alt="" class="w-4/6 feature-img mx-auto">
-                </div>
-
-                <div class="w-full h-fit overflow-auto lg:overflow-visible lg:max-w-xs flex lg:flex-col gap-3 lg:gap-6">
-                    <button data-image="{% static 'assets/images/app-bookee.png' %}"
-                        class="min-w-[200px] p-3 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
-                        <div class="font-semibold text-white text-lg mb-2">
-                            Bookee
-                        </div>
-                        <p class="text-[var(--fg2)] text-md text-[14px]">
-                            Access hundreds of books, magazines, and newspapers, and enhance your reading experience
-                            with text-to-speech features.
-                        </p>
-                    </button>
-                    <button data-image="{% static 'assets/images/logo-on-phone.png' %}"
-                        class="min-w-[200px] p-3 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
-                        <div class="font-semibold text-white text-lg mb-2">
-                            Akada AI
-                        </div>
-                        <p class="text-[var(--fg2)] text-md text-[14px]">
-                            Get personalized recommendations, feedback, and support from our AI study companion to
-                            master tough concepts and reach your learning goals.
-                        </p>
-                    </button>
+                <div class="w-full max-w-3xl mx-auto flex flex-col gap-8 items-center mt-8">
+                    <div class="w-full max-w-md text-md text-[var(--fg)] text-center" id="feature-txt">
+                        LearningPost is your key to unlocking a truly engaging and fun learning experience. We achieve
+                        this by focusing on five key features designed to make learning dynamic and enjoyable.
+                    </div>
+                    <img src="{% static 'assets/images/app-home.png' %}" alt="" id="feature-img" class="w-3/6 mx-auto">
                 </div>
             </div>
         </div>
@@ -343,7 +332,8 @@
 
 <script>
     $('.feature-btn').click((e) => {
-        $('.feature-img').attr('src', $(e.target).attr('data-image'))
+        $('#feature-img').attr('src', $(e.target).attr('data-image'))
+        $('#feature-txt').text($(e.target).attr('data-text'))
         $('.feature-btn').removeClass('active').addClass('elevated-box')
         $(e.target).addClass('active').removeClass('elevated-box')
     })
