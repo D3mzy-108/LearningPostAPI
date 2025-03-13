@@ -24,7 +24,7 @@ urlpatterns = [
     path('', include('website.urls')),
     path('portal/admin/', include('admin_app.urls')),
     path('smartlinks/', include('smartlink.urls')),
-    # path('akada/', include('akada.urls')),
+    path('akada/', include('akada.urls')),
     path('challenge/', include('challenge_app.urls')),
     path('api/', include('endpoints.urls')),
 ]
