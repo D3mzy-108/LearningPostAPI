@@ -22,7 +22,11 @@ def prompt_akada(request, username: str):
             'role': 'user',
             'parts': p.prompt,
         })
-    conversation_context = prompts_list[:6]
+    conversation_context = 'Here are past responses as context:\n\n"'
+    for pr in prompts_list[:6]:
+        conversation_context += f'{pr["parts"]}\n'
+    else:
+        conversation_context += f'"\n\n'
     if request.method == 'POST':
         try:
             # INIT GEMINI PARAMS
@@ -31,15 +35,10 @@ def prompt_akada(request, username: str):
             gemini_model = 'gemini-2.0-flash-lite'
             # FETCH RESPONSE FROM GEMINI AI
             prompt = request.POST.get('prompt')
-            conversation_context.insert(0, {"role": "user", "parts": prompt})
+            conversation_context += f'{prompt}'
             response = client.models.generate_content(
                 model=gemini_model,
-                contents=[
-                    {
-                        'role': item['role'],
-                        'parts': [item['parts']],
-                    } for item in conversation_context
-                ],
+                contents=[conversation_context],
             )
             generated_text = response.text
             akada_response = {
@@ -55,8 +54,7 @@ def prompt_akada(request, username: str):
             instance.system_response = generated_text
             instance.save()
             prompts_list = [akada_response]
-        except e:
-            print(e)
+        except:
             prompts_list = [{
                 'role': 'model',
                 'parts': "🚨 Oops! Connection Trouble\nWe can't reach the AI server or knowledge base.\nCheck your internet and give it another try soon! 🔄🌐",
