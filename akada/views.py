@@ -9,11 +9,6 @@ from website.models import User
 
 @csrf_exempt
 def prompt_akada(request, username: str):
-    # INIT GEMINI PARAMS
-    gemini_api_key = config('GEMINI_API_KEY')
-    client = genai.Client(api_key=gemini_api_key)
-    gemini_model = 'gemini-2.0-flash-lite'
-
     # GET LIST OF ALL PROMPTS SENT TO AKADA
     prompts = AkadaConversations.objects.filter(
         user__username=username).order_by('-id')
@@ -30,12 +25,21 @@ def prompt_akada(request, username: str):
     conversation_context = prompts_list[:6]
     if request.method == 'POST':
         try:
+            # INIT GEMINI PARAMS
+            gemini_api_key = config('GEMINI_API_KEY')
+            client = genai.Client(api_key=gemini_api_key)
+            gemini_model = 'gemini-2.0-flash-lite'
             # FETCH RESPONSE FROM GEMINI AI
             prompt = request.POST.get('prompt')
             conversation_context.insert(0, {"role": "user", "parts": prompt})
             response = client.models.generate_content(
                 model=gemini_model,
-                contents=conversation_context,
+                contents=[
+                    {
+                        'role': item['role'],
+                        'parts': [item['parts']],
+                    } for item in conversation_context
+                ],
             )
             generated_text = response.text
             akada_response = {
