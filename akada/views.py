@@ -44,7 +44,7 @@ def prompt_akada(request, username: str):
             generated_text = response.text
             akada_response = {
                 'role': 'model',
-                'parts': generated_text,
+                'parts': generated_text or '',
             }
 
             # SAVE PROMPT AND RESPONSE TO DATABASE
