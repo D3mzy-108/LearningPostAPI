@@ -26,7 +26,7 @@ def prompt_akada(request, username: str):
     for pr in prompts_list[:6]:
         conversation_context += f'{pr["parts"]}\n'
     else:
-        conversation_context += f'"\n\n'
+        conversation_context += f'"\n\nRespond in an informal tone, and as simply and short as possible\n\n'
     if request.method == 'POST':
         try:
             # INIT GEMINI PARAMS
