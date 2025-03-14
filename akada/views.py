@@ -3,30 +3,44 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from google import genai
 from django.views.decorators.csrf import csrf_exempt
-
 from akada.models import AkadaConversations
 from website.models import User
 
 
-gemini_api_key = config('GEMINI_API_KEY')
-client = genai.Client(api_key=gemini_api_key)
-gemini_model = 'gemini-2.0-flash-lite'
-
-
 @csrf_exempt
 def prompt_akada(request, username: str):
+    # INIT GEMINI PARAMS
+    gemini_api_key = config('GEMINI_API_KEY')
+    client = genai.Client(api_key=gemini_api_key)
+    gemini_model = 'gemini-2.0-flash-lite'
+
+    # GET LIST OF ALL PROMPTS SENT TO AKADA
+    prompts = AkadaConversations.objects.filter(
+        user__username=username).order_by('-id')
+    prompts_list = []
+    for p in prompts:
+        prompts_list.append({
+            'role': 'model',
+            'parts': p.system_response,
+        })
+        prompts_list.append({
+            'role': 'user',
+            'parts': p.prompt,
+        })
+    conversation_context = prompts_list[:6]
     if request.method == 'POST':
         try:
             # FETCH RESPONSE FROM GEMINI AI
             prompt = request.POST.get('prompt')
+            conversation_context.insert(0, {"role": "user", "parts": prompt})
             response = client.models.generate_content(
                 model=gemini_model,
-                contents=[prompt],
+                contents=conversation_context,
             )
             generated_text = response.text
             akada_response = {
-                'role': 'system',
-                'message': generated_text,
+                'role': 'model',
+                'parts': generated_text,
             }
 
             # SAVE PROMPT AND RESPONSE TO DATABASE
@@ -36,28 +50,15 @@ def prompt_akada(request, username: str):
             instance.prompt = prompt
             instance.system_response = generated_text
             instance.save()
-            prompts = [akada_response]
+            prompts_list = [akada_response]
         except:
-            prompts = [{
-                'role': 'system',
-                'message': "🚨 Oops! Connection Trouble\nWe can't reach the AI server or knowledge base.\nCheck your internet and give it another try soon! 🔄🌐",
+            prompts_list = [{
+                'role': 'model',
+                'parts': "🚨 Oops! Connection Trouble\nWe can't reach the AI server or knowledge base.\nCheck your internet and give it another try soon! 🔄🌐",
             }]
-    else:
-        # GET LIST OF ALL PROMPTS SENT TO AKADA
-        prompts = AkadaConversations.objects.filter(
-            user__username=username).order_by('id')
-        prompts_list = []
-        for p in prompts:
-            prompts_list.append({
-                'role': 'user',
-                'message': p.prompt,
-            })
-            prompts_list.append({
-                'role': 'system',
-                'message': p.system_response,
-            })
+
     return JsonResponse({
-        'error': False,
+        'success': True,
         'prompts': prompts_list,
     })
 
