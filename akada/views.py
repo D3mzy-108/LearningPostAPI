@@ -55,7 +55,8 @@ def prompt_akada(request, username: str):
             instance.system_response = generated_text
             instance.save()
             prompts_list = [akada_response]
-        except:
+        except e:
+            print(e)
             prompts_list = [{
                 'role': 'model',
                 'parts': "🚨 Oops! Connection Trouble\nWe can't reach the AI server or knowledge base.\nCheck your internet and give it another try soon! 🔄🌐",
