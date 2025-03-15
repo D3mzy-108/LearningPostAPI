@@ -17,14 +17,13 @@ def _send_request_to_ai(prompt) -> str | None:
         client = genai.Client(api_key=gemini_api_key)
         gemini_model = 'gemini-2.0-flash-lite'
         # FETCH RESPONSE FROM GEMINI AI
-        conversation_context += f'{prompt}'
         response = client.models.generate_content(
             model=gemini_model,
-            contents=[conversation_context],
+            contents=[prompt],
         )
         return response.text
     except:
-        return 'Request to AI model Failed'
+        return None
 
 
 @csrf_exempt
@@ -51,7 +50,8 @@ def prompt_akada(request, username: str):
         try:
             # INIT GEMINI PARAMS
             prompt = request.POST.get('prompt')
-            generated_text = _send_request_to_ai(prompt=prompt)
+            conversation_context += f'{prompt}'
+            generated_text = _send_request_to_ai(prompt=conversation_context)
             akada_response = {
                 'role': 'model',
                 'parts': generated_text or '',
