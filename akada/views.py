@@ -3,8 +3,28 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from google import genai
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from akada.models import AkadaConversations
 from website.models import User
+
+
+def _send_request_to_ai(prompt) -> str | None:
+    """
+    This function sends a request to the connected AI model and returns a string response from the model
+    """
+    try:
+        gemini_api_key = config('GEMINI_API_KEY')
+        client = genai.Client(api_key=gemini_api_key)
+        gemini_model = 'gemini-2.0-flash-lite'
+        # FETCH RESPONSE FROM GEMINI AI
+        conversation_context += f'{prompt}'
+        response = client.models.generate_content(
+            model=gemini_model,
+            contents=[conversation_context],
+        )
+        return response.text
+    except:
+        return 'Request to AI model Failed'
 
 
 @csrf_exempt
@@ -30,17 +50,8 @@ def prompt_akada(request, username: str):
     if request.method == 'POST':
         try:
             # INIT GEMINI PARAMS
-            gemini_api_key = config('GEMINI_API_KEY')
-            client = genai.Client(api_key=gemini_api_key)
-            gemini_model = 'gemini-2.0-flash-lite'
-            # FETCH RESPONSE FROM GEMINI AI
             prompt = request.POST.get('prompt')
-            conversation_context += f'{prompt}'
-            response = client.models.generate_content(
-                model=gemini_model,
-                contents=[conversation_context],
-            )
-            generated_text = response.text
+            generated_text = _send_request_to_ai(prompt=prompt)
             akada_response = {
                 'role': 'model',
                 'parts': generated_text or '',
@@ -63,6 +74,28 @@ def prompt_akada(request, username: str):
     return JsonResponse({
         'success': True,
         'prompts': prompts_list,
+    })
+
+
+@require_POST
+@csrf_exempt
+def request_smartlink(request, username: str):
+    try:
+        # VERIFY USER
+        if not User.objects.filter(username=username).exists():
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid user!',
+            })
+        # INIT GEMINI PARAMS
+        prompt = request.POST.get('prompt')
+        generated_text = _send_request_to_ai(prompt=prompt)
+        akada_response = generated_text or ''
+    except:
+        akada_response = "🚨 Oops! Connection Trouble\nWe can't reach the AI server or knowledge base.\nCheck your internet and give it another try soon! 🔄🌐",
+    return JsonResponse({
+        'success': True,
+        'smartlink_response': akada_response,
     })
 
 
