@@ -12,7 +12,7 @@ class Quest(models.Model):
     time = models.IntegerField(verbose_name='Time per Question')
     about = models.TextField(blank=True, null=True)
     instructions = models.TextField(blank=True, null=True)
-    bookmarked = models.ManyToManyField(User, blank=True)
+    # bookmarked = models.ManyToManyField(User, blank=True)
     is_premium = models.BooleanField(default=False)
 
     def __str__(self):
@@ -51,7 +51,7 @@ class Library(models.Model):
     author = models.CharField(max_length=200, null=True)
     about = models.TextField(blank=True, null=True)
     about_author = models.TextField(blank=True, null=True)
-    bookmarked = models.ManyToManyField(User, blank=True)
+    # bookmarked = models.ManyToManyField(User, blank=True)
     is_premium = models.BooleanField(default=False)
 
     def __str__(self):
