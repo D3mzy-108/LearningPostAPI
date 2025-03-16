@@ -17,9 +17,6 @@ urlpatterns = [
     path('get-logged-in-user/<str:username>/', get_logged_in_user),
     path('edit-user-profile/<str:username>/', edit_profile),
     path('add-sub-account/<str:username>/', add_sub_account),
-    path('subscription-plans/', get_plans),
-    path('log-subscription/', log_subscription),
-    path('subscription-success/<str:username>/<int:quest_support>/<int:bookee_support>/<int:akada_support>/<str:selected_grades>/<int:duration>/', subscription_success),
     # ========================================================================================================
     # APPLICATION HOME PAGE
     # ========================================================================================================

@@ -69,33 +69,33 @@ class SubAccounts(models.Model):
         return f"{self.parent.first_name} -> {self.child.first_name}"
 
 
-class UserSubscription(models.Model):
-    expiry_date = models.DateField()
-    support_quest = models.BooleanField(default=True)
-    support_bookee = models.BooleanField(default=True)
-    support_akada = models.BooleanField(default=True)
-    supported_grades = models.TextField()
-    profile = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name='subscription')
-    # profile = models.OneToOneField(
-    #     UserProfile, on_delete=models.CASCADE, related_name='subscription')
+# class UserSubscription(models.Model):
+#     expiry_date = models.DateField()
+#     support_quest = models.BooleanField(default=True)
+#     support_bookee = models.BooleanField(default=True)
+#     support_akada = models.BooleanField(default=True)
+#     supported_grades = models.TextField()
+#     profile = models.OneToOneField(
+#         User, on_delete=models.CASCADE, related_name='subscription')
+#     # profile = models.OneToOneField(
+#     #     UserProfile, on_delete=models.CASCADE, related_name='subscription')
 
-    def __str__(self):
-        return f"{self.profile.user.first_name} -> {self.expiry_date}"
+#     def __str__(self):
+#         return f"{self.profile.user.first_name} -> {self.expiry_date}"
 
-    def get_grades(self):
-        grades = self.supported_grades.split(' --- ')
-        return grades
+#     def get_grades(self):
+#         grades = self.supported_grades.split(' --- ')
+#         return grades
 
 
-class SubscriptionLog(models.Model):
-    date = models.DateField(auto_now_add=True)
-    user = models.ForeignKey(
-        User, on_delete=models.SET_NULL, related_name='subscription_logs', null=True)
-    code = models.CharField(max_length=100, unique=True)
-    amount = models.IntegerField()
-    currency = models.CharField(max_length=5, null=True)
-    is_successful = models.BooleanField(default=False)
+# class SubscriptionLog(models.Model):
+#     date = models.DateField(auto_now_add=True)
+#     user = models.ForeignKey(
+#         User, on_delete=models.SET_NULL, related_name='subscription_logs', null=True)
+#     code = models.CharField(max_length=100, unique=True)
+#     amount = models.IntegerField()
+#     currency = models.CharField(max_length=5, null=True)
+#     is_successful = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f"{self.code} >> {self.currency} {self.amount}"
+#     def __str__(self):
+#         return f"{self.code} >> {self.currency} {self.amount}"

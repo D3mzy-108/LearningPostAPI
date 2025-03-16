@@ -22,11 +22,11 @@ class SubAccountsAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(UserSubscription)
-class UserSubscriptionAdmin(admin.ModelAdmin):
-    pass
+# @admin.register(UserSubscription)
+# class UserSubscriptionAdmin(admin.ModelAdmin):
+#     pass
 
 
-@admin.register(SubscriptionLog)
-class SubscriptionLogAdmin(admin.ModelAdmin):
-    pass
+# @admin.register(SubscriptionLog)
+# class SubscriptionLogAdmin(admin.ModelAdmin):
+#     pass
