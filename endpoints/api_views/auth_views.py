@@ -60,6 +60,7 @@ def edit_profile(request, username):
         user.country = request.POST.get('country')
         user.state = request.POST.get('state')
         user.is_active = True
+        user.save()
         return JsonResponse({
             'success': True,
             'message': 'Profile Saved',
