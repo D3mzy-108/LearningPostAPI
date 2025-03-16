@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .api_views.performance_views import get_challenge_performance, get_performance, save_performance
-from .api_views.auth_views import add_sub_account, log_subscription, login_endpoint, get_logged_in_user, edit_profile, get_plans, subscription_success
+from .api_views.auth_views import add_sub_account, login_endpoint, get_logged_in_user, edit_profile
 from .api_views.quest_views import get_grades, get_quest, quests, questions, answer, rate_quest
 from .api_views.library_views import library, chapters, rate_book
 from .api_views.bookmarks_views import bookmarks, add_quest_to_bookmark, add_book_to_bookmark
