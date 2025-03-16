@@ -7,9 +7,9 @@ from django.db.models import Avg, ExpressionWrapper, fields
 
 
 def _get_quest(username):
-    user = get_object_or_404(User, username=username)
-    grades = user.subscription.get_grades()
-    quests = Quest.objects.filter(grade__in=grades).order_by('?')
+    # user = get_object_or_404(User, username=username)
+    # grades = user.subscription.get_grades()
+    quests = Quest.objects.all().order_by('?')
     paginator = Paginator(quests, 30)
     page = 1
     try:
