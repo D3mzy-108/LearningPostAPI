@@ -8,8 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 def get_top_10(request, username, testid):
     user = get_object_or_404(User, username=username)
-    state = request.GET.get('state') or user.profile.state
-    country = request.GET.get('country') or user.profile.country
+    state = request.GET.get('state') or user.state
+    country = request.GET.get('country') or user.country
     if not Leaderboard.objects.filter(
             user__pk=user.pk,
             quest__id=testid).exists():

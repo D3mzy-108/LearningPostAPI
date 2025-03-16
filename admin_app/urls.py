@@ -3,7 +3,7 @@ from django.urls import path
 from .admin_app_views.subscription_views import add_plan, modify_plan, plans
 from .admin_app_views.quests_views import download_quest, quests, create_quest, edit_quest, delete_quest, view_questions, bulk_upload, single_upload, edit_question, delete_question
 from .admin_app_views.library_views import create_book, delete_book, delete_chapter, edit_book, library, upload_chapter, view_book
-from .admin_app_views.classifications_views import classifications, delete_code, generate_new_code
+# from .admin_app_views.classifications_views import classifications, delete_code, generate_new_code
 from .admin_app_views.reports_views import send_report, user_feedback
 
 urlpatterns = [
@@ -25,13 +25,6 @@ urlpatterns = [
          edit_question, name='edit_question'),
     path('quests/questions/<int:pk>/delete/',
          delete_question, name='delete_question'),
-    # ========================================================================================================
-    # CLASSIFICATIONS
-    # ========================================================================================================
-    path('classifications/', classifications, name="classifications"),
-    path('classifications/generate-new-referral/',
-         generate_new_code, name="generate_referral"),
-    path('classifications/<int:id>/delete/', delete_code, name="delete_code"),
     # ========================================================================================================
     # LIBRARY
     # ========================================================================================================

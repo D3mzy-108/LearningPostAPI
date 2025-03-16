@@ -8,6 +8,8 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True)
     profile_photo = models.URLField(null=True, blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f"{self.username} ~ {self.first_name}"
@@ -19,43 +21,43 @@ class User(AbstractUser):
         super(User, self).save(*args, **kwargs)
 
 
-class UserProfile(models.Model):
-    schools = [
-        {
-            'name': 'The African Church Model College',
-            'subscription_percentage': 17,
-        },
-        {
-            'name': 'Other',
-            'subscription_percentage': 0,
-        },
-    ]
-    school_choices = [
-        (school['name'], school['name']) for school in schools
-    ]
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name='profile')
-    phone = models.CharField(max_length=100, null=True, blank=True)
-    date_of_birth = models.DateField(null=True, blank=True)
-    school = models.CharField(
-        max_length=200, null=True, choices=school_choices, default=school_choices[len(school_choices) - 1])
-    country = models.CharField(max_length=100, null=True)
-    state = models.CharField(max_length=100, null=True)
-    guardian_email = models.EmailField(null=True, blank=True)
-    guardian_phone = models.CharField(max_length=100, blank=True, null=True)
+# class UserProfile(models.Model):
+#     schools = [
+#         {
+#             'name': 'The African Church Model College',
+#             'subscription_percentage': 17,
+#         },
+#         {
+#             'name': 'Other',
+#             'subscription_percentage': 0,
+#         },
+#     ]
+#     school_choices = [
+#         (school['name'], school['name']) for school in schools
+#     ]
+#     user = models.OneToOneField(
+#         User, on_delete=models.CASCADE, related_name='profile')
+#     phone = models.CharField(max_length=100, null=True, blank=True)
+#     date_of_birth = models.DateField(null=True, blank=True)
+#     school = models.CharField(
+#         max_length=200, null=True, choices=school_choices, default=school_choices[len(school_choices) - 1])
+#     country = models.CharField(max_length=100, null=True)
+#     state = models.CharField(max_length=100, null=True)
+#     guardian_email = models.EmailField(null=True, blank=True)
+#     guardian_phone = models.CharField(max_length=100, blank=True, null=True)
 
-    def __str__(self):
-        return self.user.username
+#     def __str__(self):
+#         return self.user.username
 
 
-class BetaReferal(models.Model):
-    code = models.SlugField(unique=True)
-    is_used = models.BooleanField(default=False)
-    profile = models.OneToOneField(
-        UserProfile, on_delete=models.CASCADE, related_name='referral', blank=True, null=True)
+# class BetaReferal(models.Model):
+#     code = models.SlugField(unique=True)
+#     is_used = models.BooleanField(default=False)
+#     profile = models.OneToOneField(
+#         UserProfile, on_delete=models.CASCADE, related_name='referral', blank=True, null=True)
 
-    def __str__(self):
-        return self.code
+#     def __str__(self):
+#         return self.code
 
 
 class SubAccounts(models.Model):
@@ -74,7 +76,9 @@ class UserSubscription(models.Model):
     support_akada = models.BooleanField(default=True)
     supported_grades = models.TextField()
     profile = models.OneToOneField(
-        UserProfile, on_delete=models.CASCADE, related_name='subscription')
+        User, on_delete=models.CASCADE, related_name='subscription')
+    # profile = models.OneToOneField(
+    #     UserProfile, on_delete=models.CASCADE, related_name='subscription')
 
     def __str__(self):
         return f"{self.profile.user.first_name} -> {self.expiry_date}"

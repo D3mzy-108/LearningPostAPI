@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from admin_app.models import Quest, SubscriptionPlan
-from website.models import SubAccounts, SubscriptionLog, User, UserProfile, BetaReferal, UserSubscription
+from website.models import SubAccounts, SubscriptionLog, User, UserSubscription
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 from datetime import date, timedelta, datetime
@@ -16,7 +16,6 @@ def login_endpoint(request):
     if request.method == 'POST':
         # Extract user data from the request
         user_id = request.POST.get('userId')
-        display_name = request.POST.get('displayName')
         email = request.POST.get('email')
         profileUrl = request.POST.get('profileURL')
         # Add other necessary user information
@@ -27,79 +26,43 @@ def login_endpoint(request):
 
         # If the user is newly created, set additional attributes
         if created:
-            user.first_name = display_name
             user.profile_photo = profileUrl
+            user.is_active = False
             # Set other user attributes as needed
             user.save()
 
         # Login the user
         auth.login(request, user)
 
-        profile = UserProfile.objects.filter(user__pk=user.pk)
-        account_activated = False
-        if profile.exists():
-            rc = ''
-            if BetaReferal.objects.filter(profile__pk=profile.first().pk).exists():
-                rc = profile.first().referral.code
-                account_activated = True
-            if not UserSubscription.objects.filter(profile__pk=profile.first().pk).exists():
-                subscription = UserSubscription()
-                trial_period = date.today() + timedelta(days=7)
-                subscription.expiry_date = trial_period.strftime('%Y-%m-%d')
-                grade_list = Quest.objects.all().order_by(
-                    'grade').values_list('grade', flat=True).distinct()
-                list_of_grades = []
-                for grade in grade_list:
-                    list_of_grades.append(grade)
-                subscription.supported_grades = (" --- ").join(list_of_grades)
-                subscription.profile = profile.first()
-                subscription.save()
-            else:
-                subscription = profile.first().subscription
-            user_profile = {
-                'phone': profile.first().phone,
-                'date_of_birth': profile.first().date_of_birth,
-                'school': profile.first().school,
-                'referal_code': rc,
-                'country': profile.first().country,
-                'state': profile.first().state,
-                'guardian_email': profile.first().guardian_email,
-                'guardian_phone': profile.first().guardian_phone,
-            }
-            user_subscription = {
-                'expiry_date': subscription.expiry_date,
-                'support_quest': subscription.support_quest,
-                'support_bookee': subscription.support_bookee,
-                'support_akada': subscription.support_akada,
-                'supported_grades': subscription.supported_grades.split(' --- '),
-            }
-        else:
+        if not UserSubscription.objects.filter(profile__pk=user.pk).exists():
+            subscription = UserSubscription()
+            trial_period = date.today() + timedelta(days=7)
+            subscription.expiry_date = trial_period.strftime('%Y-%m-%d')
             grade_list = Quest.objects.all().order_by(
                 'grade').values_list('grade', flat=True).distinct()
             list_of_grades = []
             for grade in grade_list:
                 list_of_grades.append(grade)
-            user_profile = {
-                'phone': '',
-                'date_of_birth': '',
-                'school': '',
-                'referal_code': '',
-                'country': '',
-                'state': '',
-                'guardian_email': '',
-                'guardian_phone': '',
-            }
-            user_subscription = {
-                'expiry_date': date.today(),
-                'support_quest': True,
-                'support_bookee': True,
-                'support_akada': True,
-                'supported_grades': list_of_grades,
-            }
+            subscription.supported_grades = (" --- ").join(list_of_grades)
+            subscription.profile = user
+            subscription.save()
+        else:
+            subscription = user.subscription
+        user_profile = {
+            'country': user.country,
+            'state': user.state,
+        }
+        user_subscription = {
+            'expiry_date': subscription.expiry_date,
+            'support_quest': subscription.support_quest,
+            'support_bookee': subscription.support_bookee,
+            'support_akada': subscription.support_akada,
+            'supported_grades': subscription.supported_grades.split(' --- '),
+        }
         context = {
             'success': True,
             'message': 'Login Successful!',
-            'isNewUser': not profile.exists() or not account_activated,
+            'isNewUser': not user.is_active,
             'userProfile': user_profile,
             'subscription': user_subscription,
         }
@@ -114,61 +77,30 @@ def login_endpoint(request):
 @csrf_exempt
 def edit_profile(request, username):
     user = get_object_or_404(User, username=username)
-    profiles = UserProfile.objects.filter(user__pk=user.pk)
-    if not profiles.exists():
-        profile = UserProfile()
-        profile.user = user
-        subscription = UserSubscription()
-        trial_period = date.today() + timedelta(days=7)
-        subscription.expiry_date = trial_period.strftime('%Y-%m-%d')
-        subscription.profile = profile
-    else:
-        profile = profiles.first()
-        subscription = profile.subscription
     if request.method == 'POST':
-        profile.phone = request.POST.get('phone')
-        profile.date_of_birth = request.POST.get('dob')
-        profile.school = request.POST.get('school')
-        profile.country = request.POST.get('country')
-        profile.state = request.POST.get('state')
-        profile.guardian_email = request.POST.get('guardian_email')
-        profile.guardian_phone = request.POST.get('guardian_phone')
-        if not profiles.exists():
-            subscription.supported_grades = request.POST.get('grades') or ''
-        referal_code = request.POST.get('ref_code')
-        referral = BetaReferal.objects.filter(code=referal_code)
-        if referral.exists():
-            m_ref = referral.first()
-            if not m_ref.is_used:
-                profile.save()
-                subscription.save()
-                m_ref.is_used = True
-                m_ref.profile = profile
-                m_ref.save()
-                message = 'Your profile has been updated!'
-            else:
-                if m_ref.profile.user.pk == profile.user.pk:
-                    profile.save()
-                    subscription.save()
-                    message = 'Your profile has been updated!'
-                else:
-                    message = 'Referral has already been used!'
-            return JsonResponse({
-                'success': True,
-                'message': message,
-                'user_subscription': {
-                    'expiry_date': subscription.expiry_date,
-                    'support_quest': subscription.support_quest,
-                    'support_bookee': subscription.support_bookee,
-                    'support_akada': subscription.support_akada,
-                    'supported_grades': subscription.supported_grades.split(' --- '),
-                },
-            })
+        user.first_name = request.POST.get('displayName')
+        user.country = request.POST.get('country')
+        user.state = request.POST.get('state')
+        user.is_active = True
+        if not UserSubscription.objects.filter(profile__pk=user.pk).exists():
+            subscription = UserSubscription()
+            trial_period = date.today() + timedelta(days=7)
+            subscription.expiry_date = trial_period.strftime('%Y-%m-%d')
+            subscription.profile = user
+            subscription.save()
         else:
-            return JsonResponse({
-                'success': False,
-                'message': 'Invalid referral code!',
-            })
+            subscription = user.subscription
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile Saved',
+            'user_subscription': {
+                'expiry_date': subscription.expiry_date,
+                'support_quest': subscription.support_quest,
+                'support_bookee': subscription.support_bookee,
+                'support_akada': subscription.support_akada,
+                'supported_grades': subscription.supported_grades.split(' --- '),
+            },
+        })
     return JsonResponse({
         'success': False,
         'message': 'Invalid request!',
@@ -178,14 +110,8 @@ def edit_profile(request, username):
 def get_logged_in_user(request, username):
     user = User.objects.filter(username=username)
     user_profile = {
-        'phone': '',
-        'date_of_birth': '',
-        'school': '',
-        'referal_code': '',
         'country': '',
         'state': '',
-        'guardian_email': '',
-        'guardian_phone': '',
     }
     if user.exists():
         m_user = get_object_or_404(User, username=username)
@@ -193,21 +119,10 @@ def get_logged_in_user(request, username):
         display_name = m_user.first_name
         email = m_user.email
         profile_url = m_user.profile_photo
-        profile = UserProfile.objects.filter(user__pk=m_user.pk)
-        rc = ''
-        if BetaReferal.objects.filter(profile__pk=profile.first().pk):
-            rc = profile.first().referral.code
-        if profile.exists():
-            user_profile = {
-                'phone': profile.first().phone,
-                'date_of_birth': profile.first().date_of_birth,
-                'school': profile.first().school,
-                'referal_code': rc,
-                'country': profile.first().country,
-                'state': profile.first().state,
-                'guardian_email': profile.first().guardian_email,
-                'guardian_phone': profile.first().guardian_phone,
-            }
+        user_profile = {
+            'country': m_user.country,
+            'state': m_user.state,
+        }
         sub_accounts = []
         for account in SubAccounts.objects.filter(parent__pk=m_user.pk):
             sub_accounts.append({
@@ -235,20 +150,18 @@ def get_logged_in_user(request, username):
 @csrf_exempt
 def add_sub_account(request, username):
     if request.method == 'POST':
-        code = request.POST.get('ref_code')
-        referral = get_object_or_404(BetaReferal, code=code)
-        if referral.profile is not None:
-            child = referral.profile.user
-            parent = get_object_or_404(User, username=username)
-            if not SubAccounts.objects.filter(parent__pk=parent.pk, child__pk=child.pk).exists():
-                account_instance = SubAccounts()
-                account_instance.parent = parent
-                account_instance.child = child
-                account_instance.save()
-            return JsonResponse({
-                'success': True,
-                'message': 'Account has been linked!'
-            })
+        code = request.POST.get('username')
+        child = get_object_or_404(User, username=code)
+        parent = get_object_or_404(User, username=username)
+        if not SubAccounts.objects.filter(parent__pk=parent.pk, child__pk=child.pk).exists():
+            account_instance = SubAccounts()
+            account_instance.parent = parent
+            account_instance.child = child
+            account_instance.save()
+        return JsonResponse({
+            'success': True,
+            'message': 'Account has been linked!'
+        })
     return JsonResponse({
         'success': False,
         'message': 'Invalid Request!'
@@ -296,7 +209,7 @@ def log_subscription(request):
                 'username': user.username,
                 'name': user.first_name,
                 'email': user.email,
-                'phone': user.profile.phone,
+                'phone': user.phone,
             },
         })
     else:
@@ -314,7 +227,7 @@ def subscription_success(request, username, quest_support, bookee_support, akada
     sub_log.is_successful = True
     # UPDATE USER SUBSCRIPTION DETAILS
     user_subscription = get_object_or_404(
-        UserSubscription, profile__pk=user.profile.pk)
+        UserSubscription, profile__pk=user.pk)
     user_subscription.support_quest = quest_support == 1
     user_subscription.support_bookee = bookee_support == 1
     user_subscription.support_akada = akada_support == 1
@@ -336,27 +249,4 @@ def subscription_success(request, username, quest_support, bookee_support, akada
             'supported_grades': user_subscription.supported_grades.split(' --- '),
         },
 
-    })
-
-
-def get_partnered_schools(request):
-    schools = UserProfile.school_choices
-    return JsonResponse({
-        'schools': schools,
-    })
-
-
-def create_referral(request):
-    random_string = request.GET.get('random_string')
-    referral = BetaReferal()
-    if not BetaReferal.objects.filter(code__icontains=random_string).exists():
-        referral.code = random_string
-    else:
-        ref_count = BetaReferal.objects.filter(
-            code__icontains=random_string).count()
-        referral.code = f'{random_string}-{ref_count}'
-    referral.save()
-    return JsonResponse({
-        'success': True,
-        'referral': referral.code,
     })
