@@ -1,5 +1,7 @@
 from django.urls import path
 
+from endpoints.api_views.subscription import get_subscription_plans
+
 from .api_views.performance_views import get_challenge_performance, get_performance, save_performance
 from .api_views.auth_views import add_sub_account, login_endpoint, get_logged_in_user, edit_profile
 from .api_views.quest_views import get_grades, get_quest, quests, questions, answer, rate_quest
@@ -55,4 +57,8 @@ urlpatterns = [
     path('save-performance/<str:username>/', save_performance),
     path('get-performance/<str:username>/', get_performance),
     path('get-challenge-history/<str:username>/', get_challenge_performance),
+    # ========================================================================================================
+    # SUBSCRIPTION
+    # ========================================================================================================
+    path('subscription-plans/', get_subscription_plans),
 ]
