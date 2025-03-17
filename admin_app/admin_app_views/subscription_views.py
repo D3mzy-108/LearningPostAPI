@@ -10,6 +10,7 @@ def plans(request):
     plans = SubscriptionPlan.objects.all()
     context = {
         'plans': plans,
+        'currencies': SubscriptionPlan.currencies,
     }
     return render(request, 'admin_app/subscription_plans/plans.html', context)
 
@@ -20,9 +21,8 @@ def add_plan(request):
         plan = SubscriptionPlan()
         plan.plan = request.POST['plan']
         plan.duration = request.POST['duration']
-        plan.quest_price = request.POST['q_cost']
-        plan.bookee_price = request.POST['b_cost']
-        plan.akada_price = request.POST['a_cost']
+        plan.currency = request.POST['currency']
+        plan.price = request.POST['price']
         plan.save()
     return redirect(request.META.get('HTTP_REFERER'))
 
@@ -33,8 +33,7 @@ def modify_plan(request, id):
         plan = get_object_or_404(SubscriptionPlan, id=id)
         plan.plan = request.POST['plan']
         plan.duration = request.POST['duration']
-        plan.quest_price = request.POST['q_cost']
-        plan.bookee_price = request.POST['b_cost']
-        plan.akada_price = request.POST['a_cost']
+        plan.currency = request.POST['currency']
+        plan.price = request.POST['price']
         plan.save()
     return redirect(request.META.get('HTTP_REFERER'))

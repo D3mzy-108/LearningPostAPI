@@ -1,143 +1,142 @@
 {% extends 'admin.html' %}
 {% load static %}
 {% block screen %}
-<div class="w-full">
+<div class="w-full max-w-screen">
     <span class="mr-auto text-xl text-[var(--fg)] font-bold">Subscription Plans</span>
-    <div class="mt-8 border border-white/10 rounded-lg">
-        <button type="button" onclick="$('#createPlanForm').slideToggle(300)"
-            class="w-full bg-[var(--bg2)] border-none outline-none py-4 px-4 text-[var(--fg2)] text-start flex gap-2 items-center justify-between rounded-lg">
+    <div class="my-8">
+        <button type="button" id="createPlanTgl"
+            class="w-full outline-none py-4 px-4 text-[var(--fg2)] text-start flex gap-2 items-center justify-between bg-white/10 border border-white/5 rounded-xl shadow-lg">
             <span class="font-medium text-lg text-[var(--fg)]">Create Plan</span>
             <ion-icon name="add-circle-outline" class="text-2xl"></ion-icon>
         </button>
-        <div id="createPlanForm" class="w-full py-6 px-4">
+    </div>
+
+    <!-- SUBSCRIPTION PLANS LIST -->
+    <div class="w-full overflow-auto h-fit bg-white/10 border border-white/5 rounded-xl shadow-lg px-2 py-1">
+        <table class="table-auto w-full">
+            <thead>
+                <tr>
+                    <th class="text-start text-[var(--fg2)] py-2 px-4">Plan</th>
+                    <th class="text-start text-[var(--fg2)] py-2 px-4">Price</th>
+                    <th class="text-start text-[var(--fg2)] py-2 px-4">Duration</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plan in plans %}
+                <tr class="border-t border-t-white/20">
+                    <td class="text-start text-[var(--fg)] py-2 px-4">{{plan.plan}}</td>
+                    <td class="text-start text-[var(--fg)] py-2 px-4">{{plan.currency}} {{plan.price}}</td>
+                    <td class="text-start text-[var(--fg)] py-2 px-4">{{plan.duration}} days</td>
+                    <td class="text-end text-[var(--fg)] py-2 px-4">
+                        <!-- ACTIONS -->
+                        <button type="button" data-id="{{plan.id}}"
+                            class="tgl-edit-plan bg-white/10 px-2 aspect-square rounded-full grid place-items-center ml-auto">
+                            <ion-icon name="pencil-outline"></ion-icon>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- CREATE PLAN DIALOG -->
+    <dialog id="createPlanCard" class="w-[100vw] h-full bg-transparent mx-auto">
+        <div class="w-full max-w-xl rounded-xl bg-[var(--bg2)] p-6 mt-20 mx-auto shadow-xl">
             <form action="{% url 'add_plan' %}" method="post">
                 {% csrf_token %}
-                <div class="flex max-sm:flex-col gap-4">
-                    <div class="w-full md:flex-1">
-                        <label for="plan" class="text-[var(--fg)] font-medium">Plan Name*</label>
-                        <input type="text" maxlength="20" name="plan" id="plan"
-                            class="w-full py-2 px-3 mt-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
-                            required>
-                    </div>
-                    <div class="w-full md:flex-1">
-                        <label for="duration" class="text-[var(--fg)] font-medium">Duration*</label>
-                        <div class="w-full flex items-center rounded-md bg-[var(--bg2)] pr-3 mt-2">
-                            <input type="number" name="duration" id="duration"
-                                class="w-full py-2 px-3 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
-                                required>
-                            <label for="duration" class="text-[var(--fg)] text-sm font-medium">days</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex max-sm:flex-col gap-4 my-6">
-                    <div class="w-full md:flex-1">
-                        <label for="q_cost" class="text-[var(--fg)] font-medium">Quest Cost*</label>
-                        <input type="number" name="q_cost" id="q_cost"
-                            class="w-full py-2 px-3 mt-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
-                            required>
-                    </div>
-                    <div class="w-full md:flex-1">
-                        <label for="b_cost" class="text-[var(--fg)] font-medium">Bookee Cost*</label>
-                        <input type="number" name="b_cost" id="b_cost"
-                            class="w-full py-2 px-3 mt-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
-                            required>
-                    </div>
-                    <div class="w-full md:flex-1">
-                        <label for="a_cost" class="text-[var(--fg)] font-medium">Akada Cost*</label>
-                        <input type="number" name="a_cost" id="a_cost"
-                            class="w-full py-2 px-3 mt-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
-                            required>
-                    </div>
-                </div>
-                <div class="w-full text-center pt-4">
-                    <button type="submit"
-                        class="w-full max-w-sm rounded-md py-3 px-4 bg-[var(--highlight)] font-semibold">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="mt-8 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {% for plan in plans %}
-        <div class="w-full rounded-xl p-4 bg-[var(--bg)] border border-white/10">
-            <div class="planCard planCard{{plan.id}}">
-                <div class="flex w-full items-start">
-                    <div class="flex-1">
-                        <span class="text-sm text-[var(--fg2)]">{{plan.plan}}</span>
-                        <div class="text-3xl text-[var(--fg)] font-medium">
-                            ₦{{plan.quest_price|add:plan.bookee_price|add:plan.akada_price}}</div>
-                    </div>
-                    <button type="button" data-id="{{plan.id}}"
-                        class="tgl-edit-plan bg-transparent outline-none text-[var(--lightgray)] px-[0.35rem] aspect-square border border-[var(--lightgray)] rounded-full grid place-items-center">
-                        <ion-icon name="pencil-outline"></ion-icon>
-                    </button>
-                </div>
-                <div class="mt-4 flex flex-col gap-1">
-                    <div class="flex items-center justify-between gap-4">
-                        <span class="text-[var(--fg2)]">Quest :</span>
-                        <span class="text-[var(--fg)]">₦{{plan.quest_price}}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-4">
-                        <span class="text-[var(--fg2)]">Bookee :</span>
-                        <span class="text-[var(--fg)]">₦{{plan.bookee_price}}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-4">
-                        <span class="text-[var(--fg2)]">Akada :</span>
-                        <span class="text-[var(--fg)]">₦{{plan.akada_price}}</span>
-                    </div>
-                </div>
-            </div>
-            <form action="{% url 'modify_plan' id=plan.id %}" method="post" class="w-full planCard planCard{{plan.id}}">
-                {% csrf_token %}
                 <div class="flex flex-col gap-3">
-                    <legend class="text-[var(--fg2)] text-lg">Modify {{plan.plan}}</legend>
+                    <legend class="text-[var(--fg)] text-lg font-bold">Create Subscription Plan</legend>
                     <div class="flex items-center justify-between gap-4 mt-1">
-                        <span class="text-[var(--fg2)]">Plan :</span>
+                        <div class="flex-1 text-[var(--fg2)]">Plan :</div>
                         <input type="text" maxlength="20" name="plan"
-                            class="flex-1 py-1 px-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
+                            class="flex-2 py-2 px-4 rounded-lg bg-white/10 border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
                             required value="{{plan.plan}}">
                     </div>
                     <div class="flex items-center justify-between gap-4">
-                        <span class="text-[var(--fg2)]">Duration :</span>
-                        <div class="flex-1 flex items-center rounded-md bg-[var(--bg2)] pr-3">
+                        <div class="flex-1 text-[var(--fg2)]">Duration :</div>
+                        <div class="flex-3 flex items-center rounded-md bg-white/10 pr-3">
                             <input type="number" name="duration" placeholder="Duration"
-                                class="w-full flex-1 py-1 px-2 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
+                                class="w-full flex-1 py-2 px-4 rounded-md bg-transparent border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
                                 required value="{{plan.duration}}">
                             <span class="text-[var(--fg)] text-sm font-medium">days</span>
                         </div>
                     </div>
                     <div class="flex items-center justify-between gap-4">
-                        <span class="text-[var(--fg2)]">Quest :</span>
-                        <input type="number" name="q_cost"
-                            class="flex-1 py-1 px-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
+                        <div class="flex-1 text-[var(--fg2)]">Price :</div>
+                        <input type="number" name="price"
+                            class="flex-2 py-2 px-4 rounded-lg bg-white/10 border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
                             required value="{{plan.quest_price}}">
                     </div>
                     <div class="flex items-center justify-between gap-4">
-                        <span class="text-[var(--fg2)]">Bookee :</span>
-                        <input type="number" name="b_cost"
-                            class="flex-1 py-1 px-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
-                            required value="{{plan.bookee_price}}">
+                        <div class="flex-1 text-[var(--fg2)]">Currency :</div>
+                        <select name="currency" id="" class="bg-transparent border-none py-2 px-4 text-[var(--fg)]">
+                            {% for currency in currencies %}
+                            <option value="{{currency|first}}">{{currency|last}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <div class="flex items-center justify-between gap-4">
-                        <span class="text-[var(--fg2)]">Akada :</span>
-                        <input type="number" name="a_cost"
-                            class="flex-1 py-1 px-2 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
-                            required value="{{plan.akada_price}}">
-                    </div>
-                    <div class="flex w-full gap-4 mt-1">
-                        <button type="button" data-id="{{plan.id}}"
-                            class="tgl-edit-plan w-full border border-[var(--lightgray)] rounded-full py-2 text-[var(--lightgray)] grid place-items-center">
-                            <ion-icon name="close-outline"></ion-icon>
-                        </button>
+                    <div class="flex w-full gap-4 mt-1 justify-center">
                         <button type="submit"
-                            class="w-full border border-[var(--green)] rounded-full py-2 text-[var(--green)] grid place-items-center">
-                            <ion-icon name="checkmark-outline"></ion-icon>
+                            class="rounded-lg py-3 px-12 text-[var(--fg)] bg-[var(--highlight)] font-medium">
+                            Submit
                         </button>
                     </div>
                 </div>
             </form>
         </div>
-        {% endfor %}
-    </div>
+    </dialog>
+
+    <!-- EDIT PLAN DIALOGS -->
+    {% for plan in plans %}
+    <dialog id="planCard{{plan.id}}" class="w-[100vw] h-full bg-transparent mx-auto">
+        <div class="w-full max-w-xl rounded-xl bg-[var(--bg2)] p-6 mt-20 mx-auto shadow-xl">
+            <form action="{% url 'modify_plan' id=plan.id %}" method="post" class="w-full">
+                {% csrf_token %}
+                <div class="flex flex-col gap-3">
+                    <legend class="text-[var(--fg)] text-lg font-bold">Modify {{plan.plan}}</legend>
+                    <div class="flex items-center justify-between gap-4 mt-1">
+                        <div class="flex-1 text-[var(--fg2)]">Plan :</div>
+                        <input type="text" maxlength="20" name="plan"
+                            class="flex-2 py-2 px-4 rounded-lg bg-white/10 border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
+                            required value="{{plan.plan}}">
+                    </div>
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex-1 text-[var(--fg2)]">Duration :</div>
+                        <div class="flex-3 flex items-center rounded-md bg-white/10 pr-3">
+                            <input type="number" name="duration" placeholder="Duration"
+                                class="w-full flex-1 py-2 px-4 rounded-md bg-transparent border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
+                                required value="{{plan.duration}}">
+                            <span class="text-[var(--fg)] text-sm font-medium">days</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex-1 text-[var(--fg2)]">Price :</div>
+                        <input type="number" name="price"
+                            class="flex-2 py-2 px-4 rounded-lg bg-white/10 border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-medium"
+                            required value="{{plan.price}}">
+                    </div>
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex-1 text-[var(--fg2)]">Currency :</div>
+                        <select name="currency" id="" class="bg-transparent border-none py-2 px-4 text-[var(--fg)]">
+                            {% for currency in plan.currencies %}
+                            <option value="{{currency|first}}">{{currency|last}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="flex w-full gap-4 mt-1 justify-center">
+                        <button type="submit"
+                            class="rounded-lg py-3 px-12 text-[var(--fg)] bg-[var(--highlight)] font-medium">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </dialog>
+    {% endfor %}
 </div>
 
 <style>
@@ -145,8 +144,9 @@
         display: none;
     }
 
-    .planCard:last-child {
-        display: none;
+    dialog::backdrop {
+        backdrop-filter: blur(1rem);
+        background: #ffffff20;
     }
 
     .tgl-edit-plan * {
@@ -155,8 +155,23 @@
 </style>
 
 <script>
+    $('#createPlanTgl').click((e) => {
+        const dialog = document.getElementById(`createPlanCard`);
+        dialog.showModal();
+        dialog.addEventListener("click", (event) => {
+            if (event.target === dialog) {
+                dialog.close();
+            }
+        });
+    })
     $('.tgl-edit-plan').click((e) => {
-        $(`.planCard${$(e.target).attr('data-id')}`).slideToggle(300)
+        const dialog = document.getElementById(`planCard${$(e.target).attr('data-id')}`);
+        dialog.showModal();
+        dialog.addEventListener("click", (event) => {
+            if (event.target === dialog) {
+                dialog.close();
+            }
+        });
     })
 </script>
 

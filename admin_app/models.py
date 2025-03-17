@@ -140,11 +140,13 @@ class MPerformance(models.Model):
 
 
 class SubscriptionPlan(models.Model):
+    currencies = [
+        ('NGN', 'NGN'),
+    ]
     plan = models.CharField(max_length=20)
+    currency = models.CharField(max_length=5, choices=currencies, null=True)
     duration = models.IntegerField()
-    quest_price = models.IntegerField()
-    bookee_price = models.IntegerField()
-    akada_price = models.IntegerField()
+    price = models.FloatField(default=0.0)
 
     def __str__(self):
-        return f'{self.plan} ~ {self.quest_price + self.bookee_price + self.akada_price}'
+        return f'{self.plan} ~ {self.price}'
