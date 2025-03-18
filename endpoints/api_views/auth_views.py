@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from admin_app.models import Quest, SubscriptionPlan
-from website.models import SubAccounts, User
+from website.models import SubAccounts, User, UserSubscription
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 from datetime import date, timedelta, datetime
@@ -33,6 +33,16 @@ def login_endpoint(request):
 
         # Login the user
         auth.login(request, user)
+        user_subscriptions = UserSubscription.objects.filter(
+            profile__email=email)
+        if not user_subscriptions.exists():
+            user_subscription = UserSubscription()
+            today = datetime.date.today()
+            expiry_date = today + datetime.timedelta(days=7)
+            user_subscription.expiry_date = expiry_date
+            user_subscription.is_confirmed = True
+            user_subscription.profile = user
+            user_subscription.save()
 
         user_profile = {
             'country': user.country,
