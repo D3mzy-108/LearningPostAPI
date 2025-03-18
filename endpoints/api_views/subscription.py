@@ -95,8 +95,11 @@ def payment_success(request):
 
 
 def is_subscription_valid(user: User) -> bool:
-    today = datetime.date.today()
-    subscription = UserSubscription.objects.get(
-        profile__email=user.email)
-    target_date = subscription.expiry_date
-    return target_date > today
+    try:
+        today = datetime.date.today()
+        subscription = UserSubscription.objects.get(
+            profile__email=user.email)
+        target_date = subscription.expiry_date
+        return target_date > today
+    except:
+        return False
