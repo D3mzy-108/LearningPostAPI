@@ -5,6 +5,7 @@ from google import genai
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from akada.models import AkadaConversations
+from endpoints.api_views.subscription import is_subscription_valid
 from website.models import User
 
 
@@ -28,6 +29,12 @@ def _send_request_to_ai(prompt) -> str | None:
 
 @csrf_exempt
 def prompt_akada(request, username: str):
+    user = get_object_or_404(User, username=username)
+    if not is_subscription_valid(user=user):
+        return JsonResponse({
+            'success': False,
+            'message': 'Your subscription is expired!'
+        })
     # GET LIST OF ALL PROMPTS SENT TO AKADA
     prompts = AkadaConversations.objects.filter(
         user__username=username).order_by('-id')

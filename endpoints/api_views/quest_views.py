@@ -4,6 +4,8 @@ from django.core.paginator import Paginator
 from admin_app.models import *
 from django.db.models import Avg, ExpressionWrapper, fields
 
+from endpoints.api_views.subscription import is_subscription_valid
+
 
 # ========================================================================================================
 # QUESTS
@@ -14,7 +16,8 @@ def quests(request, username):
     category = request.GET.get('category') or ''
     # user = get_object_or_404(User, username=username)
     # grades = user.subscription.get_grades()
-    quests = Quest.objects.filter(grade__icontains=grade, category__icontains=category).order_by('?')
+    quests = Quest.objects.filter(
+        grade__icontains=grade, category__icontains=category).order_by('?')
     if search is not None:
         quests = quests.filter(
             title__icontains=search)
@@ -113,6 +116,12 @@ def get_quest(request, testid, username):
 
 
 def questions(request, testid, username):
+    user = get_object_or_404(User, username=username)
+    if not is_subscription_valid(user=user):
+        return JsonResponse({
+            'success': False,
+            'message': 'Your subscription is expired!'
+        })
     all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
     unanswered_questions = all_questions.exclude(
         answered_by__user__username=username).order_by('?')

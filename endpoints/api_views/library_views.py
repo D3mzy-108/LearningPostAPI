@@ -4,6 +4,8 @@ from django.core.paginator import Paginator
 from admin_app.models import *
 from django.db.models import Avg, ExpressionWrapper, fields
 
+from endpoints.api_views.subscription import is_subscription_valid
+
 
 # ========================================================================================================
 # LIBRARY
@@ -52,6 +54,12 @@ def library(request, username):
 
 
 def chapters(request, username, bookid):
+    user = get_object_or_404(User, username=username)
+    if not is_subscription_valid(user=user):
+        return JsonResponse({
+            'success': False,
+            'message': 'Your subscription is expired!'
+        })
     chapters = Chapter.objects.filter(book__id=bookid).order_by('title')
     list_of_chapters = []
     for chapter in chapters:
