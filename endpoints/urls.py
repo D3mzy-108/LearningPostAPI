@@ -1,6 +1,6 @@
 from django.urls import path
 
-from endpoints.api_views.subscription import get_subscription_plans
+from endpoints.api_views.subscription import get_subscription_plans, make_subscription_request, payment_success, subscribe
 
 from .api_views.performance_views import get_challenge_performance, get_performance, save_performance
 from .api_views.auth_views import add_sub_account, login_endpoint, get_logged_in_user, edit_profile
@@ -61,4 +61,7 @@ urlpatterns = [
     # SUBSCRIPTION
     # ========================================================================================================
     path('subscription-plans/', get_subscription_plans),
+    path('subscription/make-subscription-request/', make_subscription_request),
+    path('subscription/subscribe/', subscribe),
+    path('subscription/payment-success/', payment_success),
 ]
