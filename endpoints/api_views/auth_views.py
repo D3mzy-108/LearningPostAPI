@@ -87,6 +87,7 @@ def get_logged_in_user(request, username):
         'country': '',
         'state': '',
     }
+    is_subscribed = False
     if user.exists():
         m_user = get_object_or_404(User, username=username)
         userid = m_user.username
@@ -104,14 +105,13 @@ def get_logged_in_user(request, username):
                 'displayName': account.child.first_name,
                 'username': account.child.username,
             })
-        subscribed = is_subscription_valid(m_user)
+        is_subscribed = is_subscription_valid(m_user)
     else:
         userid = None
         display_name = 'Guest User'
         email = None
         profile_url = ''
         sub_accounts = []
-        subscribed = False
     context = {
         'userId': userid,
         'displayName': display_name,
@@ -119,7 +119,7 @@ def get_logged_in_user(request, username):
         'profileURL': profile_url,
         'userProfile': user_profile,
         'sub_accounts': sub_accounts,
-        'is_subscribed': subscribed,
+        'is_subscribed': is_subscribed,
     }
     return JsonResponse(context)
 
