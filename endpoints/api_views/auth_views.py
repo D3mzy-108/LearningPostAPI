@@ -90,6 +90,7 @@ def get_logged_in_user(request, username):
     is_subscribed = False
     if user.exists():
         m_user = get_object_or_404(User, username=username)
+        is_subscribed = is_subscription_valid(user=m_user)
         userid = m_user.username
         display_name = m_user.first_name
         email = m_user.email
@@ -105,7 +106,6 @@ def get_logged_in_user(request, username):
                 'displayName': account.child.first_name,
                 'username': account.child.username,
             })
-        is_subscribed = is_subscription_valid(m_user)
     else:
         userid = None
         display_name = 'Guest User'
