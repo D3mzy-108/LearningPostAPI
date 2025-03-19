@@ -100,6 +100,9 @@ def is_subscription_valid(user: User) -> bool:
         subscription = UserSubscription.objects.get(
             profile__email=user.email)
         target_date = subscription.expiry_date
-        return target_date > today
+        if subscription.is_confirmed:
+            return target_date > today
+        else:
+            False
     except:
         return False
