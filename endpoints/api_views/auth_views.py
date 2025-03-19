@@ -2,6 +2,7 @@ import datetime
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from admin_app.models import Quest, SubscriptionPlan
+from endpoints.api_views.subscription import is_subscription_valid
 from website.models import SubAccounts, User, UserSubscription
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
@@ -103,12 +104,14 @@ def get_logged_in_user(request, username):
                 'displayName': account.child.first_name,
                 'username': account.child.username,
             })
+        subscribed = is_subscription_valid(m_user)
     else:
         userid = None
         display_name = 'Guest User'
         email = None
         profile_url = ''
         sub_accounts = []
+        subscribed = False
     context = {
         'userId': userid,
         'displayName': display_name,
@@ -116,6 +119,7 @@ def get_logged_in_user(request, username):
         'profileURL': profile_url,
         'userProfile': user_profile,
         'sub_accounts': sub_accounts,
+        'is_subscribed': subscribed,
     }
     return JsonResponse(context)
 
