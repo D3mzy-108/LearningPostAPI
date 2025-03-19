@@ -49,6 +49,7 @@ def make_subscription_request(request):
 def subscribe(request):
     try:
         payload = json.loads(request.body.decode('utf-8'))
+        print(payload)
         transaction_id = payload['id']
     except Exception as e:
         return HttpResponse(f"Error parsing payload: {e}")
