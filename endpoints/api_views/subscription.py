@@ -72,6 +72,7 @@ def subscribe(request):
         try:
             user = User.objects.get(email=customer_email)
         except User.DoesNotExist:
+            print('USER NOT FOUND')
             return HttpResponse("User not found")
 
         # Get the user's wallet
@@ -82,11 +83,14 @@ def subscribe(request):
             subscription.save()
 
             # You can optionally return a success response to Flutterwave
+            print('SUBSCRIPTION SUCCESSFUL')
             return HttpResponse("Subscription successful")
         except:
+            print('SUBSCRIPTION FAILED')
             return HttpResponse("Subscription Failed")
     else:
         # Handle unsuccessful transactions (log or perform other actions)
+        print('PAYMENT FAILED')
         return HttpResponse("Payment not successful")
 
 
