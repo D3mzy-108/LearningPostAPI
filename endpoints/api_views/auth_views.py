@@ -127,7 +127,7 @@ def get_logged_in_user(request, username):
 @csrf_exempt
 def add_sub_account(request, username):
     if request.method == 'POST':
-        code = request.POST.get('username')
+        code = request.POST.get('ref_code')
         child = get_object_or_404(User, username=code)
         parent = get_object_or_404(User, username=username)
         if not SubAccounts.objects.filter(parent__pk=parent.pk, child__pk=child.pk).exists():
