@@ -126,9 +126,9 @@ def questions(request, testid, username):
     unanswered_questions = all_questions.exclude(
         answered_by__user__username=username).order_by('?')
     if unanswered_questions.count() > 0:
-        random_items = unanswered_questions[:30]
+        random_items = unanswered_questions[:15]
     else:
-        random_items = all_questions[:30]
+        random_items = all_questions[:15]
     selected_questions = []
 
     for question in random_items:
