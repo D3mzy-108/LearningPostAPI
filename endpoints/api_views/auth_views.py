@@ -1,9 +1,8 @@
 import datetime
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from admin_app.models import Quest, SubscriptionPlan
 from endpoints.api_views.subscription import is_subscription_valid
-from website.models import SubAccounts, User, UserSubscription
+from website.models import User, UserSubscription
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 
@@ -99,42 +98,42 @@ def get_logged_in_user(request, username):
             'country': m_user.country,
             'state': m_user.state,
         }
-        sub_accounts = []
-        for account in SubAccounts.objects.filter(parent__pk=m_user.pk):
-            sub_accounts.append({
-                'profileURL': account.child.profile_photo,
-                'displayName': account.child.first_name,
-                'username': account.child.username,
+        friends = []
+        for account in m_user.friends.all():
+            friends.append({
+                'profileURL': account.profile_photo,
+                'displayName': account.first_name,
+                'username': account.username,
             })
     else:
         userid = None
         display_name = 'Guest User'
         email = None
         profile_url = ''
-        sub_accounts = []
+        friends = []
     context = {
         'userId': userid,
         'displayName': display_name,
         'email': email,
         'profileURL': profile_url,
         'userProfile': user_profile,
-        'sub_accounts': sub_accounts,
+        'friends': friends,
         'is_subscribed': is_subscribed,
     }
     return JsonResponse(context)
 
 
 @csrf_exempt
-def add_sub_account(request, username):
+def add_friend(request, username):
     if request.method == 'POST':
         code = request.POST.get('ref_code')
-        child = get_object_or_404(User, username=code)
-        parent = get_object_or_404(User, username=username)
-        if not SubAccounts.objects.filter(parent__pk=parent.pk, child__pk=child.pk).exists():
-            account_instance = SubAccounts()
-            account_instance.parent = parent
-            account_instance.child = child
-            account_instance.save()
+        party_a = get_object_or_404(User, username=username)
+        party_b = get_object_or_404(User, username=code)
+        if not party_a.friends.all().filter(pk=party_b.pk).exists():
+            party_a.friends.add(party_b)
+            party_b.friends.add(party_a)
+            party_a.save()
+            party_b.save()
         return JsonResponse({
             'success': True,
             'message': 'Account has been linked!'

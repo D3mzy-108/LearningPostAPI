@@ -7,11 +7,6 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'first_name']
 
 
-@admin.register(SubAccounts)
-class SubAccountsAdmin(admin.ModelAdmin):
-    pass
-
-
 @admin.register(UserSubscription)
 class UserSubscriptionAdmin(admin.ModelAdmin):
     pass

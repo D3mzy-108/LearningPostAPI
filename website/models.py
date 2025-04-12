@@ -10,6 +10,8 @@ class User(AbstractUser):
     profile_photo = models.URLField(null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
     state = models.CharField(max_length=100, null=True, blank=True)
+    friends = models.ManyToManyField(
+        'self', blank=True, symmetrical=False)
 
     def __str__(self):
         return f"{self.username} ~ {self.first_name}"
@@ -19,15 +21,6 @@ class User(AbstractUser):
             usn_email = self.email.split('@')[0].lower()
             self.username = slugify(usn_email)
         super(User, self).save(*args, **kwargs)
-
-
-class SubAccounts(models.Model):
-    parent = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='sub_accounts')
-    child = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.parent.first_name} -> {self.child.first_name}"
 
 
 class UserSubscription(models.Model):
