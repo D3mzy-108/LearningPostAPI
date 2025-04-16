@@ -38,6 +38,7 @@ def _build_quest_object(quest, username) -> dict[str, any]:
         'question_count': quest.questions.count(),
         'answered_count': answered_count,
         'rating': rating,
+        'topics': quest.questions.all().order_by('topic').values_list('topic', flat=True).distinct().count(),
     }
 
 
