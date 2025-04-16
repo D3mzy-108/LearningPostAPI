@@ -10,6 +10,60 @@ from endpoints.api_views.subscription import is_subscription_valid
 # ========================================================================================================
 # QUESTS
 # ========================================================================================================
+def _build_quest_object(quest, username) -> dict[str, any]:
+    if User.objects.filter(username=username).exists():
+        answered_count = get_object_or_404(User, username=username).answered.filter(
+            question__quest__pk=quest.pk).count()
+    else:
+        answered_count = 0
+    avg_rating = quest.rated_quests.aggregate(avg_rating=ExpressionWrapper(
+        Avg('rating'),
+        output_field=fields.FloatField()
+    ))['avg_rating']
+    if avg_rating is not None:
+        rating = f'{round(avg_rating, 1)}'
+    else:
+        rating = '5.0'
+
+    return {
+        'testid': quest.pk,
+        'cover': quest.cover.url,
+        'title': quest.title,
+        'grade': quest.grade,
+        'isPremium': quest.is_premium,
+        'time': quest.time,
+        'about': quest.about,
+        'instructions': quest.instructions,
+        'bookmarked': quest.bookmarked.filter(username=username).exists(),
+        'question_count': quest.questions.count(),
+        'answered_count': answered_count,
+        'rating': rating,
+    }
+
+
+def _build_questions_list(questions) -> list[dict]:
+    selected_questions = []
+
+    for question in questions:
+        diagram_url = None
+        if question.diagram:
+            diagram_url = question.diagram.url
+        selected_questions.append({
+            'questionid': question.pk,
+            'comprehension': question.comprehension,
+            'diagram': diagram_url,
+            'question': question.question,
+            'a': question.a,
+            'b': question.b,
+            'c': question.c,
+            'd': question.d,
+            'answer': question.answer,
+            'explanation': question.explanation,
+            'topic': question.topic,
+        })
+    return selected_questions
+
+
 def quests(request, username):
     search = request.GET.get('search')
     grade = request.GET.get('grade') or ''
@@ -21,7 +75,7 @@ def quests(request, username):
     if search is not None:
         quests = quests.filter(
             title__icontains=search)
-    paginator = Paginator(quests, 50)
+    paginator = Paginator(quests, 100)
     page = request.GET.get('page')
     if page == None:
         page = 1
@@ -31,34 +85,7 @@ def quests(request, username):
         displayed_quests = []
     quests_list = []
     for quest in displayed_quests:
-        if User.objects.filter(username=username).exists():
-            answered_count = get_object_or_404(User, username=username).answered.filter(
-                question__quest__pk=quest.pk).count()
-        else:
-            answered_count = 0
-        avg_rating = quest.rated_quests.aggregate(avg_rating=ExpressionWrapper(
-            Avg('rating'),
-            output_field=fields.FloatField()
-        ))['avg_rating']
-        if avg_rating is not None:
-            rating = f'{round(avg_rating, 1)}'
-        else:
-            rating = '5.0'
-
-        quests_list.append({
-            'testid': quest.pk,
-            'cover': quest.cover.url,
-            'title': quest.title,
-            'grade': quest.grade,
-            'isPremium': quest.is_premium,
-            'time': quest.time,
-            'about': quest.about,
-            'instructions': quest.instructions,
-            'bookmarked': quest.bookmarked.filter(username=username).exists(),
-            'question_count': quest.questions.count(),
-            'answered_count': answered_count,
-            'rating': rating,
-        })
+        quests_list.append(_build_quest_object(quest, username))
     grade_list = Quest.objects.all().order_by(
         'grade').values_list('grade', flat=True).distinct()
     category_list = Quest.objects.all().order_by(
@@ -80,34 +107,8 @@ def quests(request, username):
 
 def get_quest(request, testid, username):
     quest = get_object_or_404(Quest, id=testid)
-    if User.objects.filter(username=username).exists():
-        answered_count = get_object_or_404(User, username=username).answered.filter(
-            question__quest__pk=quest.pk).count()
-    else:
-        answered_count = 0
-    avg_rating = quest.rated_quests.aggregate(avg_rating=ExpressionWrapper(
-        Avg('rating'),
-        output_field=fields.FloatField()
-    ))['avg_rating']
-    if avg_rating is not None:
-        rating = f'{round(avg_rating, 1)}'
-    else:
-        rating = '5.0'
 
-    quest_obj = {
-        'testid': quest.pk,
-        'cover': quest.cover.url,
-        'title': quest.title,
-        'grade': quest.grade,
-        'isPremium': quest.is_premium,
-        'time': quest.time,
-        'about': quest.about,
-        'instructions': quest.instructions,
-        'bookmarked': quest.bookmarked.filter(username=username).exists(),
-        'question_count': quest.questions.count(),
-        'answered_count': answered_count,
-        'rating': rating,
-    }
+    quest_obj = _build_quest_object(quest, username)
     context = {
         'success': True,
         'quest': quest_obj,
@@ -129,28 +130,10 @@ def questions(request, testid, username):
         random_items = unanswered_questions[:15]
     else:
         random_items = all_questions[:15]
-    selected_questions = []
 
-    for question in random_items:
-        diagram_url = None
-        if question.diagram:
-            diagram_url = question.diagram.url
-        selected_questions.append({
-            'questionid': question.pk,
-            'comprehension': question.comprehension,
-            'diagram': diagram_url,
-            'question': question.question,
-            'a': question.a,
-            'b': question.b,
-            'c': question.c,
-            'd': question.d,
-            'answer': question.answer,
-            'explanation': question.explanation,
-            'topic': question.topic,
-        })
     context = {
         'success': True,
-        'questions': selected_questions,
+        'questions': _build_questions_list(random_items),
     }
     return JsonResponse(context)
 
@@ -195,5 +178,40 @@ def get_grades(request):
     context = {
         'success': True,
         'grades': list_of_grades,
+    }
+    return JsonResponse(context)
+
+
+# =================================================================================
+# PRACTICE QUEST VIEWS
+# =================================================================================
+def get_quest_topics(request, testid) -> JsonResponse:
+    """
+    Returns an object list of all the topics in a quest along with the question count of each topic.
+    """
+    quest = get_object_or_404(Quest, id=testid)
+    questions = Question.objects.filter(quest__pk=quest.pk)
+    distinct_topics = questions.order_by('topic').values_list(
+        'topic', flat=True).distinct()
+    topics = []
+    for topic in distinct_topics:
+        topics.append({
+            'testid': quest.id,
+            'topic': topic,
+            'question_count': questions.filter(topic=topic).count()
+        })
+
+    return JsonResponse({
+        'success': True,
+        'topics': topics,
+    })
+
+
+def get_practice_questions(request, testid, topic) -> JsonResponse:
+    questions = Question.objects.filter(
+        quest__pk=testid, topic=topic).order_by('?')
+    context = {
+        'success': True,
+        'questions': _build_questions_list(questions),
     }
     return JsonResponse(context)
