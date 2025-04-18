@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from admin_app.models import *
 from django.db.models import Avg, ExpressionWrapper, fields
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 
 from endpoints.api_views.subscription import is_subscription_valid
 
@@ -208,9 +210,11 @@ def get_quest_topics(request, testid) -> JsonResponse:
     })
 
 
-def get_practice_questions(request, testid, topic) -> JsonResponse:
+@require_POST
+@csrf_exempt
+def get_practice_questions(request, testid) -> JsonResponse:
     questions = Question.objects.filter(
-        quest__pk=testid, topic=topic).order_by('?')
+        quest__pk=testid, topic=request.POST.get('topic')).order_by('?')
     context = {
         'success': True,
         'questions': _build_questions_list(questions),

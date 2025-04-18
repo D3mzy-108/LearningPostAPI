@@ -34,7 +34,7 @@ urlpatterns = [
     path('<str:username>/rate-quest/<int:testid>/<str:rating>/', rate_quest),
     # PRACTICE QUEST
     path('get-quest-topics/<int:testid>/', get_quest_topics),
-    path('get-practice-questions/<int:testid>/<str:topic>/', get_practice_questions),
+    path('get-practice-questions/<int:testid>/', get_practice_questions),
     # ========================================================================================================
     # LIBRARY
     # ========================================================================================================
