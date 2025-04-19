@@ -6,6 +6,7 @@ from django.db.models import Avg, ExpressionWrapper, fields
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
+from akada.utils import NewStudyMaterialInstance, _save_study_materials_instance
 from endpoints.api_views.subscription import is_subscription_valid
 
 
@@ -197,12 +198,18 @@ def get_quest_topics(request, testid) -> JsonResponse:
     distinct_topics = questions.order_by('topic').values_list(
         'topic', flat=True).distinct()
     topics = []
+    study_material_instances = []
     for topic in distinct_topics:
         topics.append({
             'testid': quest.id,
             'topic': topic,
             'question_count': questions.filter(topic=topic).count()
         })
+        study_material_instances.append(NewStudyMaterialInstance(
+            topic=topic,
+            quest=quest
+        ))
+    _save_study_materials_instance(instances=study_material_instances)
 
     return JsonResponse({
         'success': True,

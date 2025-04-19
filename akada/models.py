@@ -1,4 +1,5 @@
 from django.db import models
+from admin_app.models import Quest
 from website.models import User
 
 
@@ -15,6 +16,29 @@ class AkadaConversations(models.Model):
 
     def __str__(self):
         return f'{self.user.first_name} - {self.prompt}'
+
+
+class GeneratedStudyMaterials(models.Model):
+    quest = models.ForeignKey(
+        Quest, on_delete=models.SET_NULL, null=True, blank=True)
+    topic = models.CharField(max_length=200)
+    content = models.TextField(null=True, blank=True)
+    bookmarked = models.ManyToManyField(
+        User, related_name='bookmarked_study_materials', blank=True)
+
+    class Meta:
+        verbose_name = 'GeneratedStudyMaterials'
+        verbose_name_plural = 'GeneratedStudyMaterials'
+
+    def __str__(self):
+        return f'{self.topic}'
+
+    def save(self, *args, **kwargs):
+        is_new_instance = self._state.adding
+        if is_new_instance:
+            if self.quest is not None and not self.quest.title in self.topic:
+                self.topic = f'{self.topic} - {self.quest.title}'
+        return super().save(*args, **kwargs)
 
 
 # from django.db import models

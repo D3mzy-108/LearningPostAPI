@@ -1,12 +1,14 @@
 from decouple import config
+from google import genai
+
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from google import genai
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from akada.models import AkadaConversations
-from endpoints.api_views.subscription import is_subscription_valid
+
+from akada.models import AkadaConversations, GeneratedStudyMaterials
 from website.models import User
+from endpoints.api_views.subscription import is_subscription_valid
 
 
 def _send_request_to_ai(prompt) -> str | None:
@@ -104,6 +106,75 @@ def request_smartlink(request, username: str):
         'success': True,
         'smartlink_response': akada_response,
     })
+
+
+def get_study_materials(request):
+    search = request.GET.get('search') or ''
+    uid = request.GET.get('uid')
+    if uid:
+        user = get_object_or_404(User, username=uid)
+        generated_study_materials = GeneratedStudyMaterials.objects.filter(
+            topic__icontains=search, bookmarked__pk=user.pk).order_by('topic')
+    else:
+        generated_study_materials = GeneratedStudyMaterials.objects.filter(
+            topic__icontains=search).order_by('?')
+    study_materials = [
+        {
+            'material_id': _.pk,
+            'topic': _.topic,
+            'cover_img': _.quest.cover.url if _.quest else None,
+            'subject': _.quest.title if _.quest else None,
+            'quest_id': _.quest.pk if _.quest else None,
+        } for _ in generated_study_materials
+    ]
+    return JsonResponse({
+        'success': True,
+        'study_materials': study_materials,
+    })
+
+
+def get_material_content(request, material_id):
+    generated_study_material = get_object_or_404(
+        GeneratedStudyMaterials, pk=material_id)
+    if not generated_study_material.content:
+        akada_response = _send_request_to_ai(
+            f'Write a short textbook covering all core areas on the topic "{generated_study_material.topic}" in 4000 words')
+        if akada_response is None:
+            return JsonResponse({
+                'success': False,
+                'message': 'Unable to generate content. Please try again later.'
+            })
+        generated_study_material.content = akada_response
+        generated_study_material.save()
+    return JsonResponse({
+        'success': True,
+        'content': generated_study_material.content,
+    })
+
+
+def bookmark_study_material(request, material_id, username):
+    try:
+        generated_study_material = GeneratedStudyMaterials.objects.get(
+            pk=material_id)
+        user = User.objects.get(username=username)
+        is_bookmarked = False
+        if generated_study_material.bookmarked.filter(pk=user.pk).exists():
+            generated_study_material.bookmarked.remove(user)
+            is_bookmarked = False
+        else:
+            generated_study_material.bookmarked.add(user)
+            is_bookmarked = True
+        generated_study_material.save()
+        return JsonResponse({
+            'success': True,
+            'message': 'Bookmark updated!',
+            'bookmarked': is_bookmarked,
+        })
+    except:
+        return JsonResponse({
+            'success': False,
+            'message': 'Item not found'
+        })
 
 
 # import os
