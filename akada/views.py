@@ -110,9 +110,9 @@ def request_smartlink(request, username: str):
 
 def get_study_materials(request):
     search = request.GET.get('search') or ''
-    uid = request.GET.get('uid')
-    if uid:
-        user = get_object_or_404(User, username=uid)
+    uid = request.GET.get('uid') or ''
+    user = get_object_or_404(User, username=uid)
+    if search == 'bookmarked':
         generated_study_materials = GeneratedStudyMaterials.objects.filter(
             topic__icontains=search, bookmarked__pk=user.pk).order_by('topic')
     else:
@@ -125,6 +125,7 @@ def get_study_materials(request):
             'cover_img': _.quest.cover.url if _.quest else None,
             'subject': _.quest.title if _.quest else None,
             'quest_id': _.quest.pk if _.quest else None,
+            'bookmarked': _.bookmarked.filter(pk=user.pk).exists(),
         } for _ in generated_study_materials
     ]
     return JsonResponse({
