@@ -114,7 +114,7 @@ def get_study_materials(request):
     user = get_object_or_404(User, username=uid)
     if search == 'bookmarked':
         generated_study_materials = GeneratedStudyMaterials.objects.filter(
-            topic__icontains=search, bookmarked__pk=user.pk).order_by('topic')
+            bookmarked__pk=user.pk).order_by('topic')
     else:
         generated_study_materials = GeneratedStudyMaterials.objects.filter(
             topic__icontains=search).order_by('?')
