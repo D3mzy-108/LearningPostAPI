@@ -11,11 +11,11 @@ from endpoints.api_views.subscription import is_subscription_valid
 # LIBRARY
 # ========================================================================================================
 def library(request, username):
-    books = Library.objects.all().order_by('?')
+    books = Library.objects.filter(organization=None).order_by('?')
     search = request.GET.get('search')
     if search is not None:
         books = books.filter(title__icontains=search)
-    paginator = Paginator(books, 50)
+    paginator = Paginator(books, 100)
     page = request.GET.get('page')
     if page == None:
         page = 1

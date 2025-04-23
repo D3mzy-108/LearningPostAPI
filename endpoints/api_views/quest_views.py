@@ -75,7 +75,7 @@ def quests(request, username):
     # user = get_object_or_404(User, username=username)
     # grades = user.subscription.get_grades()
     quests = Quest.objects.filter(
-        grade__icontains=grade, category__icontains=category).order_by('?')
+        grade__icontains=grade, category__icontains=category, organization=None).order_by('?')
     if search is not None:
         quests = quests.filter(
             title__icontains=search)

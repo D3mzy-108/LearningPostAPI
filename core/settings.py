@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'website',
     'admin_app',
+    'learningpost_professional',
     'akada',
     'challenge_app',
     'endpoints',

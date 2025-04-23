@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Avg
+from learningpost_professional.models import ProfessionalOrganization
 from website.models import User
 from django.core.validators import FileExtensionValidator
 
@@ -14,6 +15,8 @@ class Quest(models.Model):
     instructions = models.TextField(blank=True, null=True)
     bookmarked = models.ManyToManyField(User, blank=True)
     is_premium = models.BooleanField(default=False)
+    organization = models.ForeignKey(ProfessionalOrganization, on_delete=models.CASCADE,
+                                     related_name='professional_quests', null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -53,6 +56,8 @@ class Library(models.Model):
     about_author = models.TextField(blank=True, null=True)
     bookmarked = models.ManyToManyField(User, blank=True)
     is_premium = models.BooleanField(default=False)
+    organization = models.ForeignKey(ProfessionalOrganization, on_delete=models.CASCADE,
+                                     related_name='professional_books', null=True, blank=True)
 
     def __str__(self):
         return self.title
