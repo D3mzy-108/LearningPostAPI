@@ -20,6 +20,11 @@ def professional_signup(request):
     password = request.POST.get('password')
     company_code = request.POST.get('company_code')
 
+    # VERIFY ORGANIZATION CODE
+    organization = get_object_or_404(
+        ProfessionalOrganization, organization_code=company_code)
+
+    # CREATE NEW USER
     if not User.objects.filter(username=username).exists():
         user_instance = User()
         user_instance.first_name = first_name
@@ -29,9 +34,8 @@ def professional_signup(request):
         user_instance.set_password(password)
         user_instance.save()
 
+    # ADD USER TO ORGANIZATION
     user = get_object_or_404(User, username=username)
-    organization = get_object_or_404(
-        ProfessionalOrganization, organization_code=company_code)
     organization.members.add(user)
     organization.save()
 
