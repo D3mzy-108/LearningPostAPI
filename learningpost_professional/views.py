@@ -24,6 +24,14 @@ def professional_signup(request):
     organization = get_object_or_404(
         ProfessionalOrganization, organization_code=company_code)
 
+    # VERIFY IF USER EXISTS
+    user_exists = User.objects.filter(email=email).exists()
+    if user_exists:
+        return JsonResponse({
+            'success': False,
+            'message': 'User email has already been registered!',
+        })
+
     # CREATE NEW USER
     if not User.objects.filter(username=username).exists():
         user_instance = User()
