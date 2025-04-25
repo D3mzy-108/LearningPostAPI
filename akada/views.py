@@ -54,7 +54,7 @@ def prompt_akada(request, username: str):
     for pr in prompts_list[:4]:
         conversation_context += f'{pr["parts"]}\n'
     else:
-        conversation_context += f'"\n\nRespond in an informal tone, and as detailed as possible\n\n'
+        conversation_context += f'"\n\nRespond in an informal tone as detailed as possible,and with about 200 words\n\n'
     if request.method == 'POST':
         try:
             # INIT GEMINI PARAMS
@@ -98,7 +98,7 @@ def request_smartlink(request, username: str):
             })
         # INIT GEMINI PARAMS
         prompt = request.POST.get('prompt')
-        generated_text = _send_request_to_ai(prompt=prompt)
+        generated_text = _send_request_to_ai(prompt=f'{prompt}\n\n Your response should be in about 200 words')
         akada_response = generated_text or ''
     except:
         akada_response = "🚨 Oops! Connection Trouble\nWe can't reach the AI server or knowledge base.\nCheck your internet and give it another try soon! 🔄🌐",
