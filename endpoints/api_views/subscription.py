@@ -102,15 +102,12 @@ def payment_success(request):
 
 def is_subscription_valid(user: User) -> bool:
     try:
-        organizations = ProfessionalOrganization.objects.filter(
-            members__pk=user.pk)
-        if organizations.exists():
-            return True
-
         today = datetime.date.today()
         subscription = UserSubscription.objects.get(
             profile__email=user.email, is_confirmed=True)
         target_date = subscription.expiry_date
         return target_date > today
     except:
-        return False
+        organizations = ProfessionalOrganization.objects.filter(
+            members__pk=user.pk)
+        return organizations.exists()
