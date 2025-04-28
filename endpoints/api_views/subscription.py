@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods, require_POST
 from django.views.decorators.csrf import csrf_exempt
 import requests
 from admin_app.models import SubscriptionPlan
+from learningpost_professional.models import ProfessionalOrganization
 from website.models import User, UserSubscription
 
 
@@ -101,6 +102,11 @@ def payment_success(request):
 
 def is_subscription_valid(user: User) -> bool:
     try:
+        organizations = ProfessionalOrganization.objects.filter(
+            members__pk=user.pk)
+        if organizations.exists():
+            return True
+
         today = datetime.date.today()
         subscription = UserSubscription.objects.get(
             profile__email=user.email, is_confirmed=True)
