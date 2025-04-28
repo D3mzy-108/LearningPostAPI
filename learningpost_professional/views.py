@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 
-from admin_app.models import Quest
+from admin_app.models import Chapter, Library, Quest
 from endpoints.api_views.quest_views import _build_quest_object
 from learningpost_professional.models import ProfessionalOrganization
 from website.models import User
@@ -100,5 +100,32 @@ def pro_quests(request, username):
     context = {
         'success': True,
         'quests': quests_list,
+    }
+    return JsonResponse(context)
+
+
+def pro_library(request, username):
+    user = get_object_or_404(User, username=username)
+    organizations = ProfessionalOrganization.objects.filter(
+        members__pk=user.pk)
+    books = Library.objects.filter(
+        organization__in=organizations).order_by('?')
+    search = request.GET.get('search')
+    if search is not None:
+        books = books.filter(title__icontains=search)
+    books_list = []
+    for book in books:
+        books_list.append({
+            'bookid': book.id,
+            'cover': book.cover.url,
+            'title': book.title,
+            'about': book.about,
+            'author': book.author,
+            'about_author': book.about_author,
+            'chapters_count': Chapter.objects.filter(book__id=book.id).count(),
+        })
+    context = {
+        'success': True,
+        'books': books_list
     }
     return JsonResponse(context)
