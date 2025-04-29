@@ -60,4 +60,4 @@ class Score(models.Model):
         verbose_name_plural = 'Scores'
 
     def __str__(self):
-        pass
+        return self.user.username
