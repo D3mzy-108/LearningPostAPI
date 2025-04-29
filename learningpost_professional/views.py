@@ -159,7 +159,7 @@ def get_tests(request, username):
 def get_questions(request, testid):
     questions = TestQuestion.objects.filter(test__pk=testid)
     questions_list = []
-    for question in questions
+    for question in questions:
         diagram_url = None
         if question.diagram:
             diagram_url = question.diagram.url
