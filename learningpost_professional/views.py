@@ -160,7 +160,7 @@ def get_questions(request, testid):
     questions = TestQuestion.objects.filter(test__pk=testid)
     questions_list = [
         {
-            'test': question.test,
+            'testid': question.test.pk,
             'comprehension': question.comprehension,
             'diagram': question.diagram,
             'question': question.question,
