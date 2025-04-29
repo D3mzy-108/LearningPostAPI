@@ -201,3 +201,25 @@ def save_test_score(request, username: str, testid: int):
             'success': False,
             'message': 'Invalid information provided',
         })
+
+
+def get_score(request, username: str, testid: int):
+    user = get_object_or_404(User, username=username)
+    organizations = ProfessionalOrganization.objects.filter(
+        members__pk=user.pk)
+    score = Score.objects.filter(
+        test__pk=testid, user__username=username).first()
+    if score is not None:
+        return JsonResponse({
+            'success': True,
+            'score': {
+                'score': score.score,
+                'date_attempted': score.date.date(),
+                'test': score.test.titl
+            }
+        })
+    else:
+        return JsonResponse({
+            'success': False,
+            'message': "Couldn't find record of user's attempt"
+        })

@@ -30,9 +30,6 @@ class Test(models.Model):
     def __str__(self):
         return self.title
 
-    def average_rating(self):
-        return self.rated_quests.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 5.0
-
 
 class TestQuestion(models.Model):
     test = models.ForeignKey(
@@ -45,6 +42,9 @@ class TestQuestion(models.Model):
     c = models.TextField()
     d = models.TextField()
     answer = models.TextField()
+
+    def __str__(self):
+        pass
 
 
 class Score(models.Model):
