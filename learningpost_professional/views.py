@@ -205,8 +205,8 @@ def save_test_score(request, username: str, testid: int):
 
 def get_score(request, username: str, testid: int):
     user = get_object_or_404(User, username=username)
-    organizations = ProfessionalOrganization.objects.filter(
-        members__pk=user.pk)
+    # organizations = ProfessionalOrganization.objects.filter(
+    #     members__pk=user.pk)
     score = Score.objects.filter(
         test__pk=testid, user__username=username).first()
     if score is not None:
@@ -215,7 +215,7 @@ def get_score(request, username: str, testid: int):
             'score': {
                 'score': score.score,
                 'date_attempted': score.date.date(),
-                'test': score.test.titl
+                'test': score.test.title,
             }
         })
     else:
