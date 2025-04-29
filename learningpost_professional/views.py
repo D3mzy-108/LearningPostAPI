@@ -176,7 +176,7 @@ def get_questions(request, testid):
         })
     return JsonResponse({
         'success': True,
-        'tests': questions_list,
+        'questions': questions_list,
     })
 
 
