@@ -158,19 +158,22 @@ def get_tests(request, username):
 
 def get_questions(request, testid):
     questions = TestQuestion.objects.filter(test__pk=testid)
-    questions_list = [
-        {
+    questions_list = []
+    for question in questions
+        diagram_url = None
+        if question.diagram:
+            diagram_url = question.diagram.url
+        questions_list.append({
             'testid': question.test.pk,
             'comprehension': question.comprehension,
-            'diagram': question.diagram,
+            'diagram': diagram_url,
             'question': question.question,
             'a': question.a,
             'b': question.b,
             'c': question.c,
             'd': question.d,
             'answer': question.answer,
-        } for question in questions
-    ]
+        })
     return JsonResponse({
         'success': True,
         'tests': questions_list,
