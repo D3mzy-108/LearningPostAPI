@@ -1,9 +1,10 @@
+import datetime
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 
 from admin_app.models import Chapter, Library, Quest
 from endpoints.api_views.quest_views import _build_quest_object
-from learningpost_professional.models import ProfessionalOrganization
+from learningpost_professional.models import ProfessionalOrganization, Score, Test, TestQuestion
 from website.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -129,3 +130,71 @@ def pro_library(request, username):
         'books': books_list
     }
     return JsonResponse(context)
+
+
+def get_tests(request, username):
+    user = get_object_or_404(User, username=username)
+    organizations = ProfessionalOrganization.objects.filter(
+        members__pk=user.pk)
+    tests = Test.objects.filter(organization__in=organizations)
+    tests_list = [{
+        'testid': test.pk,
+        'title': test.title,
+        'cover': test.cover.url,
+        'time': test.time,
+        'about': test.about,
+        'instructions': test.instructions,
+        'is_locked': test.expires <= datetime.date.today(),
+        'is_attempted': test.participants.all().filter(username=username).exists(),
+        'status': 'Closed' if test.expires <= datetime.date.today() else f'Closes on {test.expires}',
+        'question_count': test.test_questions.count(),
+    } for test in tests]
+
+    return JsonResponse({
+        'success': True,
+        'tests': tests_list,
+    })
+
+
+def get_questions(request, testid):
+    questions = TestQuestion.objects.filter(test__pk=testid)
+    questions_list = [
+        {
+            'test': question.test,
+            'comprehension': question.comprehension,
+            'diagram': question.diagram,
+            'question': question.question,
+            'a': question.a,
+            'b': question.b,
+            'c': question.c,
+            'd': question.d,
+            'answer': question.answer,
+        } for question in questions
+    ]
+    return JsonResponse({
+        'success': True,
+        'tests': questions_list,
+    })
+
+
+@require_POST
+@csrf_exempt
+def save_test_score(request, username: str, testid: int):
+    try:
+        score = request.POST.get('score')
+        user = User.objects.get(username=username)
+        test = Test.objects.get(pk=testid)
+        score_instance = Score()
+        score_instance.user = user
+        score_instance.test = test
+        score_instance.score = score
+        score_instance.save()
+        return JsonResponse({
+            'success': True,
+            'message': 'Score has been saved!',
+        })
+    except:
+        return JsonResponse({
+            'success': False,
+            'message': 'Invalid information provided',
+        })
