@@ -145,7 +145,7 @@ def get_tests(request, username):
         'about': test.about,
         'instructions': test.instructions,
         'is_locked': test.expires <= datetime.date.today(),
-        'is_attempted': test.participants.all().filter(username=username).exists(),
+        'is_attempted': test.participants.all().filter(user__username=username).exists(),
         'status': 'Closed' if test.expires <= datetime.date.today() else f'Closes on {test.expires}',
         'question_count': test.test_questions.count(),
     } for test in tests]
