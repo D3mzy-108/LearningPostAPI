@@ -5,6 +5,7 @@ from endpoints.api_views.subscription import is_subscription_valid
 from website.models import User, UserSubscription
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 
 # ========================================================================================================
@@ -62,21 +63,18 @@ def login_endpoint(request):
 
 
 @csrf_exempt
+@require_POST
 def edit_profile(request, username):
     user = get_object_or_404(User, username=username)
-    if request.method == 'POST':
-        user.first_name = request.POST.get('displayName')
-        user.country = request.POST.get('country')
-        user.state = request.POST.get('state')
-        user.is_active = True
-        user.save()
-        return JsonResponse({
-            'success': True,
-            'message': 'Profile Saved',
-        })
+    user.first_name = request.POST.get('displayName')
+    user.country = request.POST.get('country')
+    user.state = request.POST.get('state')
+    user.dob = datetime.datetime.strptime(request.POST.get('date'), '%d-%m-%Y')
+    user.is_active = True
+    user.save()
     return JsonResponse({
-        'success': False,
-        'message': 'Invalid request!',
+        'success': True,
+        'message': 'Profile Saved',
     })
 
 

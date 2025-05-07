@@ -12,6 +12,7 @@ class User(AbstractUser):
     state = models.CharField(max_length=100, null=True, blank=True)
     friends = models.ManyToManyField(
         'self', blank=True, symmetrical=False)
+    dob = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.username} ~ {self.first_name}"
