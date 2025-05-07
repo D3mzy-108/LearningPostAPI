@@ -47,7 +47,7 @@ def login_endpoint(request):
         user_profile = {
             'country': user.country,
             'state': user.state,
-            'dob': user.dob,
+            'dob': user.dob.strftime('%d-%m-%Y') if user.dob else None,
         }
         context = {
             'success': True,
