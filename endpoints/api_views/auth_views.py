@@ -47,6 +47,7 @@ def login_endpoint(request):
         user_profile = {
             'country': user.country,
             'state': user.state,
+            'dob': user.dob,
         }
         context = {
             'success': True,
