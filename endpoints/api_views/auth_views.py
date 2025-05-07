@@ -70,7 +70,7 @@ def edit_profile(request, username):
     user.first_name = request.POST.get('displayName')
     user.country = request.POST.get('country')
     user.state = request.POST.get('state')
-    user.dob = datetime.datetime.strptime(request.POST.get('date'), '%d-%m-%Y')
+    user.dob = datetime.datetime.strptime(request.POST.get('dob'), '%d-%m-%Y')
     user.is_active = True
     user.save()
     return JsonResponse({
