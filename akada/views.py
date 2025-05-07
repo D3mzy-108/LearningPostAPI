@@ -1,3 +1,4 @@
+from datetime import date
 from decouple import config
 from google import genai
 
@@ -11,7 +12,7 @@ from website.models import User
 from endpoints.api_views.subscription import is_subscription_valid
 
 
-def _send_request_to_ai(prompt) -> str | None:
+def _send_request_to_ai(user: User | None, prompt: str) -> str | None:
     """
     This function sends a request to the connected AI model and returns a string response from the model
     """
@@ -19,10 +20,22 @@ def _send_request_to_ai(prompt) -> str | None:
         gemini_api_key = config('GEMINI_API_KEY')
         client = genai.Client(api_key=gemini_api_key)
         gemini_model = 'gemini-2.0-flash-lite'
-        # FETCH RESPONSE FROM GEMINI AI
+
+        # CALCULATE USER AGE FOR TAILORED RESPONSE
+        if user:
+            today = date.today()
+            dob = user.dob
+            age = 10
+            if dob:
+                age = today.year - dob.year
+
+            # FETCH RESPONSE FROM GEMINI AI
+            user_prompt = f'{prompt}\n\nTailor the response for a {age} year old to easily understand'
+        else:
+            user_prompt = prompt
         response = client.models.generate_content(
             model=gemini_model,
-            contents=[prompt],
+            contents=[user_prompt],
         )
         return response.text
     except:
@@ -54,13 +67,14 @@ def prompt_akada(request, username: str):
     for pr in prompts_list[:4]:
         conversation_context += f'{pr["parts"]}\n'
     else:
-        conversation_context += f'"\n\nRespond in an informal tone as detailed as possible,and with about 200 words\n\n'
+        conversation_context += f'"\n\nRespond in an informal tone in about 150 words including as much detail as possible\n\n'
     if request.method == 'POST':
         try:
             # INIT GEMINI PARAMS
             prompt = request.POST.get('prompt')
             conversation_context += f'{prompt}'
-            generated_text = _send_request_to_ai(prompt=conversation_context)
+            generated_text = _send_request_to_ai(
+                user=user, prompt=conversation_context)
             akada_response = {
                 'role': 'model',
                 'parts': generated_text or '',
@@ -97,8 +111,10 @@ def request_smartlink(request, username: str):
                 'message': 'Invalid user!',
             })
         # INIT GEMINI PARAMS
+        user = User.objects.get(username=username)
         prompt = request.POST.get('prompt')
-        generated_text = _send_request_to_ai(prompt=f'{prompt}\n\n Your response should be in about 200 words')
+        generated_text = _send_request_to_ai(user=user,
+                                             prompt=f'{prompt}\n\n Your response should be in about 200 words')
         akada_response = generated_text or ''
     except:
         akada_response = "🚨 Oops! Connection Trouble\nWe can't reach the AI server or knowledge base.\nCheck your internet and give it another try soon! 🔄🌐",
@@ -138,8 +154,8 @@ def get_material_content(request, material_id):
     generated_study_material = get_object_or_404(
         GeneratedStudyMaterials, pk=material_id)
     if not generated_study_material.content:
-        akada_response = _send_request_to_ai(
-            f'Write a short textbook covering all core areas on the topic "{generated_study_material.topic}" in 4000 words')
+        akada_response = _send_request_to_ai(user=None,
+                                             prompt=f'Write a short textbook covering all core areas on the topic "{generated_study_material.topic}" in 4000 words')
         if akada_response is None:
             return JsonResponse({
                 'success': False,
