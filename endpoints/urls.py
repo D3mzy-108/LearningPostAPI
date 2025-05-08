@@ -7,7 +7,7 @@ from .api_views.auth_views import add_friend, login_endpoint, get_logged_in_user
 from .api_views.quest_views import get_grades, get_practice_questions, get_quest, get_quest_topics, quests, questions, answer, rate_quest
 from .api_views.library_views import library, chapters, rate_book
 from .api_views.bookmarks_views import bookmarks, add_quest_to_bookmark, add_book_to_bookmark
-from .api_views.leaderboard_views import get_top_10, update_rank
+from .api_views.leaderboard_views import get_top_10, get_top_10_global, update_rank
 from .api_views.home_views import home_endpoint
 
 
@@ -53,6 +53,7 @@ urlpatterns = [
     # LEADERBOARD
     # ========================================================================================================
     path('top-ten-leaderboard/<str:username>/<int:testid>/', get_top_10),
+    path('top-ten-global-leaderboard/<str:username>/', get_top_10_global),
     path('update-rank/<str:username>/<int:testid>/', update_rank),
     # ========================================================================================================
     # PERFORMANCE

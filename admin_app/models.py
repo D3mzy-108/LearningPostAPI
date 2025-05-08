@@ -1,8 +1,11 @@
+import datetime
+
 from django.db import models
 from django.db.models import Avg
+from django.core.validators import FileExtensionValidator
+
 from learningpost_professional.models import ProfessionalOrganization
 from website.models import User
-from django.core.validators import FileExtensionValidator
 
 
 class Quest(models.Model):
@@ -106,9 +109,11 @@ class Leaderboard(models.Model):
         Quest, on_delete=models.CASCADE, related_name='quest_rankings')
     streak = models.IntegerField(default=0)
     questions_answered = models.IntegerField(default=0)
+    xp = models.IntegerField(default=0)
+    date = models.DateField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return f"{self.user.username} | {self.streak} streak | {self.questions_answered} questions"
+        return f"{self.user.username} | {self.xp} xp | {self.date}"
 
 
 class UserFeedback(models.Model):
