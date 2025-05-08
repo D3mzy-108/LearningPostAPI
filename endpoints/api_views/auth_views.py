@@ -84,6 +84,7 @@ def get_logged_in_user(request, username):
     user_profile = {
         'country': '',
         'state': '',
+        'dob': '',
     }
     is_subscribed = False
     if user.exists():
@@ -96,6 +97,7 @@ def get_logged_in_user(request, username):
         user_profile = {
             'country': m_user.country,
             'state': m_user.state,
+            'dob': m_user.dob.strftime('%d-%m-%Y') if m_user.dob else None,
         }
         friends = []
         for account in m_user.friends.all():
