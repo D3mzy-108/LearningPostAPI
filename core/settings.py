@@ -32,21 +32,23 @@ elif config("DEBUG") == 'False':
 ALLOWED_HOSTS = [
     "learningpost.ng",
     "www.learningpost.ng",
-    "app.learningpost.ng",
-    "www.app.learningpost.ng",
-    "portal.admin.learningpost.ng",
-    "www.portal.admin.learningpost.ng",
+    # "app.learningpost.ng",
+    # "www.app.learningpost.ng",
+    # "portal.admin.learningpost.ng",
+    # "www.portal.admin.learningpost.ng",
+    # "learningpostchallengesocket.onrender.com",
     "localhost",
-    "127.0.0.1"
+    "127.0.0.1",
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "https://learningpost.ng",
     "https://app.learningpost.ng",
     "https://portal.admin.learningpost.ng",
-    "http://learningpost.ng",
-    "http://app.learningpost.ng",
-    "http://portal.admin.learningpost.ng",
+    # "http://learningpost.ng",
+    # "http://app.learningpost.ng",
+    # "http://portal.admin.learningpost.ng",
+    "wss://learningpostchallengesocket.onrender.com",
     "http://localhost:5000",
 ]
 
