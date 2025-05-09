@@ -3,7 +3,7 @@ from django.urls import path
 from endpoints.api_views.subscription import get_subscription_plans, make_subscription_request, payment_success, subscribe
 
 from .api_views.performance_views import get_challenge_performance, get_performance, save_performance
-from .api_views.auth_views import add_friend, login_endpoint, get_logged_in_user, edit_profile
+from .api_views.auth_views import add_friend, login_endpoint, get_logged_in_user, edit_profile, update_status
 from .api_views.quest_views import get_grades, get_practice_questions, get_quest, get_quest_topics, quests, questions, answer, rate_quest
 from .api_views.library_views import library, chapters, rate_book
 from .api_views.bookmarks_views import bookmarks, add_quest_to_bookmark, add_book_to_bookmark
@@ -19,6 +19,7 @@ urlpatterns = [
     path('get-logged-in-user/<str:username>/', get_logged_in_user),
     path('edit-user-profile/<str:username>/', edit_profile),
     path('add-friend/<str:username>/', add_friend),
+    path('update-status/', update_status),
     # ========================================================================================================
     # APPLICATION HOME PAGE
     # ========================================================================================================

@@ -143,3 +143,18 @@ def add_friend(request, username):
         'success': False,
         'message': 'Invalid Request!'
     })
+
+
+@require_POST
+@csrf_exempt
+def update_status(request):
+    username = request.POST.get('username') or ''
+    is_online = request.POST.get('is_online') or False
+    user = get_object_or_404(User, username=username)
+    user.online = is_online
+    user.save()
+    status = "online" if is_online else "offline"
+    return JsonResponse({
+        'success': True,
+        'message': f'{user.first_name} is {status}',
+    })

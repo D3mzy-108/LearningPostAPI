@@ -13,6 +13,7 @@ class User(AbstractUser):
     friends = models.ManyToManyField(
         'self', blank=True, symmetrical=False)
     dob = models.DateField(blank=True, null=True)
+    online = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.username} ~ {self.first_name}"
