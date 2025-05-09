@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import ChallengeRoom, ChallengeScore
+from .models import ArenaRoom, Participants
 
 
-@admin.register(ChallengeRoom)
-class ChallengeRoomAdmin(admin.ModelAdmin):
+@admin.register(ArenaRoom)
+class ArenaRoomAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(ChallengeScore)
-class ChallengeScoreAdmin(admin.ModelAdmin):
+@admin.register(Participants)
+class ParticipantsAdmin(admin.ModelAdmin):
     pass

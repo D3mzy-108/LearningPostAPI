@@ -4,16 +4,19 @@ from django.utils.text import slugify
 from admin_app.models import Quest
 
 
-class ChallengeRoom(models.Model):
+class ArenaRoom(models.Model):
     room_name = models.CharField(max_length=20)
-    quest = models.ForeignKey(Quest, on_delete=models.CASCADE, null=True)
-    created_date = models.DateTimeField(auto_now_add=True)
+    quest = models.ForeignKey(
+        Quest, on_delete=models.CASCADE, null=True, blank=True)
+    questions = models.IntegerField(default=20)
+    time = models.IntegerField(default=15)
     is_active = models.BooleanField(default=True)
+    created_date = models.DateTimeField(auto_now_add=True)
     room_slug = models.SlugField(unique=True, null=True)
 
     def save(self, *args, **kwargs):
         self.room_slug = slugify(self.room_name)
-        super(ChallengeRoom, self).save(*args, **kwargs)
+        super(ArenaRoom, self).save(*args, **kwargs)
 
     def __str__(self):
         if self.is_active:
@@ -23,13 +26,9 @@ class ChallengeRoom(models.Model):
         return f'{self.room_name} {is_active_str}'
 
 
-class ChallengeScore(models.Model):
+class Participants(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='challenges')
     room = models.ForeignKey(
-        ChallengeRoom, on_delete=models.CASCADE, related_name='scores')
-    score_1 = models.IntegerField(default=0)
-    score_2 = models.IntegerField(default=0)
-    score_3 = models.IntegerField(default=0)
-    score_4 = models.IntegerField(default=0)
-    score_5 = models.IntegerField(default=0)
+        ArenaRoom, on_delete=models.CASCADE, related_name='scores')
+    score = models.IntegerField(default=0)

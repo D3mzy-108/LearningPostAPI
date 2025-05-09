@@ -1,61 +1,49 @@
-from django.shortcuts import get_object_or_404, render
-from django.http import JsonResponse
-from admin_app.models import Quest, Question
-from challenge_app.models import ChallengeRoom, ChallengeScore
-from django.views.decorators.csrf import csrf_exempt
-
 from website.models import User
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from admin_app.models import Question
+from challenge_app.models import ArenaRoom, Participants
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 
-def create_room(request):
-    room_name = request.GET.get('room_name')
-    testid = request.GET.get('testid')
-    # CREATE ROOM INSTANCE
-    if not ChallengeRoom.objects.filter(room_name=room_name, is_active=True).exists():
-        room_instance = ChallengeRoom()
-        room_instance.room_name = room_name
-        room_instance.quest = get_object_or_404(Quest, id=testid)
-        room_instance.save()
-        return JsonResponse({
-            'success': True,
-            'room_slug': room_instance.room_slug,
-            'room_name': room_instance.room_name,
-        })
-    else:
-        return JsonResponse({
-            'success': False,
-        })
-
-
+@require_POST
+@csrf_exempt
 def join_room(request):
-    room_name = request.GET.get('room_name')
+    room_name = request.POST.get('room_name')
+    username = request.POST.get('username')
     # FIND ROOM INSTANCE
-    room = ChallengeRoom.objects.filter(
+    room = ArenaRoom.objects.filter(
         room_name=room_name, is_active=True)
-    if room.exists():
-        return JsonResponse({
-            'success': True,
-            'room_slug': room.first().room_slug,
-            'room_name': room.first().room_name,
-        })
+    if not room.exists():
+        room_instance = ArenaRoom()
+        room_instance.room_name = room_name
+        room_instance.save()
+    lobby = ArenaRoom.objects.filter(
+        room_name=room_name, is_active=True).first()
+    user = get_object_or_404(User, username=username)
+    instance = Participants()
+    instance.user = user
+    instance.room = lobby
+    instance.save()
+    if lobby.quest:
+        quest = {
+            'testid': quest.pk,
+            'title': quest.title,
+            'cover': quest.cover.url,
+        }
     else:
-        return JsonResponse({
-            'success': False,
-        })
-
-
-def delete_room(request, slug):
-    if ChallengeScore.objects.filter(room__room_slug=slug).exists():
-        return JsonResponse({
-            'success': False,
-            'message': 'Room has been used'
-        })
-    else:
-        get_object_or_404(ChallengeRoom, room_slug=slug).delete()
-        return JsonResponse({
-            'success': True,
-            'message': 'Room has not been used'
-        })
+        quest = {
+            'testid': None,
+            'title': '',
+            'cover': '',
+        }
+    return JsonResponse({
+        'success': True,
+        'room_slug': lobby.room_slug,
+        'room_name': lobby.room_name,
+        'quest': quest,
+    })
 
 
 def get_challenge_questions(request, testid: int, limit: int):
@@ -91,52 +79,12 @@ def get_challenge_questions(request, testid: int, limit: int):
 
 
 def save_score(request):
-    load_type = request.GET.get('type')
-    if load_type == 'create':
-        room_name = request.GET.get('room_name')
-        username = request.GET.get('username')
-        room = ChallengeRoom.objects.filter(
-            room_name=room_name, is_active=True).first()
-        user = get_object_or_404(User, username=username)
-        score_instance = ChallengeScore()
-        score_instance.room = room
-        score_instance.user = user
-        score_instance.save()
-        return JsonResponse({'success': True})
-    else:
-        username = request.GET.get('username')
-        room_slug = request.GET.get('room_name')
-        score_1 = request.GET.get('score_1')
-        score_2 = request.GET.get('score_2')
-        score_3 = request.GET.get('score_3')
-        score_4 = request.GET.get('score_4')
-        score_5 = request.GET.get('score_5')
-        room = ChallengeRoom.objects.get(room_slug=room_slug)
-        room.is_active = False
-        room.save()
-        user_score = ChallengeScore.objects.get(
-            user__username=username, room__pk=room.pk)
-        user_score.score_1 = score_1
-        user_score.score_2 = score_2
-        user_score.score_3 = score_3
-        user_score.score_4 = score_4
-        user_score.score_5 = score_5
-        user_score.save()
-        return JsonResponse({'success': True})
-
-
-def get_challenge_scores(request, room_slug):
-    room = get_object_or_404(ChallengeRoom, room_slug=room_slug)
-    scores = []
-    for score in room.scores.all():
-        ttl_score = score.score_1 + score.score_2 + \
-            score.score_3 + score.score_4 + score.score_5
-        scores.append({
-            'profilePhoto': score.user.profile_photo,
-            'displayName': score.user.first_name,
-            'score': ttl_score,
-        })
-    return JsonResponse({
-        'success': True,
-        'scores': sorted(scores, key=lambda x: x['score'], reverse=True),
-    })
+    room_name = request.POST.get('room_name')
+    username = request.POST.get('username')
+    score = request.POST.get('score')
+    participant = Participants.objects.filter(
+        room__room_name=room_name, user__username=username).order_by('-id')
+    if participant.exists():
+        instance = participant.first()
+        instance.score = score
+        instance.save()

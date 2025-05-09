@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from admin_app.models import MPerformance, Quest
-from challenge_app.models import ChallengeScore
 from website.models import User
 from django.utils import timezone
 
@@ -128,53 +127,4 @@ def get_performance(request, username):
         'success': True,
         'performance': performance_list,
         'quest_performance': quest_performance_list,
-    })
-
-
-def get_challenge_performance(request, username):
-    end_date = timezone.now().date()
-    start_date = end_date - datetime.timedelta(days=30)
-
-    start_datetime = datetime.datetime.combine(
-        start_date, datetime.datetime.min.time())
-    end_datetime = datetime.datetime.combine(
-        end_date, datetime.datetime.max.time())
-
-    start_aware = timezone.make_aware(start_datetime)
-    end_aware = timezone.make_aware(end_datetime)
-
-    challenges = ChallengeScore.objects.filter(
-        user__username=username,
-        room__created_date__range=[start_aware, end_aware],
-        room__is_active=False
-    ).order_by('-id', '-room__created_date')
-    challenge_list = []
-    for challenge in challenges:
-        recorded_scores = []
-        for score in challenge.room.scores.all():
-            recorded_scores.append({
-                'isUser': score.user.username == username,
-                'score': score.score_1 + score.score_2 + score.score_3 + score.score_4 + score.score_5,
-            })
-        sorted_scores = sorted(
-            recorded_scores, key=lambda x: x['score'], reverse=True)
-        rank = 1
-        user_score = 0
-        for sorted_score in sorted_scores:
-            if sorted_score['isUser']:
-                user_score = sorted_score['score']
-                break
-            else:
-                rank += 1
-        challenge_list.append({
-            'room_slug': challenge.room.room_slug,
-            'quest_cover': challenge.room.quest.cover.url,
-            'quest_title': challenge.room.quest.title,
-            'rank': rank,
-            'score': user_score,
-            'date': challenge.room.created_date.date(),
-        })
-    return JsonResponse({
-        'success': True,
-        'challenges': challenge_list,
     })
