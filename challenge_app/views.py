@@ -108,3 +108,22 @@ def save_score(request):
         instance = participant.first()
         instance.score = score
         instance.save()
+
+
+def get_participants(request, room_name):
+    participants = Participants.objects.filter(
+        room__room_name=room_name, room__is_active=True)
+    return JsonResponse({
+        'success': True,
+        'participants': [
+            {
+                'profilePhoto': participant.user.profile_photo,
+                'displayName': participant.user.first_name,
+                'username': participant.user.username,
+            } for participant in participants
+        ]
+    })
+
+
+def leave_arena(request):
+    pass
