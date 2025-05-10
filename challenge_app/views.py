@@ -1,7 +1,7 @@
 from website.models import User
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from admin_app.models import Question
+from admin_app.models import Quest, Question
 from challenge_app.models import ArenaRoom, Participants
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -43,6 +43,26 @@ def join_room(request):
         'room_slug': lobby.room_slug,
         'room_name': lobby.room_name,
         'quest': quest,
+    })
+
+
+@require_POST
+@csrf_exempt
+def change_quest(request):
+    room_name = request.POST.get('room_name')
+    testid = request.POST.get('testid')
+    room = ArenaRoom.objects.filter(
+        room_name=room_name, is_active=True)
+    instance = room.first()
+    instance.quest = get_object_or_404(Quest, pk=testid)
+    instance.save()
+    return JsonResponse({
+        'success': True,
+        'quest': {
+            'testid': instance.quest.pk,
+            'title': instance.quest.title,
+            'cover': instance.quest.cover.url,
+        }
     })
 
 
