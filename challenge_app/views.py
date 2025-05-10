@@ -114,7 +114,7 @@ def get_participants(request, room_name, username):
     participants = Participants.objects.filter(
         room__room_name=room_name, room__is_active=True)
     user = get_object_or_404(User, username=username)
-    friends = user.friends.filter(online=False)
+    friends = user.friends.filter(online=True)
     return JsonResponse({
         'success': True,
         'participants': [
