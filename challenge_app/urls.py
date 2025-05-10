@@ -7,5 +7,5 @@ urlpatterns = [
     path('change-quest/', change_quest),
     path('questions/<int:testid>/<int:limit>/', get_challenge_questions),
     path('save-score/', save_score),
-    path('get-participants/<str:room_name>/', get_participants),
+    path('get-participants/<str:room_name>/<str:username>/', get_participants),
 ]

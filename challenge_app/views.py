@@ -110,9 +110,11 @@ def save_score(request):
         instance.save()
 
 
-def get_participants(request, room_name):
+def get_participants(request, room_name, username):
     participants = Participants.objects.filter(
         room__room_name=room_name, room__is_active=True)
+    user = get_object_or_404(User, username=username)
+    friends = user.friends.filter(online=False)
     return JsonResponse({
         'success': True,
         'participants': [
@@ -121,6 +123,13 @@ def get_participants(request, room_name):
                 'displayName': participant.user.first_name,
                 'username': participant.user.username,
             } for participant in participants
+        ],
+        'friends': [
+            {
+                'profilePhoto': friend.user.profile_photo,
+                'displayName': friend.user.first_name,
+                'username': friend.user.username,
+            } for friend in friends
         ]
     })
 
