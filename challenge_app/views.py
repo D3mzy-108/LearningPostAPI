@@ -66,7 +66,7 @@ def change_quest(request):
     })
 
 
-def get_challenge_questions(request, testid: int, limit: int):
+def get_challenge_questions(request, testid: int):
     questions = []
     all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
     random_items = all_questions[:limit]
