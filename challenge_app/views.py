@@ -68,29 +68,25 @@ def change_quest(request):
 
 def get_challenge_questions(request, testid: int, limit: int):
     questions = []
-    rounds = request.GET.get('rounds')
-
-    for _ in range(int(rounds)):
-        selected_questions = []
-        all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
-        random_items = all_questions[:limit]
-        for question in random_items:
-            diagram_url = None
-            if question.diagram:
-                diagram_url = question.diagram.url
-            selected_questions.append({
-                'questionid': question.pk,
-                'comprehension': question.comprehension,
-                'diagram': diagram_url,
-                'question': question.question,
-                'a': question.a,
-                'b': question.b,
-                'c': question.c,
-                'd': question.d,
-                'answer': question.answer,
-            })
-        else:
-            questions.append(selected_questions)
+    all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
+    random_items = all_questions[:limit]
+    for question in random_items:
+        diagram_url = None
+        if question.diagram:
+            diagram_url = question.diagram.url
+        questions.append({
+            'questionid': question.pk,
+            'comprehension': question.comprehension,
+            'diagram': diagram_url,
+            'question': question.question,
+            'a': question.a,
+            'b': question.b,
+            'c': question.c,
+            'd': question.d,
+            'answer': question.answer,
+        })
+    else:
+        questions.append(questions)
     context = {
         'success': True,
         'questions': questions,
@@ -122,6 +118,7 @@ def get_participants(request, room_name, username):
                 'profilePhoto': participant.user.profile_photo,
                 'displayName': participant.user.first_name,
                 'username': participant.user.username,
+                'score': participant.score,
             } for participant in participants
         ],
         'friends': [
