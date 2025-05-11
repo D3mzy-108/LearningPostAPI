@@ -85,8 +85,6 @@ def get_challenge_questions(request, testid: int, limit: int):
             'd': question.d,
             'answer': question.answer,
         })
-    else:
-        questions.append(questions)
     context = {
         'success': True,
         'questions': questions,
