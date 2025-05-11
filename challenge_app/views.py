@@ -66,7 +66,7 @@ def change_quest(request):
     })
 
 
-def get_challenge_questions(request, testid: int):
+def get_challenge_questions(request, testid: int, limit: int):
     questions = []
     all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
     random_items = all_questions[:limit]
@@ -131,5 +131,13 @@ def get_participants(request, room_name, username):
     })
 
 
-def leave_arena(request):
-    pass
+def leave_arena(request, room_name):
+    room = ArenaRoom.objects.filter(room_name=room_name, is_active=True)
+    if room.exists():
+        instance = room.first()
+        instance.is_active = False
+        instance.save()
+    return JsonResponse({
+        'success': True,
+        'message': 'Arena has been closed',
+    })
