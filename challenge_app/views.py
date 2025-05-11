@@ -92,6 +92,8 @@ def get_challenge_questions(request, testid: int, limit: int):
     return JsonResponse(context)
 
 
+@require_POST
+@csrf_exempt
 def save_score(request):
     room_name = request.POST.get('room_name')
     username = request.POST.get('username')
@@ -102,6 +104,7 @@ def save_score(request):
         instance = participant.first()
         instance.score = score
         instance.save()
+    return JsonResponse({'success': True})
 
 
 def get_participants(request, room_name, username):
