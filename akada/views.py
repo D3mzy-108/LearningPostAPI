@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from admin_app.models import Quest
 from akada.models import AkadaConversations, GeneratedStudyMaterials
 from website.models import User
 from endpoints.api_views.subscription import is_subscription_valid
@@ -132,8 +133,9 @@ def get_study_materials(request):
         generated_study_materials = GeneratedStudyMaterials.objects.filter(
             bookmarked__pk=user.pk).order_by('topic')
     else:
-        generated_study_materials = GeneratedStudyMaterials.objects.filter(
-            topic__icontains=search).order_by('?')
+        quests = Quest.objects.filter(
+            title__icontains=search, organization=None).order_by('?')
+        generated_study_materials = GeneratedStudyMaterials.objects.all().order_by('topic')
     study_materials = [
         {
             'material_id': _.pk,
@@ -144,9 +146,28 @@ def get_study_materials(request):
             'bookmarked': _.bookmarked.filter(pk=user.pk).exists(),
         } for _ in generated_study_materials
     ]
+    if quests:
+        subjects_list = [
+            {
+                'cover': _.cover.url,
+                'title': _.title,
+                'description': _.about,
+                'topics': [
+                    {
+                        'material_id': material.pk,
+                        'topic': material.topic,
+                        'quest_id': material.quest.pk if material.quest else None,
+                        'bookmarked': material.bookmarked.filter(pk=user.pk).exists(),
+                    } for material in generated_study_materials.filter(quest__pk=_.pk)
+                ]
+            } for _ in quests
+        ]
+    else:
+        subjects_list = []
     return JsonResponse({
         'success': True,
         'study_materials': study_materials,
+        'subjects': subjects_list,
     })
 
 
@@ -155,7 +176,7 @@ def get_material_content(request, material_id):
         GeneratedStudyMaterials, pk=material_id)
     if not generated_study_material.content:
         akada_response = _send_request_to_ai(user=None,
-                                             prompt=f'Write a short textbook covering all core areas on the topic "{generated_study_material.topic}" in 4000 words')
+                                             prompt=f'Write a short textbook covering all core areas on the topic "{generated_study_material.topic}" in 4000 words. Tailor response for a child in {generated_study_material.quest.grade} class or grade to easily understand.')
         if akada_response is None:
             return JsonResponse({
                 'success': False,

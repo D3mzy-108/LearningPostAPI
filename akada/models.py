@@ -33,12 +33,12 @@ class GeneratedStudyMaterials(models.Model):
     def __str__(self):
         return f'{self.topic}'
 
-    def save(self, *args, **kwargs):
-        is_new_instance = self._state.adding
-        if is_new_instance:
-            if self.quest is not None and not self.quest.title in self.topic:
-                self.topic = f'{self.topic} - {self.quest.title}'
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     is_new_instance = self._state.adding
+    #     if is_new_instance:
+    #         if self.quest is not None and not self.quest.title in self.topic:
+    #             self.topic = f'{self.topic}'
+    #     return super().save(*args, **kwargs)
 
 
 # from django.db import models
