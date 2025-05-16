@@ -44,7 +44,7 @@ class TestQuestion(models.Model):
     answer = models.TextField()
 
     def __str__(self):
-        pass
+        return self.question
 
 
 class Score(models.Model):
