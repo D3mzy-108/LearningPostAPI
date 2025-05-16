@@ -1,10 +1,12 @@
-from website.models import User
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from admin_app.models import Quest, Question
-from challenge_app.models import ArenaRoom, Participants
+from django.db.models import Prefetch
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+
+from website.models import User
+from admin_app.models import Quest, Question
+from challenge_app.models import ArenaRoom, Participants
 
 
 @require_POST
@@ -109,7 +111,7 @@ def save_score(request):
 
 def get_participants(request, room_name, username):
     participants = Participants.objects.filter(
-        room__room_name=room_name, room__is_active=True)
+        room__room_name=room_name, room__is_active=True).order_by('-score')
     user = get_object_or_404(User, username=username)
     friends = user.friends.filter(online=True)
     return JsonResponse({
@@ -142,3 +144,47 @@ def leave_arena(request, room_name):
         'success': True,
         'message': 'Arena has been closed',
     })
+
+
+def challenge_history(request):
+    username = request.GET.get('username')
+    if not username:
+        return JsonResponse({'success': False, 'error': 'Username not provided'}, status=400)
+
+    rooms = ArenaRoom.objects.filter(scores__user__username=username).order_by('-created_date').prefetch_related(
+        Prefetch(
+            'scores',
+            queryset=Participants.objects.order_by(
+                '-score').select_related('user'),
+            to_attr='ranked_scores'
+        ),
+        'quest'
+    )
+
+    challenges = []
+    for room in rooms:
+        user_position = None
+        participants = []
+        for index, participant in enumerate(room.ranked_scores):
+            # RECORD CURRENT USER'S RANK
+            if participant.user.username == username:
+                user_position = index + 1
+            # ADD PARTICIPANT TO PARTICIPANTS LIST
+            participants.append({
+                'profilePhoto': participant.user.profile_photo,
+                'displayName': participant.user.first_name,
+                'username': participant.user.username,
+                'score': participant.score,
+            })
+
+        challenges.append({
+            'quest': {
+                'cover': room.quest.cover.url if room.quest and hasattr(room.quest, 'cover') else '',
+                'title': room.quest.title if room.quest else '',
+            },
+            'date': room.created_date.strftime('%d %B, %y'),
+            'position': user_position,
+            'participants': participants,
+        })
+
+    return JsonResponse({'success': True, 'challenges': challenges})
