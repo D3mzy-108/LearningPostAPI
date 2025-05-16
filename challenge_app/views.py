@@ -134,12 +134,25 @@ def get_participants(request, room_name, username):
     })
 
 
+def _close_room(room: ArenaRoom | None):
+    if not room:
+        return
+    participants = Participants.objects.filter(room__room_slug=room.room_slug)
+    # CHECK IF ANY PARTICIPANT HAS A SCORE HIGHER THAN 0
+    # THIS IS TO PROVE THAT THE CHALLENGE WAS ACTUALLY ATTEMPTED
+    if participants.filter(score__gt=0).exists():
+        room.is_active = False
+        room.save()
+    # IF SUCH PARTICIPANT DOESN'T EXIST, DELETE THE ROOM AND ITS PARTICIPANTS
+    else:
+        room.delete()
+
+
 def leave_arena(request, room_name):
     room = ArenaRoom.objects.filter(room_name=room_name, is_active=True)
     if room.exists():
         instance = room.first()
-        instance.is_active = False
-        instance.save()
+        _close_room(instance)
     return JsonResponse({
         'success': True,
         'message': 'Arena has been closed',
