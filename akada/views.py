@@ -135,7 +135,8 @@ def get_study_materials(request):
     else:
         quests = Quest.objects.filter(
             title__icontains=search, organization=None).order_by('?')
-        generated_study_materials = GeneratedStudyMaterials.objects.all().order_by('topic')
+        generated_study_materials = GeneratedStudyMaterials.objects.filter(
+            topic__icontains=search).order_by('topic')
     study_materials = [
         {
             'material_id': _.pk,
