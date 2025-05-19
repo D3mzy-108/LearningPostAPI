@@ -41,6 +41,7 @@ class Question(models.Model):
     answer = models.TextField()
     explanation = models.TextField()
     topic = models.TextField(default='')
+    is_draft = models.BooleanField(default=False)
 
 
 class AnsweredBy(models.Model):

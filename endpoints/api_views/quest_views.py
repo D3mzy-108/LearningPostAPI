@@ -127,7 +127,8 @@ def questions(request, testid, username):
             'success': False,
             'message': 'Your subscription is expired!'
         })
-    all_questions = Question.objects.filter(quest__pk=testid).order_by('?')
+    all_questions = Question.objects.filter(
+        quest__pk=testid, is_draft=False).order_by('?')
     unanswered_questions = all_questions.exclude(
         answered_by__user__username=username).order_by('?')
     if unanswered_questions.count() > 0:
@@ -221,7 +222,7 @@ def get_quest_topics(request, testid) -> JsonResponse:
 @csrf_exempt
 def get_practice_questions(request, testid) -> JsonResponse:
     questions = Question.objects.filter(
-        quest__pk=testid, topic=request.POST.get('topic')).order_by('?')
+        quest__pk=testid, topic=request.POST.get('topic'), is_draft=False).order_by('?')
     context = {
         'success': True,
         'questions': _build_questions_list(questions),

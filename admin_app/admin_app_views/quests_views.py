@@ -183,6 +183,7 @@ def edit_question(request, quest_pk, pk):
         question.answer = request.POST['answer']
         question.explanation = request.POST['explanation']
         question.topic = request.POST['topic']
+        question.is_draft = False
         question.save()
     return redirect(request.META.get('HTTP_REFERER'))
 
