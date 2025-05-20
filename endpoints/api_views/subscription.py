@@ -42,7 +42,7 @@ def get_subscription_plans(request, username):
 def make_subscription_request(request: HttpRequest):
     email = request.POST.get('email')
     plan_id = request.POST.get('plan_id')
-    grades = request.POST.getlist('grades')
+    grades = json.loads(request.POST.get('grades', '[]'))
     if len(grades) == 0:
         return JsonResponse({
             'success': False,
