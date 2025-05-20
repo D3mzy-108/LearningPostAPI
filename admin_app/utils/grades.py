@@ -25,7 +25,7 @@ def get_grades_list() -> list:
     return grades
 
 
-def user_subscribed_grades(user: User) -> list:
+def user_subscribed_grades(user: User) -> list[str]:
     try:
         subscription = UserSubscription.objects.filter(profile=user).first()
         if subscription:
