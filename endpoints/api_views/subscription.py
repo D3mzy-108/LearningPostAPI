@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods, require_POST
 from django.views.decorators.csrf import csrf_exempt
 import requests
-from admin_app.models import SubscriptionPlan
+from admin_app.models import Quest, SubscriptionPlan
 from admin_app.utils.grades import get_grades_list, set_user_subscribed_grades_string, user_subscribed_grades
 from learningpost_professional.models import ProfessionalOrganization
 from website.models import User, UserSubscription
@@ -17,6 +17,10 @@ def get_subscription_plans(request, username):
     grades = get_grades_list()
     user_grades = user_subscribed_grades(
         get_object_or_404(User, username=username))
+    grades_list = []
+    for grade in grades:
+        if Quest.objects.filter(grade=grade['grade'], organization=None).exists():
+            grades_list.append(grade)
     return JsonResponse({
         'success': True,
         'subscription_plans': [
@@ -28,7 +32,7 @@ def get_subscription_plans(request, username):
                 'price': plan.price,
             } for plan in subscription_plans
         ],
-        'grades': grades,
+        'grades': grades_list,
         'user_grades': user_grades,
     })
 

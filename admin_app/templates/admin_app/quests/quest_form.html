@@ -62,6 +62,7 @@
         id="grade"
         class="w-full py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
       >
+        <option value="Outlier" selected>Outlier / Other</option>
         {% for grade in grades %} {% if grade.grade == instance.grade %}
         <option value="{{grade.grade}}" selected>
           {{grade.class}} / {{grade.grade}}
