@@ -64,7 +64,7 @@ urlpatterns = [
     # ========================================================================================================
     # SUBSCRIPTION
     # ========================================================================================================
-    path('subscription-plans/', get_subscription_plans),
+    path('subscription-plans/<str:username>/', get_subscription_plans),
     path('subscription/make-subscription-request/', make_subscription_request),
     path('subscription/subscribe/', subscribe),
     path('subscription/payment-success/', payment_success),

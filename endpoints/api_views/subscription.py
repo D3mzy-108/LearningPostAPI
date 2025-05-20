@@ -7,13 +7,16 @@ from django.views.decorators.http import require_http_methods, require_POST
 from django.views.decorators.csrf import csrf_exempt
 import requests
 from admin_app.models import SubscriptionPlan
-from admin_app.utils.grades import set_user_subscribed_grades_string
+from admin_app.utils.grades import get_grades_list, set_user_subscribed_grades_string, user_subscribed_grades
 from learningpost_professional.models import ProfessionalOrganization
 from website.models import User, UserSubscription
 
 
-def get_subscription_plans(request):
+def get_subscription_plans(request, username):
     subscription_plans = SubscriptionPlan.objects.all().order_by('duration')
+    grades = get_grades_list()
+    user_grades = user_subscribed_grades(
+        get_object_or_404(User, username=username))
     return JsonResponse({
         'success': True,
         'subscription_plans': [
@@ -25,6 +28,8 @@ def get_subscription_plans(request):
                 'price': plan.price,
             } for plan in subscription_plans
         ],
+        'grades': grades,
+        'user_grades': user_grades,
     })
 
 
