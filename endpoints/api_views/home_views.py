@@ -5,11 +5,17 @@ from django.core.paginator import Paginator
 from admin_app.models import *
 from django.db.models import Avg, ExpressionWrapper, fields
 
+from admin_app.utils.grades import user_subscribed_grades
+
 
 def _get_quest(username):
-    # user = get_object_or_404(User, username=username)
-    # grades = user.subscription.get_grades()
-    quests = Quest.objects.all().order_by('?')
+    user = get_object_or_404(User, username=username)
+    grades = user_subscribed_grades(user)
+    if len(grades) == 0:
+        quests = Quest.objects.filter(organization=None).order_by('?')
+    else:
+        quests = Quest.objects.filter(
+            grade__in=grades, organization=None).order_by('?')
     paginator = Paginator(quests, 30)
     page = 1
     try:
@@ -98,60 +104,40 @@ def home_endpoint(request, username):
         {
             "type": "QUEST",
             "titles": [
+                "Time to Play!",
+                "Ready to Play?",
+                "Let's Do This!",
+                "It's Game Time!",
+                "Fun Stuff to Do!",
                 "Adventures Await!",
                 "Embark on Quests!",
-                "Ready for a Challenge?",
-                "Unleash Your Inner Guru!",
-                "Let's Get Adventuring!",
-            ],
-        },
-        {
-            "type": "BOOKEE",
-            "titles": [
-                "Your Next Great Read Awaits!",
-                "Dive into a Story!",
-                "Fuel Your Curiosity!",
-                "Explore New Worlds!",
-                "Unleash Your Inner Bookworm!",
-            ],
-        },
-        {
-            "type": "QUEST",
-            "titles": [
-                "Ready to Play?",
-                "It's Game Time!",
+                "Let's Get Started!",
                 "Challenge Accepted!",
-                "Let's Do This!",
-                "Fun Stuff to Do!",
+                "Interact and Explore!",
+                "Let's Get Adventuring!",
+                "What Can You Do Today?",
+                "Ready for a Challenge?",
+                "What Will You Discover?",
+                "Unleash Your Inner Guru!",
             ],
         },
         {
             "type": "BOOKEE",
             "titles": [
-                "Get Lost in a Book!",
-                "Time to Relax and Read!",
                 "Happy Reading!",
                 "Let's Get Lit!",
-                "Fuel Your Imagination!",
-            ],
-        },
-        {
-            "type": "QUEST",
-            "titles": [
-                "What Can You Do Today?",
-                "Interact and Explore!",
-                "Let's Get Started!",
-                "Time to Play!",
-                "What Will You Discover?",
-            ],
-        },
-        {
-            "type": "BOOKEE",
-            "titles": [
-                "Books Just for You!",
                 "Handpicked Reads!",
-                "Personalized Reading List!",
+                "Dive into a Story!",
+                "Books Just for You!",
+                "Explore New Worlds!",
+                "Get Lost in a Book!",
+                "Fuel Your Curiosity!",
+                "Fuel Your Imagination!",
+                "Time to Relax and Read!",
                 "What Will You Read Next?",
+                "Personalized Reading List!",
+                "Unleash Your Inner Bookworm!",
+                "Your Next Great Read Awaits!",
                 "Let's Find Your Perfect Book!",
             ],
         },

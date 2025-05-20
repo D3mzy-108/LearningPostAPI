@@ -1,0 +1,106 @@
+{
+    "grades": [
+        {
+            "grade": "1st grade",
+            "min_age": 5,
+            "max_age": 6,
+            "class": "Primary 1"
+        },
+        {
+            "grade": "2nd grade",
+            "min_age": 6,
+            "max_age": 7,
+            "class": "Primary 2"
+        },
+        {
+            "grade": "3rd grade",
+            "min_age": 7,
+            "max_age": 8,
+            "class": "Primary 3"
+        },
+        {
+            "grade": "4th grade",
+            "min_age": 8,
+            "max_age": 9,
+            "class": "Primary 4"
+        },
+        {
+            "grade": "5th grade",
+            "min_age": 9,
+            "max_age": 10,
+            "class": "Primary 5"
+        },
+        {
+            "grade": "6th grade",
+            "min_age": 9,
+            "max_age": 11,
+            "class": "Primary 6"
+        },
+        {
+            "grade": "7th grade",
+            "min_age": 10,
+            "max_age": 12,
+            "class": "JSS 1"
+        },
+        {
+            "grade": "8th grade",
+            "min_age": 11,
+            "max_age": 13,
+            "class": "JSS 2"
+        },
+        {
+            "grade": "9th grade",
+            "min_age": 12,
+            "max_age": 14,
+            "class": "JSS 3"
+        },
+        {
+            "grade": "10th grade",
+            "min_age": 13,
+            "max_age": 15,
+            "class": "SSS 1"
+        },
+        {
+            "grade": "11th grade",
+            "min_age": 14,
+            "max_age": 16,
+            "class": "SSS 2"
+        },
+        {
+            "grade": "12th grade",
+            "min_age": 15,
+            "max_age": 17,
+            "class": "SSS 3"
+        },
+        {
+            "grade": "A Level",
+            "min_age": 16,
+            "max_age": 18,
+            "class": "A Level"
+        },
+        {
+            "grade": "Year 1",
+            "min_age": 17,
+            "max_age": 9999,
+            "class": "Year 1 Uni"
+        },
+        {
+            "grade": "Year 2",
+            "min_age": 18,
+            "max_age": 9999,
+            "class": "Year 2 Uni"
+        },
+        {
+            "grade": "Year 3",
+            "min_age": 19,
+            "max_age": 9999,
+            "class": "Year 3 Uni"
+        },
+        {
+            "grade": "Professional",
+            "min_age": 18,
+            "max_age": 9999,
+            "class": "Professional"
+        }
+    ]
+}

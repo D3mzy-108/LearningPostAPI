@@ -1,93 +1,148 @@
-{% extends 'admin.html' %}
-{% load static %}
-{% block screen %}
-<form action="" method="post" enctype="multipart/form-data" class="grid grid-cols-1 gap-8">
-    {% csrf_token %}
-    <a href="{% url 'quests' %}" class="p-3 bg-[var(--bg2)] rounded-md grid place-items-center w-fit ml-auto">
-        <ion-icon name="close-sharp" class="text-[var(--fg2)] text-2xl"></ion-icon>
-    </a>
-    <!-- TITLE -->
-    <input type="text" name="title" id="title"
-        class="w-full p-4 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] text-2xl font-semibold"
-        placeholder="Quest Title*" required value="{{instance.title}}">
-    <!-- COVER -->
-    <div class="w-fit">
-        <label for="cover" class="text-[var(--fg)] font-medium">Set a Quest Cover Image*</label>
-        <div class="w-full">
-            <a href="{{instance.cover.url}}" class="text-[12px] text-blue-500">{{instance.cover.url}}</a>
-        </div>
-        {% if instance.cover == None %}
-        <input type="file" name="cover" id="cover" accept="image/*" required
-            class="w-full mt-3 text-[var(--fg)] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[var(--bg2)] file:text-[var(--fg2)]">
+{% extends 'admin.html' %} {% load static %} {% block screen %}
+<form
+  action=""
+  method="post"
+  enctype="multipart/form-data"
+  class="grid grid-cols-1 gap-8"
+>
+  {% csrf_token %}
+  <a
+    href="{% url 'quests' %}"
+    class="p-3 bg-[var(--bg2)] rounded-md grid place-items-center w-fit ml-auto"
+  >
+    <ion-icon name="close-sharp" class="text-[var(--fg2)] text-2xl"></ion-icon>
+  </a>
+  <!-- TITLE -->
+  <input
+    type="text"
+    name="title"
+    id="title"
+    class="w-full p-4 rounded-lg bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] text-2xl font-semibold"
+    placeholder="Quest Title*"
+    required
+    value="{{instance.title}}"
+  />
+  <!-- COVER -->
+  <div class="w-fit">
+    <label for="cover" class="text-[var(--fg)] font-medium"
+      >Set a Quest Cover Image*</label
+    >
+    <div class="w-full">
+      <a href="{{instance.cover.url}}" class="text-[12px] text-blue-500"
+        >{{instance.cover.url}}</a
+      >
+    </div>
+    {% if instance.cover == None %}
+    <input
+      type="file"
+      name="cover"
+      id="cover"
+      accept="image/*"
+      required
+      class="w-full mt-3 text-[var(--fg)] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[var(--bg2)] file:text-[var(--fg2)]"
+    />
+    {% else %}
+    <input
+      type="file"
+      name="cover"
+      id="cover"
+      accept="image/*"
+      class="w-full mt-3 text-[var(--fg)] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[var(--bg2)] file:text-[var(--fg2)]"
+    />
+    {% endif %}
+  </div>
+
+  <div class="flex max-sm:flex-col gap-8 sm:gap-4">
+    <div class="w-full flex items-center rounded-md bg-[var(--bg2)] pl-4">
+      <label for="grade" class="text-[var(--fg)] text-sm font-medium"
+        >Grade</label
+      >
+      <select
+        name="grade"
+        id="grade"
+        class="w-full py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+      >
+        {% for grade in grades %} {% if grade.grade == instance.grade %}
+        <option value="{{grade.grade}}" selected>
+          {{grade.class}} / {{grade.grade}}
+        </option>
         {% else %}
-        <input type="file" name="cover" id="cover" accept="image/*"
-            class="w-full mt-3 text-[var(--fg)] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[var(--bg2)] file:text-[var(--fg2)]">
-        {% endif %}
+        <option value="{{grade.grade}}">
+          {{grade.class}} / {{grade.grade}}
+        </option>
+        {% endif %} {% endfor %}
+      </select>
     </div>
+    <div class="w-full flex items-center rounded-md bg-[var(--bg2)] pr-4">
+      <input
+        type="number"
+        name="time"
+        id="time"
+        class="w-full py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+        placeholder="Time per Question*"
+        required
+        value="{{instance.time}}"
+      />
+      <label for="time" class="text-[var(--fg)] text-sm font-medium"
+        >Seconds</label
+      >
+    </div>
+    <div class="w-full flex items-center rounded-md bg-[var(--bg2)] pl-4">
+      <label for="category" class="text-[var(--fg)] text-sm font-medium"
+        >Category</label
+      >
+      <input
+        type="text"
+        name="category"
+        id="category"
+        class="w-full py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+        placeholder="E.g. science, art, or humanitarian*"
+        required
+        value="{{instance.category}}"
+      />
+    </div>
+  </div>
 
-    <div class="flex max-sm:flex-col gap-8 sm:gap-4">
-        <div class="w-full flex items-center rounded-md bg-[var(--bg2)] pl-4">
-            <label for="grade" class="text-[var(--fg)] text-sm font-medium">Grade</label>
-            <input type="text" name="grade" id="grade"
-                class="w-full py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
-                placeholder="Quest Grade or Class*" required value="{{instance.grade}}">
-        </div>
-        <div class="w-full flex items-center rounded-md bg-[var(--bg2)] pr-4">
-            <input type="number" name="time" id="time"
-                class="w-full py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
-                placeholder="Time per Question*" required value="{{instance.time}}">
-            <label for="time" class="text-[var(--fg)] text-sm font-medium">Seconds</label>
-        </div>
-        <div class="w-full flex items-center rounded-md bg-[var(--bg2)] pl-4">
-            <label for="category" class="text-[var(--fg)] text-sm font-medium">Category</label>
-            <input type="text" name="category" id="category"
-                class="w-full py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
-                placeholder="E.g. science, art, or humanitarian*" required value="{{instance.category}}">
-        </div>
-    </div>
+  <div class="w-full">
+    <label for="about" class="text-[var(--fg)] font-medium">About Quest</label>
+    <textarea
+      name="about"
+      id="about"
+      rows="7"
+      placeholder="Provide a short description of what this quest is about, or its table of content."
+      class="w-full mt-3 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+    >
+{{instance.about}}</textarea
+    >
+  </div>
 
-    <div class="w-full">
-        <label for="about" class="text-[var(--fg)] font-medium">About Quest</label>
-        <textarea name="about" id="about" rows="7"
-            placeholder="Provide a short description of what this quest is about, or its table of content."
-            class="w-full mt-3 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold">{{instance.about}}</textarea>
-    </div>
+  <div class="w-full">
+    <label for="instructions" class="text-[var(--fg)] font-medium"
+      >Instructions & Tips</label
+    >
+    <textarea
+      name="instructions"
+      id="instructions"
+      rows="7"
+      class="w-full mt-3 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold"
+    >
+{{instance.instructions}}</textarea
+    >
+  </div>
 
-    <div class="w-full">
-        <label for="instructions" class="text-[var(--fg)] font-medium">Instructions & Tips</label>
-        <textarea name="instructions" id="instructions" rows="7"
-            class="w-full mt-3 py-3 px-4 rounded-md bg-[var(--bg2)] border-none outline-none text-[var(--fg)] placeholder:text-[var(--lightgray)] font-semibold">{{instance.instructions}}</textarea>
-    </div>
-
-    <div class="w-fit">
-        <legend class="text-[var(--fg)] font-medium">Premium / Free</legend>
-        <div class="flex gap-2 text-[var(--fg)] mt-3">
-            {% if not instance.is_premium or instance.is_premium == None %}
-            <input type="radio" name="is_premium" id="free" value="False" checked>
-            {% else %}
-            <input type="radio" name="is_premium" id="free" value="False">
-            {% endif %}
-            <label for="free">Free Quest</label>
-        </div>
-        <div class="flex gap-2 text-[var(--fg)]">
-            {% if instance.is_premium %}
-            <input type="radio" name="is_premium" id="premium" value="True" checked>
-            {% else %}
-            <input type="radio" name="is_premium" id="premium" value="True">
-            {% endif %}
-            <label for="premium">Premium Quest</label>
-        </div>
-    </div>
-
-    <div class="w-full text-center px-4 mt-4">
-        <button type="submit"
-            class="w-full max-w-sm rounded-md py-3 px-4 bg-[var(--highlight)] font-semibold">Save</button>
-    </div>
+  <div class="w-full text-center px-4 mt-4">
+    <button
+      type="submit"
+      class="w-full max-w-sm rounded-md py-3 px-4 bg-[var(--highlight)] font-semibold"
+    >
+      Save
+    </button>
+  </div>
 </form>
 
 <style>
-    input {
-        background-color: transparent;
-    }
+  input {
+    background-color: transparent;
+  }
 </style>
 {% endblock screen %}

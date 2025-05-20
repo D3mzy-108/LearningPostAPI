@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+
+from admin_app.utils.grades import get_grades_list
 from ..models import *
 import csv
 from django.contrib.auth.decorators import login_required
@@ -56,10 +58,11 @@ def create_quest(request):
         instance.time = time
         instance.about = about
         instance.instructions = instructions
-        instance.is_premium = request.POST['is_premium'] == 'True'
         instance.save()
         return redirect('quests')
-    context = {}
+    context = {
+        'grades': get_grades_list(),
+    }
     return render(request, 'admin_app/quests/quest_form.html', context)
 
 
@@ -76,11 +79,11 @@ def edit_quest(request, pk):
         instance.time = request.POST['time']
         instance.about = request.POST['about']
         instance.instructions = request.POST['instructions']
-        instance.is_premium = request.POST['is_premium'] == 'True'
         instance.save()
         return redirect('quests')
     context = {
-        'instance': instance
+        'instance': instance,
+        'grades': get_grades_list(),
     }
     return render(request, 'admin_app/quests/quest_form.html', context)
 

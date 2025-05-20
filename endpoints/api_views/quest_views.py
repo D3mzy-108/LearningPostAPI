@@ -6,6 +6,7 @@ from django.db.models import Avg, ExpressionWrapper, fields
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
+from admin_app.utils.grades import user_subscribed_grades
 from akada.utils import NewStudyMaterialInstance, _save_study_materials_instance
 from endpoints.api_views.subscription import is_subscription_valid
 
@@ -72,10 +73,12 @@ def quests(request, username):
     search = request.GET.get('search')
     grade = request.GET.get('grade') or ''
     category = request.GET.get('category') or ''
-    # user = get_object_or_404(User, username=username)
-    # grades = user.subscription.get_grades()
+    user = get_object_or_404(User, username=username)
+    grades = user_subscribed_grades(user)
     quests = Quest.objects.filter(
         grade__icontains=grade, category__icontains=category, organization=None).order_by('?')
+    if len(grades) > 0:
+        quests = Quest.objects.filter(grade__in=grades)
     if search is not None:
         quests = quests.filter(
             title__icontains=search)

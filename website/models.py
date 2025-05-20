@@ -30,6 +30,7 @@ class UserSubscription(models.Model):
     profile = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='subscription')
     is_confirmed = models.BooleanField(default=False)
+    grades = models.TextField(default='', blank=True)
 
     def __str__(self):
         return f"{self.profile.first_name} -> {self.expiry_date}"

@@ -1,12 +1,13 @@
 import datetime
 import json
 from decouple import config
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods, require_POST
 from django.views.decorators.csrf import csrf_exempt
 import requests
 from admin_app.models import SubscriptionPlan
+from admin_app.utils.grades import set_user_subscribed_grades_string
 from learningpost_professional.models import ProfessionalOrganization
 from website.models import User, UserSubscription
 
@@ -29,15 +30,22 @@ def get_subscription_plans(request):
 
 @require_POST
 @csrf_exempt
-def make_subscription_request(request):
+def make_subscription_request(request: HttpRequest):
     email = request.POST.get('email')
     plan_id = request.POST.get('plan_id')
+    grades = request.POST.getlist('grades')
+    if len(grades) == 0:
+        return JsonResponse({
+            'success': False,
+            'message': 'Please select at least one grade, and ensure your app version is up to date.',
+        })
     subscription_plan = get_object_or_404(SubscriptionPlan, pk=plan_id)
     user_subscription = UserSubscription.objects.get(profile__email=email)
     today = datetime.date.today()
     expiry_date = today + datetime.timedelta(days=subscription_plan.duration)
     user_subscription.expiry_date = expiry_date
     user_subscription.is_confirmed = False
+    user_subscription.grades = set_user_subscribed_grades_string(grades)
     user_subscription.save()
     return JsonResponse({
         'success': True,
