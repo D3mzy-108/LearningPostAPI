@@ -78,7 +78,7 @@ def quests(request, username):
     quests = Quest.objects.filter(
         grade__icontains=grade, category__icontains=category, organization=None).order_by('?')
     if len(grades) > 0:
-        quests = Quest.objects.filter(grade__in=grades)
+        quests = quests.filter(grade__in=grades)
     if search is not None:
         quests = quests.filter(
             title__icontains=search)

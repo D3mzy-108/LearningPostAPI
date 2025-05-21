@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from admin_app.models import Quest
+from admin_app.utils.grades import user_subscribed_grades
 from akada.models import AkadaConversations, GeneratedStudyMaterials
 from website.models import User
 from endpoints.api_views.subscription import is_subscription_valid
@@ -129,14 +130,20 @@ def get_study_materials(request):
     search = request.GET.get('search') or ''
     uid = request.GET.get('uid') or ''
     user = get_object_or_404(User, username=uid)
+    grades = user_subscribed_grades(user)
     if search == 'bookmarked':
         generated_study_materials = GeneratedStudyMaterials.objects.filter(
             bookmarked__pk=user.pk).order_by('topic')
     else:
         quests = Quest.objects.filter(
             title__icontains=search, organization=None).order_by('?')
+        if len(grades) > 0:
+            quests = quests.filter(grade__in=grades)
         generated_study_materials = GeneratedStudyMaterials.objects.filter(
             topic__icontains=search).order_by('topic')
+    if len(grades) > 0:
+        generated_study_materials = generated_study_materials.filter(
+            quest__grade__in=grades)
     study_materials = [
         {
             'material_id': _.pk,

@@ -30,6 +30,8 @@ def user_subscribed_grades(user: User) -> list[str]:
         subscription = UserSubscription.objects.filter(profile=user).first()
         if subscription:
             user_grades = subscription.grades
+            if user_grades == '{"grades": []}':
+                return []
             user_grades_list = user_grades.split('|') if user_grades else []
             return user_grades_list
         else:

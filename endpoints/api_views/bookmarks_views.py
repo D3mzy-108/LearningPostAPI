@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from admin_app.models import *
+from admin_app.utils.grades import user_subscribed_grades
 from website.models import User
 from django.db.models import Avg, ExpressionWrapper, fields
 
@@ -15,6 +16,11 @@ def bookmarks(request, username):
             bookmarked__username=username).order_by('title')
         bookmarked_books = Library.objects.filter(
             bookmarked__username=username).order_by('title')
+
+        user = get_object_or_404(User, username=username)
+        grades = user_subscribed_grades(user)
+        if len(grades) > 0:
+            bookmarked_quests = bookmarked_quests.filter(grade__in=grades)
     else:
         bookmarked_quests = []
         bookmarked_books = []
