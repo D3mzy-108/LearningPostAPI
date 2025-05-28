@@ -52,6 +52,7 @@ CORS_ALLOWED_ORIGINS = [
     # "http://portal.admin.learningpost.ng",
     "wss://learningpostchallengesocket.onrender.com",
     "http://localhost:5000",
+    "http://localhost:3000",
 ]
 
 
