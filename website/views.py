@@ -3,6 +3,7 @@ import os
 from core.settings import BASE_DIR, STATIC_URL
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib import auth
+from django.http import JsonResponse
 from .models import User
 
 
@@ -60,7 +61,7 @@ def faq(request):
     context = {
         'faqs': faqs,
     }
-    return render(request, 'website/faq.html', context)
+    return JsonResponse(context)
 
 
 def logout(request):
