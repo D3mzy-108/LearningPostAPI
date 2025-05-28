@@ -32,6 +32,8 @@ elif config("DEBUG") == 'False':
 ALLOWED_HOSTS = [
     "learningpost.ng",
     "www.learningpost.ng",
+    "api.learningpost.ng",
+    "www.api.learningpost.ng",
     # "app.learningpost.ng",
     # "www.app.learningpost.ng",
     # "portal.admin.learningpost.ng",
@@ -43,8 +45,8 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://learningpost.ng",
-    "https://app.learningpost.ng",
-    "https://portal.admin.learningpost.ng",
+    "https://api.learningpost.ng",
+    "https://admin.learningpost.ng",
     # "http://learningpost.ng",
     # "http://app.learningpost.ng",
     # "http://portal.admin.learningpost.ng",
