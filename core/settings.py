@@ -30,8 +30,6 @@ elif config("DEBUG") == 'False':
     DEBUG = False
 
 ALLOWED_HOSTS = [
-    "learningpost.ng",
-    "www.learningpost.ng",
     "api.learningpost.ng",
     "www.api.learningpost.ng",
     # "app.learningpost.ng",

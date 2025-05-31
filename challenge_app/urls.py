@@ -1,9 +1,11 @@
 from django.urls import path
-from .views import challenge_history, change_quest, get_challenge_questions, get_participants, join_room, leave_arena, save_score
+from .views import (challenge_history, change_quest, get_challenge_questions,
+                    get_participants, join_room, leave_arena, save_score, find_open_rooms)
 
 
 urlpatterns = [
     path('join/', join_room),
+    path('find-open-rooms/<str:username>/', find_open_rooms),
     path('change-quest/', change_quest),
     path('questions/<int:testid>/<int:limit>/', get_challenge_questions),
     path('save-score/', save_score),

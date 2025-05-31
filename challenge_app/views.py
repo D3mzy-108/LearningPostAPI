@@ -30,9 +30,9 @@ def join_room(request):
     instance.save()
     if lobby.quest:
         quest = {
-            'testid': quest.pk,
-            'title': quest.title,
-            'cover': quest.cover.url,
+            'testid': lobby.quest.pk,
+            'title': lobby.quest.title,
+            'cover': lobby.quest.cover.url,
         }
     else:
         quest = {
@@ -45,6 +45,33 @@ def join_room(request):
         'room_slug': lobby.room_slug,
         'room_name': lobby.room_name,
         'quest': quest,
+    })
+
+
+def find_open_rooms(request, username):
+    user = get_object_or_404(User, username=username)
+    friends = user.friends.all()
+    active_rooms = ArenaRoom.objects.filter(is_active=True)
+    arenas_list = []
+    for room in active_rooms:
+        friend_participants = Participants.objects.filter(
+            room__pk=room.pk, user__in=friends)
+        arenas_list.append({
+            'room_slug': room.room_slug,
+            'room_name': room.room_name,
+            'quest': {
+                'testid': room.quest.pk,
+                'title': room.quest.title,
+                'cover': room.quest.cover.url,
+            },
+            'friend': {
+                'profilePhoto': friend_participants.first().user.profile_photo,
+                'display': f'{friend_participants.first().user.first_name} {f"and {friend_participants.count() - 1} others" if friend_participants.count() > 1 else ""}',
+            } if friend_participants.exists() else None,
+        })
+    return JsonResponse({
+        'success': True,
+        'active_arenas': arenas_list,
     })
 
 
