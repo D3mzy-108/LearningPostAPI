@@ -63,7 +63,7 @@ def find_open_rooms(request, username):
                 'testid': room.quest.pk,
                 'title': room.quest.title,
                 'cover': room.quest.cover.url,
-            },
+            } if room.quest else None,
             'friend': {
                 'profilePhoto': friend_participants.first().user.profile_photo,
                 'display': f'{friend_participants.first().user.first_name} {f"and {friend_participants.count() - 1} others" if friend_participants.count() > 1 else ""}',
