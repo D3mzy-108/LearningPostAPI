@@ -66,7 +66,7 @@ def find_open_rooms(request, username):
             } if room.quest else None,
             'friend': {
                 'profilePhoto': friend_participants.first().user.profile_photo,
-                'display': f'{friend_participants.first().user.first_name} {f"and {friend_participants.count() - 1} others" if friend_participants.count() > 1 else ""}',
+                'display': f'{friend_participants.first().user.first_name} {f"+ {friend_participants.count() - 1} others" if friend_participants.count() > 1 else ""}',
             } if friend_participants.exists() else None,
         })
     return JsonResponse({
