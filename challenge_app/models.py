@@ -9,7 +9,7 @@ class ArenaRoom(models.Model):
     quest = models.ForeignKey(
         Quest, on_delete=models.CASCADE, null=True, blank=True)
     questions = models.IntegerField(default=10)
-    time = models.IntegerField(default=15)
+    time = models.IntegerField(default=30)
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now_add=True)
     room_slug = models.SlugField(unique=True, null=True)
