@@ -121,9 +121,10 @@ class UserFeedback(models.Model):
     feedback_choices = [
         ('question_report', 'question_report'),
         ('help_desk', 'help_desk'),
+        ('unsatisfied_user', 'unsatisfied_user'),
     ]
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='m_feedbacks')
+        User, on_delete=models.SET_NULL, related_name='m_feedbacks', blank=True, null=True)
     message = models.TextField()
     is_viewed = models.BooleanField(default=False)
     feedback_type = models.CharField(
@@ -133,7 +134,7 @@ class UserFeedback(models.Model):
     date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.message}\n~ {self.user.first_name}'
+        return f'{self.feedback_type}\n{self.message}'
 
 
 class MPerformance(models.Model):

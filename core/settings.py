@@ -24,10 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "0$w&yk9mq#7h$(b$m4-m26!hcyoxaejiq$_sh4u-k==pvs@-74"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if config("DEBUG") == 'True':
-    DEBUG = True
-elif config("DEBUG") == 'False':
-    DEBUG = False
+DEBUG = config("DEBUG") == 'True'
 
 ALLOWED_HOSTS = [
     "api.learningpost.ng",
@@ -157,8 +154,20 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = (BASE_DIR / 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = (BASE_DIR / 'media')
+if DEBUG:
+    MEDIA_URL = 'media/'
+    MEDIA_ROOT = (BASE_DIR/'media')
+else:
+    AWS_ACCESS_KEY_ID = config('B2_APPLICATION_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = config('B2_APPLICATION_KEY')
+    AWS_STORAGE_BUCKET_NAME = config('B2_BUCKET_NAME')
+    AWS_S3_REGION_NAME = config('B2_BUCKET_REGION')
+    AWS_S3_ENDPOINT = f's3.{AWS_S3_REGION_NAME}.backblazeb2.com'
+    AWS_S3_ENDPOINT_URL = f'https://{AWS_S3_ENDPOINT}'
+    AWS_DEFAULT_ACL = 'public-read'
+    # Adjust based on your needs
+
+    DEFAULT_FILE_STORAGE = 'storages.b2.BackblazeB2Storage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -167,3 +176,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'website.user'
 LOGIN_URL = 'login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.learningpost.ng'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')

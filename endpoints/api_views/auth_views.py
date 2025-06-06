@@ -1,6 +1,8 @@
 import datetime
+import json
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from admin_app.models import UserFeedback
 from endpoints.api_views.subscription import is_subscription_valid
 from website.models import User, UserSubscription
 from django.contrib import auth
@@ -124,6 +126,9 @@ def get_logged_in_user(request, username):
     return JsonResponse(context)
 
 
+# ========================================================================================================
+# FRIENDS
+# ========================================================================================================
 @csrf_exempt
 def add_friend(request, username):
     if request.method == 'POST':
@@ -157,4 +162,34 @@ def update_status(request):
     return JsonResponse({
         'success': True,
         'message': f'{user.first_name} is {status}',
+    })
+
+
+# ========================================================================================================
+# DELETE
+# ========================================================================================================
+@require_POST
+@csrf_exempt
+def request_account_deletion(request):
+    data = json.loads(request.body)
+    email = data.get('email')
+    user_display_name = data.get('user_display_name')
+    reason = data.get('reason')
+    print(reason)
+    print(email)
+
+    if User.objects.filter(email=email, first_name=user_display_name).exists():
+        user = User.objects.get(email=email)
+        feedback_instance = UserFeedback()
+        feedback_instance.feedback_type = 'unsatisfied_user'
+        feedback_instance.message = f'Account was deleted because: \n{reason}'
+        feedback_instance.save()
+        user.delete()
+        return JsonResponse({
+            'success': True,
+            'message': 'Account has been deleted.',
+        })
+    return JsonResponse({
+        'success': False,
+        'message': 'User with the provided credentials does not exist.',
     })
