@@ -154,20 +154,20 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = (BASE_DIR / 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-if DEBUG:
-    MEDIA_URL = 'media/'
-    MEDIA_ROOT = (BASE_DIR/'media')
-else:
-    AWS_ACCESS_KEY_ID = config('B2_APPLICATION_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = config('B2_APPLICATION_KEY')
-    AWS_STORAGE_BUCKET_NAME = config('B2_BUCKET_NAME')
-    AWS_S3_REGION_NAME = config('B2_BUCKET_REGION')
-    AWS_S3_ENDPOINT = f's3.{AWS_S3_REGION_NAME}.backblazeb2.com'
-    AWS_S3_ENDPOINT_URL = f'https://{AWS_S3_ENDPOINT}'
-    AWS_DEFAULT_ACL = 'public-read'
-    # Adjust based on your needs
+# if DEBUG:
+MEDIA_URL = 'media/'
+MEDIA_ROOT = (BASE_DIR/'media')
+# else:
+#     AWS_ACCESS_KEY_ID = config('B2_APPLICATION_KEY_ID')
+#     AWS_SECRET_ACCESS_KEY = config('B2_APPLICATION_KEY')
+#     AWS_STORAGE_BUCKET_NAME = config('B2_BUCKET_NAME')
+#     AWS_S3_REGION_NAME = config('B2_BUCKET_REGION')
+#     AWS_S3_ENDPOINT = f's3.{AWS_S3_REGION_NAME}.backblazeb2.com'
+#     AWS_S3_ENDPOINT_URL = f'https://{AWS_S3_ENDPOINT}'
+#     AWS_DEFAULT_ACL = 'public-read'
+#     # Adjust based on your needs
 
-    DEFAULT_FILE_STORAGE = 'storages.b2.BackblazeB2Storage'
+#     DEFAULT_FILE_STORAGE = 'storages.b2.BackblazeB2Storage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
