@@ -1,364 +1,152 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-<div class="w-screen h-fit relative overflow-auto" style="background: radial-gradient(#FFFFFF20, #00000000 90%);">
-    {% include 'partials/home_nav.html' %}
-    <div class="px-6 pt-6 pb-12 md:px-12 lg:px-24 mx-auto">
-        <div class="w-full h-full flex max-sm:flex-col items-center gap-6">
-            <div class="w-full md:w-3/6">
-                <h1 class="text-3xl md:text-4xl lg:text-5xl text-white font-semibold">
-                    Transform Your <br><span class="blue-text">Learning Experience</span> with<br>
-                    <img src="{% static 'assets/images/logo_white.png' %}" alt=""
-                        class="h-[3rem] md:h-[4rem] lg:h-[5rem] -ml-[1rem] md:-ml-[1.5rem] lg:-ml-[1.8rem] -mt[2rem]">
-                </h1>
-                <p class="text-[var(--fg2)] text-xl md:text-2xl" style="font-style: italic;">
-                    #where fun meets brain power
-                </p>
-                <div class="w-full mt-8">
-                    <button
-                        class="w-fit border-none outline-none blue-bg py-3 px-8 text-[#FFF] rounded-md open-login-page">
-                        Get Started
-                    </button>
-                </div>
-            </div>
-            <div class="w-full md:w-3/6 max-sm:pt-6">
-                <img src="{% static 'assets/images/banner_img.svg' %}" alt="" class="w-full">
-            </div>
-        </div>
-    </div>
-
-    <!-- ABOUT SECTION -->
-    <div class="px-6 py-12 md:px-12 lg:px-24">
-        <h1 class="text-2xl lg:text-4xl text-white text-center font-semibold">
-            Find your <span class="blue-text">Personalized <br>Learning</span> pathway.
+<div
+  class="w-screen h-fit relative overflow-auto"
+  style="background: radial-gradient(#ffffff20, #00000000 90%)"
+>
+  {% include 'partials/home_nav.html' %}
+  <div class="px-6 pt-6 pb-12 md:px-12 lg:px-24 mx-auto">
+    <div class="w-full h-full flex max-sm:flex-col items-center gap-6">
+      <div class="w-full md:w-3/6">
+        <h1 class="text-3xl md:text-4xl lg:text-5xl text-white font-semibold">
+          Transform Your <br /><span class="blue-text"
+            >Learning Experience</span
+          >
+          with<br />
+          <img
+            src="{% static 'assets/images/logo_white.png' %}"
+            alt=""
+            class="h-[3rem] md:h-[4rem] lg:h-[5rem] -ml-[1rem] md:-ml-[1.5rem] lg:-ml-[1.8rem] -mt[2rem]"
+          />
         </h1>
-        <div class="text-[var(--fg2)] text-md lg:text-lg mt-6 lg:mt-12 text-center w-full md:w-4/6 lg:w-4/5 mx-auto">
-            At LearningPost, we believe that every student deserves access to quality education tailored to their
-            individual needs. <span class="md:hidden"><br><br></span>Our platform is designed to empower learners of all
-            ages and backgrounds to unlock
-            their
-            full potential and achieve academic success. <span class="md:hidden"><br><br></span>Whether you're a
-            student, teacher, or parent,
-            LearningPost
-            provides the tools, resources, and support you need to thrive in today's rapidly changing educational
-            landscape.
+        <p
+          class="text-[var(--fg2)] text-xl md:text-2xl"
+          style="font-style: italic"
+        >
+          #where fun meets brain power
+        </p>
+        <div class="w-full mt-8">
+          <button
+            class="w-fit border-none outline-none blue-bg py-3 px-8 text-[#FFF] rounded-md open-learningpost-website"
+          >
+            Learn More
+          </button>
         </div>
+      </div>
+      <div class="w-full md:w-3/6 max-sm:pt-6">
+        <img
+          src="{% static 'assets/images/banner_img.svg' %}"
+          alt=""
+          class="w-full"
+        />
+      </div>
     </div>
+  </div>
 
-    <!-- BEST LEARNING MATERIALS SECTION -->
-    <div class="px-6 py-12 md:px-12 lg:px-24">
-        <h1 class="text-2xl lg:text-4xl text-white text-center font-semibold">
-            Elevate your Learning quest <br>with <span class="blue-text">Innovative Tools.</span>
-        </h1>
-        <div class="mt-12 lg:mt-18">
-            <div class="w-full flex flex-wrap gap-6 items-start justify-center">
-                <div class="w-full max-w-xs h-fit px-3 py-6 rounded-lg bg-[var(--bg2)] elevated-box">
-                    <div class="h-[40px] mb-3 py-[5px]">
-                        <img src="{% static 'assets/images/quest-logo.png' %}" alt="" class="h-full">
-                    </div>
-                    <p class="text-gray-100 text-md">
-                        <span class="truncated">
-                            LearningPost Quests transform education into a captivating adventure.
-                            Dive headfirst into interactive challenges,
-                            quizzes and activities precisely crafted to stimulate young minds.
-                        </span>
-                        <span class="full-content hidden">
-                            LearningPost Quests transform education into a captivating adventure.
-                            Dive headfirst into interactive challenges,
-                            quizzes and activities precisely crafted to stimulate young minds. Every Quest conquers new
-                            realms of critical thinking,
-                            imaginative problem-solving and subject mastery. With Quests, the journey of discovery
-                            becomes an exhilarating quest,
-                            where students of all ages celebrate victories while developing an insatiable passion for
-                            learning.
-                        </span>
-                        <span class="blue-text tgl-more">Read more.</span>
-                    </p>
-                </div>
-                <div class="w-full max-w-xs h-fit px-3 py-6 rounded-lg bg-[var(--bg2)] elevated-box">
-                    <div class="h-[40px] mb-3">
-                        <img src="{% static 'assets/images/bookee-logo.png' %}" alt="" class="h-full">
-                    </div>
-                    <p class="text-gray-100 text-md">
-                        <span class="truncated">
-                            Bookee is your portal to a universe of knowledge. Immerse yourself in a our galaxy of
-                            carefully curated textbooks and
-                            ebooks, spanning every subject and genre imaginable
-                        </span>
-                        <span class="full-content hidden">
-                            Bookee is your portal to a universe of knowledge. Immerse yourself in a our galaxy of
-                            carefully curated textbooks and
-                            ebooks, spanning every subject and genre imaginable - from STEM subjects to arts, language,
-                            literary classics and
-                            beyond. Bookee is a curated cosmos of endlessly enriching content, inspiring intellectual
-                            growth, awakening curiosities,
-                            and illuminating new perspectives at every turn.
-                        </span>
-                        <span class="blue-text tgl-more">Read more.</span>
-                    </p>
-                </div>
-                <div class="w-full max-w-xs h-fit px-3 py-6 rounded-lg bg-[var(--bg2)] elevated-box">
-                    <div class="h-[40px] mb-3">
-                        <img src="{% static 'assets/images/smartlinks-logo.png' %}" alt="" class="h-full">
-                    </div>
-                    <p class="text-gray-100 text-md">
-                        <span class="truncated">
-                            Seamlessly woven into LearningPost's platform, SmartLinks are catalysts that blast open the
-                            doors to deeper
-                            understanding. With just a tap, these powerful gateways
-                        </span>
-                        <span class="full-content hidden">
-                            Seamlessly woven into LearningPost's platform, SmartLinks are catalysts that blast open the
-                            doors to deeper
-                            understanding. With just a tap, these powerful gateways grant you instant access to a
-                            curated universe of supplementary
-                            materials, external resources, and enriching explanations. Say goodbye to shallow,
-                            surface-level learning. SmartLinks
-                            transform every core concept into an entryway to an expansive world of exploration. Broaden
-                            your horizons, dive into
-                            diverse knowledge domains, and empower yourself to master any topic more comprehensively
-                            than ever before - all through
-                            these revolutionary smart pathways to discovery.
-                        </span>
-                        <span class="blue-text tgl-more">Read more.</span>
-                    </p>
-                </div>
-            </div>
-        </div>
+  <!-- FOOTER -->
+  <div class="py-12 px-3 md:px-8 lg:px-18 flex flex-col items-center gap-3">
+    <img
+      src="{% static 'assets/images/logo_white.png' %}"
+      alt="logo"
+      class="max-lg:w-4/6 lg:h-[50px] rounded-md -ml-3"
+    />
+    <dic class="mx-auto text-[var(--fg)]">&copy; 2024, LearningPost</dic>
+    <div class="flex gap-2 mt-3">
+      <a
+        href="mailto:support@learningpost.ng"
+        class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg"
+        title="Mail Support"
+      >
+        <ion-icon name="mail-outline" class="pointer-events-none"></ion-icon>
+      </a>
+      <a
+        href="{% url 'pp' %}"
+        class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg"
+        title="Privacy"
+      >
+        <ion-icon name="shield-outline" class="pointer-events-none"></ion-icon>
+      </a>
+      <a
+        href="{% url 'tc' %}"
+        class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg"
+        title="T&C"
+      >
+        <ion-icon
+          name="document-text-outline"
+          class="pointer-events-none"
+        ></ion-icon>
+      </a>
+      <a
+        href="https://learningpost.ng/faq"
+        class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-xl"
+        title="FAQ"
+      >
+        <ion-icon
+          name="help-circle-outline"
+          class="pointer-events-none"
+        ></ion-icon>
+      </a>
     </div>
-
-    <!-- COOL FEATURES TO HELP YOU LEARN -->
-    <div class="px-6 pt-24 my-12 md:px-12 lg:px-24 bg-black/40">
-        <h1 class="text-2xl lg:text-4xl text-white text-center font-semibold">
-            Discover the magic of <br><span class="blue-text">Cool & Exciting</span> features!
-        </h1>
-        <div class="mt-12 lg:mt-18">
-            <div class="w-full flex flex-col gap-6 justify-center items-center">
-                <div class="w-full relative">
-                    <div class="w-fit max-w-full mx-auto h-fit overflow-auto flex gap-3 p-3 items-center">
-                        <button data-image="{% static 'assets/images/app-quest.png' %}"
-                            data-text="Interactive modules with quizzes, activities, and assessments to guide learning, and SmartLinks to help delve into concepts deeper."
-                            class="py-3 px-6 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
-                            <div class="font-semibold text-white text-lg text-center">
-                                Quests
-                            </div>
-                        </button>
-                        <button data-image="{% static 'assets/images/app-challenge.png' %}"
-                            data-text="Test your knowledge and compete with friends in fun and interactive quizzes and competitions."
-                            class="py-3 px-6 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
-                            <div class="font-semibold text-white text-lg text-center">
-                                Challenge
-                            </div>
-                        </button>
-                        <button data-image="{% static 'assets/images/app-performance.png' %}"
-                            data-text="Track your progress, identify areas for improvement, and celebrate your achievements with detailed performance analytics and certificates of completion."
-                            class="py-3 px-6 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
-                            <div class="font-semibold text-white text-lg text-center">
-                                Analytics
-                            </div>
-                        </button>
-                        <button data-image="{% static 'assets/images/app-bookee.png' %}"
-                            data-text="Access hundreds of books, magazines, and newspapers, and enhance your reading experience with text-to-speech features."
-                            class="py-3 px-6 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
-                            <div class="font-semibold text-white text-lg text-center">
-                                Bookee
-                            </div>
-                        </button>
-                        <button data-image="{% static 'assets/images/app-home.png' %}"
-                            data-text="Get personalized recommendations, feedback, and support from our AI study companion to master tough concepts and reach your learning goals."
-                            class="py-3 px-6 rounded-lg bg-[var(--bg2)] elevated-box text-start feature-btn">
-                            <div class="font-semibold text-white text-lg text-center">
-                                Akada AI
-                            </div>
-                        </button>
-                    </div>
-                    <div class="w-full text-center text-white/30 text-xs absolute -bottom-3">Click for details</div>
-                </div>
-
-                <div class="w-full max-w-3xl mx-auto flex flex-col gap-8 items-center mt-8">
-                    <div class="w-full max-w-md text-md text-[var(--fg)] text-center" id="feature-txt">
-                        LearningPost is your key to unlocking a truly engaging and fun learning experience. We achieve
-                        this by focusing on five key features designed to make learning dynamic and enjoyable.
-                    </div>
-                    <img src="{% static 'assets/images/app-home.png' %}" alt="" id="feature-img" class="w-3/6 mx-auto">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- WHAT SETS US APART SECTION -->
-    <div class="px-6 py-12 md:px-12 lg:px-24">
-        <h1 class="text-2xl lg:text-4xl text-white text-center font-semibold">
-            Every Learner is <span class="blue-text">Center Stage.</span>
-        </h1>
-        <div class="mt-12 lg:mt-18">
-            <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="w-full">
-                    <div class="font-semibold text-white text-lg mb-3">
-                        Learning Quests Tailored to You
-                    </div>
-                    <p class="text-[var(--fg2)] text-md">
-                        These aren't one-size-fits-all quizzes. Quests are carefully crafted to align with each
-                        student's unique strengths and
-                        needs. Areas of weakness are targeted, while concepts already mastered are skipped over -
-                        eliminating wasted time. Every
-                        quest is an personalized, efficient path to conquering knowledge gaps.
-                    </p>
-                </div>
-                <div class="w-full">
-                    <div class="font-semibold text-white text-lg mb-3">
-                        Interactive Multimodal Adventures
-                    </div>
-                    <p class="text-[var(--fg2)] text-md">
-                        Static learning is a relic. Our multmodal approach to learning integrates audio-visual stimuli
-                        in order to expand the
-                        knowledge horizon, on demand. Best of all, it's a two-way street: interactive features let
-                        students contribute to the
-                        direction of their learning journeys based on personal needs, preferences and styles.
-                    </p>
-                </div>
-                <div class="w-full">
-                    <div class="font-semibold text-white text-lg mb-3">
-                        Gamified Learning Pathways
-                    </div>
-                    <p class="text-[var(--fg2)] text-md">
-                        The gaming fun doesn't stop at points and badges. Learners can take the spotlight in live
-                        "Challenge" quizzes, going
-                        head-to-head with peers in a celebration of capabilities. These real-time contests allow
-                        students to showcase their
-                        knowledge mastery for recognition and prizes.
-                    </p>
-                </div>
-                <div class="w-full">
-                    <div class="font-semibold text-white text-lg mb-3">
-                        Flexible Bite-Sized, Self-Paced Learning
-                    </div>
-                    <p class="text-[var(--fg2)] text-md">
-                        Knowledge is served in digestible, on-demand portions that fit your schedule. With 24/7 access
-                        to resources and support,
-                        learners enjoy ultimate flexibility to tailor study sessions to their personal styles, needs and
-                        pace. Small doses of
-                        learning, massive long-term gains.
-                    </p>
-                </div>
-                <div class="w-full">
-                    <div class="font-semibold text-white text-lg mb-3">
-                        Mastery Learning: No Learner Left Behind
-                    </div>
-                    <p class="text-[var(--fg2)] text-md">
-                        LearningPost believes fundamentals matter more than skipping ahead. That's why comprehensive
-                        mastery of core concepts is
-                        prioritized over rushing to advanced topics. Review and remediation are actively encouraged
-                        until each student has
-                        solidified the essential foundations to level up confidently, with no learner left behind.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DOWNLOAD APP SECTION -->
-    <div class="px-6 py-12 md:px-24">
-        {% include './partials/download_section.html' %}
-    </div>
-
-    <!-- FOOTER -->
-    <div class="py-12 px-3 md:px-8 lg:px-18 flex flex-col items-center gap-3">
-        <img src="{% static 'assets/images/logo_white.png' %}" alt="logo"
-            class="max-lg:w-4/6 lg:h-[50px] rounded-md -ml-3">
-        <dic class="mx-auto text-[var(--fg)]">&copy; 2024, LearningPost</dic>
-        <div class="flex gap-2 mt-3">
-            <a href="mailto:support@learningpost.ng"
-                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg"
-                title="Mail Support">
-                <ion-icon name="mail-outline" class="pointer-events-none"></ion-icon>
-            </a>
-            <a href="{% url 'pp' %}"
-                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg"
-                title="Privacy">
-                <ion-icon name="shield-outline" class="pointer-events-none"></ion-icon>
-            </a>
-            <a href="{% url 'tc' %}"
-                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-lg"
-                title="T&C">
-                <ion-icon name="document-text-outline" class="pointer-events-none"></ion-icon>
-            </a>
-            <a href="{% url 'faq' %}"
-                class="w-[40px] aspect-square grid place-items-center bg-[var(--bg)] rounded-full text-white text-xl"
-                title="FAQ">
-                <ion-icon name="help-circle-outline" class="pointer-events-none"></ion-icon>
-            </a>
-        </div>
-    </div>
+  </div>
 </div>
 
 <style>
-    * {
-        user-select: none;
-    }
+  * {
+    user-select: none;
+  }
 
-    .blue-text {
-        color: #79adf9;
-    }
+  .blue-text {
+    color: #79adf9;
+  }
 
-    .blue-bg {
-        background: #547aaf;
-    }
+  .blue-bg {
+    background: #547aaf;
+  }
 
-    .elevated-box {
-        box-shadow: 0 6px 8px #11111150;
-    }
+  .elevated-box {
+    box-shadow: 0 6px 8px #11111150;
+  }
 
-    .feature-btn {
-        border: 2px solid transparent;
-        transition: .5s;
-        outline: none !important;
-    }
+  .feature-btn {
+    border: 2px solid transparent;
+    transition: 0.5s;
+    outline: none !important;
+  }
 
-    .feature-btn.active,
-    .feature-btn:hover {
-        border: 2px solid #5F89C4;
-    }
+  .feature-btn.active,
+  .feature-btn:hover {
+    border: 2px solid #5f89c4;
+  }
 
-    .feature-btn * {
-        pointer-events: none;
-    }
+  .feature-btn * {
+    pointer-events: none;
+  }
 
-    .tgl-more {
-        cursor: pointer;
-    }
+  .tgl-more {
+    cursor: pointer;
+  }
 </style>
 
 <script>
-    $('.feature-btn').click((e) => {
-        $('#feature-img').attr('src', $(e.target).attr('data-image'))
-        $('#feature-txt').text($(e.target).attr('data-text'))
-        $('.feature-btn').removeClass('active').addClass('elevated-box')
-        $(e.target).addClass('active').removeClass('elevated-box')
-    })
-    $('.open-login-page').click(() => {
-        setTimeout(() => {
-            var a = document.createElement('a')
-            a.href = 'https://app.learningpost.ng/'
-            a.target = '_blank'
-            a.click()
-        }, 500)
-    })
-    $('.open-login-page').dblclick(() => {
-        var a = document.createElement('a')
-        if ("{{request.user.is_authenticated}}" == 'True') {
-            a.href = "{% url 'quests' %}"
-        } else {
-            a.href = "{% url 'login' %}"
-        }
-        a.click()
-    })
-    $('.tgl-more').click((e) => {
-        $(e.target.parentElement.children[0]).toggleClass('hidden')
-        $(e.target.parentElement.children[1]).toggleClass('hidden')
-        var ismore = $(e.target).text() == 'Read more.';
-        $(e.target).text(ismore == true ? 'Read less.' : 'Read more.')
-    })
+  $(".feature-btn").click((e) => {
+    $("#feature-img").attr("src", $(e.target).attr("data-image"));
+    $("#feature-txt").text($(e.target).attr("data-text"));
+    $(".feature-btn").removeClass("active").addClass("elevated-box");
+    $(e.target).addClass("active").removeClass("elevated-box");
+  });
+  $(".open-learningpost-website").click(() => {
+    setTimeout(() => {
+      var a = document.createElement("a");
+      a.href = "https://learningpost.ng/";
+      a.target = "_blank";
+      a.click();
+    }, 500);
+  });
+  $(".tgl-more").click((e) => {
+    $(e.target.parentElement.children[0]).toggleClass("hidden");
+    $(e.target.parentElement.children[1]).toggleClass("hidden");
+    var ismore = $(e.target).text() == "Read more.";
+    $(e.target).text(ismore == true ? "Read less." : "Read more.");
+  });
 </script>
 {% endblock content %}

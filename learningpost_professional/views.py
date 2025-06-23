@@ -71,6 +71,7 @@ def professional_login(request):
                     'last_name': user.last_name,
                     'email': user.email,
                     'username': user.username,
+                    'lastLogin': datetime.datetime.strftime(user.last_login, '%d-%m-%Y'),
                 },
             })
         else:
@@ -83,6 +84,39 @@ def professional_login(request):
             'success': False,
             'message': 'Invalid credentials!'
         })
+
+
+@require_POST
+@csrf_exempt
+def join_organization(request):
+    # GET POSTED DATA
+    username = request.POST.get('username') or ''
+    company_code = request.POST.get('cc') or ''
+
+    # GET USER AND ORGANIZATION OBJECTS
+    try:
+        user = User.objects.get(username=username)
+    except:
+        return JsonResponse({
+            'success': False,
+            'message': 'Could not find a valid user.'
+        })
+    try:
+        organization = ProfessionalOrganization.objects.get(
+            organization_code=company_code)
+    except:
+        return JsonResponse({
+            'success': False,
+            'message': 'Group does not exist.'
+        })
+    # ADD USER TO ORGANIZATION
+    organization.members.add(user)
+    organization.save()
+
+    return JsonResponse({
+        'success': True,
+        'message': f'Welcome to {organization.organization_name}',
+    })
 
 
 def pro_quests(request, username):
@@ -98,9 +132,17 @@ def pro_quests(request, username):
     quests_list = []
     for quest in quests:
         quests_list.append(_build_quest_object(quest, username))
+    organizations_list = []
+    for organization in organizations:
+        organizations_list.append({
+            'name': organization.organization_name,
+            'logo': f'{organization.organization_logo.url}',
+            'code': organization.organization_code,
+        })
     context = {
         'success': True,
         'quests': quests_list,
+        'organizations': organizations_list,
     }
     return JsonResponse(context)
 

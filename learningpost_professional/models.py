@@ -6,6 +6,8 @@ from website.models import User
 
 class ProfessionalOrganization(models.Model):
     organization_name = models.CharField(max_length=100)
+    organization_logo = models.ImageField(
+        upload_to='organization_logos/', null=True)
     organization_code = models.CharField(max_length=50, unique=True)
     members = models.ManyToManyField(User, blank=True)
 
