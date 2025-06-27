@@ -42,6 +42,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://learningpost.ng",
     "https://api.learningpost.ng",
     "https://admin.learningpost.ng",
+    "https://pro.learningpost.ng",
     # "http://learningpost.ng",
     # "http://app.learningpost.ng",
     # "http://portal.admin.learningpost.ng",
