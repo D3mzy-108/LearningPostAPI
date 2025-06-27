@@ -43,9 +43,12 @@ CORS_ALLOWED_ORIGINS = [
     "https://api.learningpost.ng",
     "https://admin.learningpost.ng",
     "https://pro.learningpost.ng",
-    # "http://learningpost.ng",
-    # "http://app.learningpost.ng",
-    # "http://portal.admin.learningpost.ng",
+
+    "https://www.learningpost.ng",
+    "https://www.api.learningpost.ng",
+    "https://www.admin.learningpost.ng",
+    "https://www.pro.learningpost.ng",
+    
     "wss://learningpostchallengesocket.onrender.com",
     "http://localhost:5000",
     "http://localhost:3000",
