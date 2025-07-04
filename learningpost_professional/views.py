@@ -121,8 +121,14 @@ def join_organization(request):
 
 def pro_quests(request, username):
     user = get_object_or_404(User, username=username)
+    organization_code = request.GET.get('code') or None
+    if organization_code is None or organization_code == '':
+        return JsonResponse({
+            'success': False,
+            'message': 'Track not found!',
+        })
     organizations = ProfessionalOrganization.objects.filter(
-        members__pk=user.pk)
+        members__pk=user.pk, organization_code=organization_code)
     quests = Quest.objects.filter(organization__in=organizations).order_by('?')
 
     search = request.GET.get('search')
@@ -149,8 +155,14 @@ def pro_quests(request, username):
 
 def pro_library(request, username):
     user = get_object_or_404(User, username=username)
+    organization_code = request.GET.get('code') or None
+    if organization_code is None or organization_code == '':
+        return JsonResponse({
+            'success': False,
+            'message': 'Track not found!',
+        })
     organizations = ProfessionalOrganization.objects.filter(
-        members__pk=user.pk)
+        members__pk=user.pk, organization_code=organization_code)
     books = Library.objects.filter(
         organization__in=organizations).order_by('?')
     search = request.GET.get('search')
@@ -176,8 +188,14 @@ def pro_library(request, username):
 
 def get_tests(request, username):
     user = get_object_or_404(User, username=username)
+    organization_code = request.GET.get('code') or None
+    if organization_code is None or organization_code == '':
+        return JsonResponse({
+            'success': False,
+            'message': 'Track not found!',
+        })
     organizations = ProfessionalOrganization.objects.filter(
-        members__pk=user.pk)
+        members__pk=user.pk, organization_code=organization_code)
     tests = Test.objects.filter(organization__in=organizations)
     tests_list = [{
         'testid': test.pk,
