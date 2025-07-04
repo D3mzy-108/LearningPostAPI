@@ -88,7 +88,7 @@ def professional_login(request):
 
 @require_POST
 @csrf_exempt
-def join_organization(request):
+def add_learning_track(request):
     # GET POSTED DATA
     username = request.POST.get('username') or ''
     company_code = request.POST.get('cc') or ''
@@ -118,6 +118,23 @@ def join_organization(request):
         'message': f'Welcome to {organization.organization_name}',
     })
 
+def get_learning_tracks(request, username):
+    user = get_object_or_404(User, username=username)
+    organizations = ProfessionalOrganization.objects.filter(
+        members__pk=user.pk)
+    organizations_list = []
+    for organization in organizations:
+        organizations_list.append({
+            'name': organization.organization_name,
+            'logo': f'{organization.organization_logo.url}',
+            'code': organization.organization_code,
+        })
+    context = {
+        'success': True,
+        'learning_tracks': organizations_list,
+    }
+    return JsonResponse(context)
+
 
 def pro_quests(request, username):
     user = get_object_or_404(User, username=username)
@@ -138,17 +155,9 @@ def pro_quests(request, username):
     quests_list = []
     for quest in quests:
         quests_list.append(_build_quest_object(quest, username))
-    organizations_list = []
-    for organization in organizations:
-        organizations_list.append({
-            'name': organization.organization_name,
-            'logo': f'{organization.organization_logo.url}',
-            'code': organization.organization_code,
-        })
     context = {
         'success': True,
         'quests': quests_list,
-        'organizations': organizations_list,
     }
     return JsonResponse(context)
 
