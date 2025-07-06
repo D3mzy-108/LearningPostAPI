@@ -19,11 +19,7 @@ def professional_signup(request):
     email = request.POST.get('email')
     username = request.POST.get('username') or email.split('@')[0]
     password = request.POST.get('password')
-    company_code = request.POST.get('company_code')
-
-    # VERIFY ORGANIZATION CODE
-    organization = get_object_or_404(
-        ProfessionalOrganization, organization_code=company_code)
+    year_of_birth = request.POST.get('year_of_birth')
 
     # VERIFY IF USER EXISTS
     user_exists = User.objects.filter(email=email).exists()
@@ -34,24 +30,21 @@ def professional_signup(request):
         })
 
     # CREATE NEW USER
-    if not User.objects.filter(username=username).exists():
-        user_instance = User()
-        user_instance.first_name = first_name
-        user_instance.last_name = last_name
-        user_instance.email = email
-        user_instance.username = username
-        user_instance.set_password(password)
-        user_instance.save()
+    user_instance = User()
+    user_instance.first_name = first_name
+    user_instance.last_name = last_name
+    user_instance.email = email
+    user_instance.username = username
+    user_instance.set_password(password)
+    user_instance.dob = datetime.datetime.strptime(
+        f'01-01-{year_of_birth}', '%d-%M-%Y')
+    user_instance.save()
 
-    # ADD USER TO ORGANIZATION
-    user = get_object_or_404(User, username=username)
-    organization.members.add(user)
-    organization.save()
-
-    return JsonResponse({
+    context = {
         'success': True,
         'message': 'Account Registered!',
-    })
+    }
+    return JsonResponse(context)
 
 
 @require_POST
@@ -117,6 +110,7 @@ def add_learning_track(request):
         'success': True,
         'message': f'Welcome to {organization.organization_name}',
     })
+
 
 def get_learning_tracks(request, username):
     user = get_object_or_404(User, username=username)
