@@ -26,7 +26,7 @@ class Quest(models.Model):
 
     def average_rating(self):
         return self.rated_quests.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 5.0
-4
+
 
 class Question(models.Model):
     quest = models.ForeignKey(

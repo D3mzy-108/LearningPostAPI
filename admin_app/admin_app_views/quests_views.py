@@ -36,6 +36,9 @@ def quests(request):
                 'bookmark_count': quest.bookmarked.count(),
                 'question_count': quest.questions.count(),
                 'rating': quest.average_rating(),
+                'about': quest.about,
+                'instructions': quest.instructions,
+                'organization': None,
                 } for quest in displayed_quests
         ],
         'page': f'{page} of {displayed_quests.paginator.num_pages}',

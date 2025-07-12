@@ -13,8 +13,8 @@ def library(request):
     search = request.GET.get('search_books') or None
     books = Library.objects.filter(organization=None).order_by('-id')
     if search is not None:
-        books = Library.objects.filter(title__icontains=search).order_by('-id')
-    paginator = Paginator(books, 30)
+        books = books.filter(title__icontains=search)
+    paginator = Paginator(books, 50)
     page = request.GET.get('page')
     if page == None or int(page) > paginator.num_pages:
         page = 1
@@ -24,14 +24,17 @@ def library(request):
         'success': True,
         'books': [
             {
-                'id': quest.pk,
-                'cover': quest.cover.url,
-                'title': quest.title,
-                'author': quest.author,
-                'bookmark_count': quest.bookmarked.count(),
-                'chapter_count': quest.chapters.count(),
-                'rating': quest.average_rating(),
-                } for quest in books
+                'id': book.pk,
+                'cover': book.cover.url,
+                'title': book.title,
+                'author': book.author,
+                'bookmark_count': book.bookmarked.count(),
+                'chapter_count': book.chapters.count(),
+                'rating': book.average_rating(),
+                'about': book.about,
+                'about_author': book.about_author,
+                'organization': None,
+                } for book in displayed_books
         ],
         'page': f'{page} of {displayed_books.paginator.num_pages}',
         'num_pages': displayed_books.paginator.num_pages,
