@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from ..models import *
 from django.contrib.auth.decorators import login_required
@@ -8,15 +9,11 @@ from django.core.paginator import Paginator
 # LIBRARY
 # ========================================================================================================
 
-@login_required
 def library(request):
-    search = request.GET.get('search_books')
-    search_val = ''
+    search = request.GET.get('search_books') or None
+    books = Library.objects.filter(organization=None).order_by('-id')
     if search is not None:
-        search_val = search
         books = Library.objects.filter(title__icontains=search).order_by('-id')
-    else:
-        books = Library.objects.all().order_by('-id')
     paginator = Paginator(books, 30)
     page = request.GET.get('page')
     if page == None or int(page) > paginator.num_pages:
@@ -24,12 +21,23 @@ def library(request):
     displayed_books = paginator.page(page)
 
     context = {
-        'library': displayed_books,
-        'paginator': displayed_books,
-        'page': page,
-        'search_val': search_val,
+        'success': True,
+        'books': [
+            {
+                'id': quest.pk,
+                'cover': quest.cover.url,
+                'title': quest.title,
+                'author': quest.author,
+                'bookmark_count': quest.bookmarked.count(),
+                'chapter_count': quest.chapters.count(),
+                'rating': quest.average_rating(),
+                } for quest in books
+        ],
+        'page': f'{page} of {displayed_books.paginator.num_pages}',
+        'num_pages': displayed_books.paginator.num_pages,
+        'search_val': search,
     }
-    return render(request, 'admin_app/library/library.html', context)
+    return JsonResponse(context)
 
 
 @login_required

@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from admin_app.utils.grades import get_grades_list
@@ -12,28 +12,37 @@ from django.core.paginator import Paginator
 # QUESTS
 # ========================================================================================================
 
-@login_required
 def quests(request):
-    search = request.GET.get('search_quest')
-    search_val = ''
+    search = request.GET.get('search_quest') or None
+    quests = Quest.objects.filter(organization=None).order_by('-id')
     if search is not None:
-        search_val = search
-        quests = Quest.objects.filter(title__icontains=search).order_by('-id')
-    else:
-        quests = Quest.objects.all().order_by('-id')
-    paginator = Paginator(quests, 30)
+        quests = quests.filter(title__icontains=search).order_by('-id')
+    paginator = Paginator(quests, 50)
     page = request.GET.get('page')
-    if page == None or int(page) > paginator.num_pages:
+    if page == None or int(page) > paginator.num_pages or int(page) < 1:
         page = 1
     displayed_quests = paginator.page(page)
 
     context = {
-        'quests': displayed_quests,
-        'paginator': displayed_quests,
-        'page': page,
-        'search_val': search_val,
+        'success': True,
+        'quests': [
+            {
+                'id': quest.pk,
+                'cover': quest.cover.url,
+                'title': quest.title,
+                'grade': quest.grade,
+                'category': quest.category or '',
+                'time': quest.time,
+                'bookmark_count': quest.bookmarked.count(),
+                'question_count': quest.questions.count(),
+                'rating': quest.average_rating(),
+                } for quest in displayed_quests
+        ],
+        'page': f'{page} of {displayed_quests.paginator.num_pages}',
+        'num_pages': displayed_quests.paginator.num_pages,
+        'search_val': search or '',
     }
-    return render(request, 'admin_app/quests/quests.html', context)
+    return JsonResponse(context)
 
 
 @login_required
