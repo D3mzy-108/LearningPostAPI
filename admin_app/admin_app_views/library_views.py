@@ -2,6 +2,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from ..models import *
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 
 
@@ -41,6 +43,46 @@ def library(request):
         'search_val': search,
     }
     return JsonResponse(context)
+
+
+@require_POST
+@csrf_exempt
+def submit_book(request):
+    book_id = request.POST.get('id')
+    title = request.POST['title']
+    cover = request.FILES.get('cover')
+    about = request.POST['about']
+    author = request.POST['author']
+    about_author = request.POST['about_author']
+    organization_code = request.POST.get('organization_code', None)
+
+    if organization_code:
+        organization = get_object_or_404(
+            ProfessionalOrganization, organization_code=organization_code)
+    else:
+        organization = None
+
+    if book_id == None or book_id == '':
+        Library.objects.create(
+            title = title,
+            cover = cover,
+            about = about,
+            author = author,
+            about_author = about_author,
+            organization=organization,
+        )
+    else:
+        instance = get_object_or_404(Library, pk=book_id)
+        instance.title = request.POST['title']
+        cover = request.FILES.get('cover')
+        if cover is not None:
+            instance.cover = cover
+        instance.about = about
+        instance.author = author
+        instance.about_author = about_author
+        instance.organization = organization
+        instance.save()
+    return JsonResponse({'success': True, 'message': 'Book saved successfully'})
 
 
 @login_required

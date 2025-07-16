@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from admin_app.utils.grades import get_grades_list
 from ..models import *
 import csv
-from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 
 
@@ -47,8 +48,53 @@ def quests(request):
     }
     return JsonResponse(context)
 
+@require_POST
+@csrf_exempt
+def submit_quest(request):
+    quest_id = request.POST.get('id')
+    title = request.POST['title']
+    cover = request.FILES.get('cover')
+    grade = request.POST['grade']
+    category = request.POST['category']
+    time = request.POST['time']
+    about = request.POST['about']
+    instructions = request.POST['instructions']
+    organization_code = request.POST.get('organization_code', None)
 
-@login_required
+    if organization_code:
+        organization = get_object_or_404(
+            ProfessionalOrganization, organization_code=organization_code)
+    else:
+        organization = None
+
+    if quest_id == None or quest_id == '':
+
+        Quest.objects.create(
+            title=title,
+            cover=cover,
+            grade=grade,
+            category=category,
+            time=time,
+            about=about,
+            instructions=instructions,
+            organization=organization,
+        )
+    else:
+        instance = get_object_or_404(Quest, pk=quest_id)
+        instance.title = request.POST['title']
+        cover = request.FILES.get('cover')
+        if cover is not None:
+            instance.cover = cover
+        instance.grade = request.POST['grade']
+        instance.category = request.POST['category']
+        instance.time = request.POST['time']
+        instance.about = request.POST['about']
+        instance.instructions = request.POST['instructions']
+        instance.organization = organization
+        instance.save()
+    return JsonResponse({'success': True, 'message': 'Quest saved successfully'})
+
+
 def create_quest(request):
     if request.method == 'POST':
         title = request.POST['title']
@@ -78,7 +124,7 @@ def create_quest(request):
     return render(request, 'admin_app/quests/quest_form.html', context)
 
 
-@login_required
+
 def edit_quest(request, pk):
     instance = get_object_or_404(Quest, pk=pk)
     if request.method == 'POST':
@@ -100,14 +146,14 @@ def edit_quest(request, pk):
     return render(request, 'admin_app/quests/quest_form.html', context)
 
 
-@login_required
+
 def delete_quest(request, pk):
     quest = get_object_or_404(Quest, pk=pk)
     quest.delete()
     return redirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required
+
 def view_questions(request, pk):
     quest = get_object_or_404(Quest, pk=pk)
     search = request.GET.get('search_questions')
@@ -133,7 +179,7 @@ def view_questions(request, pk):
     return render(request, 'admin_app/quests/quest_questions.html', context)
 
 
-@login_required
+
 def bulk_upload(request, pk):
     if request.method == 'POST':
         questions_file = request.FILES.get('questions')
@@ -159,7 +205,7 @@ def bulk_upload(request, pk):
     return redirect('view_questions', pk=pk)
 
 
-@login_required
+
 def single_upload(request, pk):
     if request.method == 'POST':
         question = Question()
@@ -180,7 +226,7 @@ def single_upload(request, pk):
     return redirect('view_questions', pk=pk)
 
 
-@login_required
+
 def edit_question(request, quest_pk, pk):
     if request.method == 'POST':
         question = get_object_or_404(Question, pk=pk)
@@ -203,14 +249,14 @@ def edit_question(request, quest_pk, pk):
     return redirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required
+
 def delete_question(request, pk):
     question = get_object_or_404(Question, pk=pk)
     question.delete()
     return redirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required
+
 def download_quest(request, testid):
     quest = get_object_or_404(Quest, id=testid)
     questions = Question.objects.filter(quest__id=quest.pk)
