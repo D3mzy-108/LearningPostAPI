@@ -16,7 +16,7 @@ def _get_quest(username):
     else:
         quests = Quest.objects.filter(
             grade__in=grades, organization=None).order_by('?')
-    paginator = Paginator(quests, 30)
+    paginator = Paginator(quests, 20)
     page = 1
     try:
         displayed_quests = paginator.page(page)
@@ -66,8 +66,8 @@ def _get_quest(username):
 
 
 def _get_book(username):
-    books = Library.objects.all().order_by('?')
-    paginator = Paginator(books, 30)
+    books = Library.objects.filter(organization=None).order_by('?')
+    paginator = Paginator(books, 20)
     page = 1
     try:
         displayed_books = paginator.page(page)
