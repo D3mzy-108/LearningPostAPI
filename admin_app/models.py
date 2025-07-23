@@ -154,9 +154,11 @@ class MPerformance(models.Model):
 class SubscriptionPlan(models.Model):
     currencies = [
         ('NGN', 'NGN'),
+        ('USD', 'USD'),
+        ('GBP', 'GBP'),
     ]
     plan = models.CharField(max_length=20)
-    currency = models.CharField(max_length=5, choices=currencies, null=True)
+    currency = models.CharField(max_length=5, choices=currencies, null=True, default='NGN')
     duration = models.IntegerField()
     price = models.FloatField(default=0.0)
 
