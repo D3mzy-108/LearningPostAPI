@@ -2,6 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from admin_app.utils.grades import get_grades_list
+from endpoints.api_views.quest_views import _build_questions_list
 from ..models import *
 import csv
 from django.views.decorators.http import require_POST
@@ -12,6 +13,22 @@ from django.core.paginator import Paginator
 # ========================================================================================================
 # QUESTS
 # ========================================================================================================
+
+def _build_quest_object(quest):
+    return {
+        'id': quest.pk,
+        'cover': quest.cover.url,
+        'title': quest.title,
+        'grade': quest.grade,
+        'category': quest.category or '',
+        'time': quest.time,
+        'bookmark_count': quest.bookmarked.count(),
+        'question_count': quest.questions.count(),
+        'rating': quest.average_rating(),
+        'about': quest.about,
+        'instructions': quest.instructions,
+        'organization': quest.organization.organization_code if quest.organization else None,
+    }
 
 def quests(request):
     search = request.GET.get('search_quest') or None
@@ -27,20 +44,7 @@ def quests(request):
     context = {
         'success': True,
         'quests': [
-            {
-                'id': quest.pk,
-                'cover': quest.cover.url,
-                'title': quest.title,
-                'grade': quest.grade,
-                'category': quest.category or '',
-                'time': quest.time,
-                'bookmark_count': quest.bookmarked.count(),
-                'question_count': quest.questions.count(),
-                'rating': quest.average_rating(),
-                'about': quest.about,
-                'instructions': quest.instructions,
-                'organization': None,
-                } for quest in displayed_quests
+            _build_quest_object(quest) for quest in displayed_quests
         ],
         'page': f'{page} of {displayed_quests.paginator.num_pages}',
         'num_pages': displayed_quests.paginator.num_pages,
@@ -95,166 +99,81 @@ def submit_quest(request):
     return JsonResponse({'success': True, 'message': 'Quest saved successfully'})
 
 
-def create_quest(request):
-    if request.method == 'POST':
-        title = request.POST['title']
-        try:
-            cover = request.FILES.get('cover')
-        except:
-            return redirect('create_quest')
-        grade = request.POST['grade']
-        category = request.POST['category']
-        time = request.POST['time']
-        about = request.POST['about']
-        instructions = request.POST['instructions']
-
-        instance = Quest()
-        instance.title = title
-        instance.cover = cover
-        instance.grade = grade
-        instance.category = category
-        instance.time = time
-        instance.about = about
-        instance.instructions = instructions
-        instance.save()
-        return redirect('quests')
-    context = {
-        'grades': get_grades_list(),
-    }
-    return render(request, 'admin_app/quests/quest_form.html', context)
-
-
-
-def edit_quest(request, pk):
-    instance = get_object_or_404(Quest, pk=pk)
-    if request.method == 'POST':
-        instance.title = request.POST['title']
-        cover = request.FILES.get('cover')
-        if cover is not None:
-            instance.cover = cover
-        instance.grade = request.POST['grade']
-        instance.category = request.POST['category']
-        instance.time = request.POST['time']
-        instance.about = request.POST['about']
-        instance.instructions = request.POST['instructions']
-        instance.save()
-        return redirect('quests')
-    context = {
-        'instance': instance,
-        'grades': get_grades_list(),
-    }
-    return render(request, 'admin_app/quests/quest_form.html', context)
-
-
-
-def delete_quest(request, pk):
-    quest = get_object_or_404(Quest, pk=pk)
-    quest.delete()
-    return redirect(request.META.get('HTTP_REFERER'))
-
-
-
 def view_questions(request, pk):
     quest = get_object_or_404(Quest, pk=pk)
     search = request.GET.get('search_questions')
+    questions = quest.questions.all().order_by('-id')
     search_val = ''
     if search is not None:
-        questions = quest.questions.all().filter(
-            question__icontains=search).order_by('-id')
+        questions = questions.filter(question__icontains=search)
         search_val = search
-    else:
-        questions = quest.questions.all().order_by('-id')
+
     paginator = Paginator(questions, 30)
     page = request.GET.get('page')
     if page == None:
         page = 1
-    displayed_questsions = paginator.page(page)
+
+    displayed_questions = paginator.page(page)
     context = {
-        'quest': quest,
-        'questions': displayed_questsions,
-        'paginator': displayed_questsions,
-        'page': page,
+        'success': True,
+        'quest': _build_quest_object(quest),
+        'questions': _build_questions_list(displayed_questions),
+        'page': f'{page} of {displayed_questions.paginator.num_pages}',
+        'num_pages': displayed_questions.paginator.num_pages,
         'search_val': search_val,
     }
-    return render(request, 'admin_app/quests/quest_questions.html', context)
+    return JsonResponse(context)
 
 
-
+@require_POST
+@csrf_exempt
 def bulk_upload(request, pk):
-    if request.method == 'POST':
-        questions_file = request.FILES.get('questions')
-        decoded_file = questions_file.read().decode('utf-8').splitlines()
-        delimiter = ',' if questions_file.name.endswith('.csv') else '\t'
-        reader = csv.DictReader(decoded_file, delimiter=delimiter)
-        table_heads = next(csv.reader(decoded_file, delimiter=delimiter), None)
-        rows = list(reader)
-        if len(table_heads) == 9:
-            for row in rows:
-                question = Question()
-                question.quest = get_object_or_404(Quest, pk=pk)
-                question.comprehension = row[table_heads[0]]
-                question.question = row[table_heads[1]]
-                question.a = row[table_heads[2]]
-                question.b = row[table_heads[3]]
-                question.c = row[table_heads[4]]
-                question.d = row[table_heads[5]]
-                question.answer = row[table_heads[6]]
-                question.explanation = row[table_heads[7]]
-                question.topic = row[table_heads[8]]
-                question.save()
-    return redirect('view_questions', pk=pk)
+    questions_file = request.FILES.get('questions')
+    decoded_file = questions_file.read().decode('utf-8').splitlines()
+    delimiter = ',' if questions_file.name.endswith('.csv') else '\t'
+    reader = csv.DictReader(decoded_file, delimiter=delimiter)
+    table_heads = next(csv.reader(decoded_file, delimiter=delimiter), None)
+    rows = list(reader)
+    if len(table_heads) == 9:
+        for row in rows:
+            question = Question()
+            question.quest = get_object_or_404(Quest, pk=pk)
+            question.comprehension = row[table_heads[0]]
+            question.question = row[table_heads[1]]
+            question.a = row[table_heads[2]]
+            question.b = row[table_heads[3]]
+            question.c = row[table_heads[4]]
+            question.d = row[table_heads[5]]
+            question.answer = row[table_heads[6]]
+            question.explanation = row[table_heads[7]]
+            question.topic = row[table_heads[8]]
+            question.save()
+    return JsonResponse({'success': True, 'message': 'Questions saved successfully'})
 
 
-
+@require_POST
+@csrf_exempt
 def single_upload(request, pk):
-    if request.method == 'POST':
+    if request.POST.get('questionId') is not None and not request.POST.get('questionId') == '':
+        question = get_object_or_404(Question, id=request.POST.get('questionId'))
+    else:
         question = Question()
-        question.quest = get_object_or_404(Quest, pk=pk)
-        diagram = request.FILES.get('diagram')
-        if diagram is not None:
-            question.diagram = diagram
-        question.comprehension = f"{request.POST['comprehension']}"
-        question.question = request.POST['question']
-        question.a = request.POST['a']
-        question.b = request.POST['b']
-        question.c = request.POST['c']
-        question.d = request.POST['d']
-        question.answer = request.POST['answer']
-        question.explanation = request.POST['explanation']
-        question.topic = request.POST['topic']
-        question.save()
-    return redirect('view_questions', pk=pk)
 
-
-
-def edit_question(request, quest_pk, pk):
-    if request.method == 'POST':
-        question = get_object_or_404(Question, pk=pk)
-        diagram = request.FILES.get('diagram')
-        if diagram is not None:
-            question.diagram = diagram
-        if request.POST.get('clear_diagram') is not None and request.POST.get('clear_diagram') == 'on':
-            question.diagram = None
-        question.comprehension = f"{request.POST['comprehension']}"
-        question.question = request.POST['question']
-        question.a = request.POST['a']
-        question.b = request.POST['b']
-        question.c = request.POST['c']
-        question.d = request.POST['d']
-        question.answer = request.POST['answer']
-        question.explanation = request.POST['explanation']
-        question.topic = request.POST['topic']
-        question.is_draft = False
-        question.save()
-    return redirect(request.META.get('HTTP_REFERER'))
-
-
-
-def delete_question(request, pk):
-    question = get_object_or_404(Question, pk=pk)
-    question.delete()
-    return redirect(request.META.get('HTTP_REFERER'))
-
+    question.quest = get_object_or_404(Quest, pk=pk)
+    diagram = request.FILES.get('diagram')
+    if diagram is not None:
+        question.diagram = diagram
+    question.comprehension = f"{request.POST['comprehension']}"
+    question.question = request.POST['question']
+    question.a = request.POST['a']
+    question.b = request.POST['b']
+    question.c = request.POST['c']
+    question.d = request.POST['d']
+    question.answer = request.POST['answer']
+    question.explanation = request.POST['explanation']
+    question.topic = request.POST['topic']
+    question.save()
+    return JsonResponse({'success': True, 'message': 'Saved question instance!'})
 
 
 def download_quest(request, testid):
