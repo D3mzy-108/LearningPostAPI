@@ -26,7 +26,11 @@ def _build_book_object(book):
 
 def library(request):
     search = request.GET.get('search_books') or None
-    books = Library.objects.filter(organization=None).order_by('-id')
+    code = request.GET.get('code') or None
+    if code is not None and code != '':
+        books = Library.objects.filter(organization__organization_code=code).order_by('-id')
+    else:
+        books = Library.objects.filter(organization=None).order_by('-id')
     if search is not None:
         books = books.filter(title__icontains=search)
     paginator = Paginator(books, 50)
@@ -56,9 +60,9 @@ def submit_book(request):
     about = request.POST['about']
     author = request.POST['author']
     about_author = request.POST['about_author']
-    organization_code = request.POST.get('organization_code', None)
+    organization_code = request.POST.get('organization_code')
 
-    if organization_code:
+    if organization_code is not None and organization_code != '':
         organization = get_object_or_404(
             ProfessionalOrganization, organization_code=organization_code)
     else:

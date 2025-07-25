@@ -1,5 +1,6 @@
 from django.urls import path
 
+from admin_app.admin_app_views.partnership_views import get_partners
 from admin_app.views import load_ext_form_data
 from .admin_app_views.subscription_views import add_plan, modify_plan, plans, save_plan_instance
 from .admin_app_views.quests_views import download_quest, quests, submit_quest, view_questions, bulk_upload, single_upload
@@ -45,4 +46,8 @@ urlpatterns = [
     path('subscription-plans/add/', add_plan, name='add_plan'),
     path('subscription-plans/<int:id>/modify/',
          modify_plan, name='modify_plan'),
+    # ========================================================================================================
+    # SUBSCRIPTION PLANS
+    # ========================================================================================================
+    path('partners/', get_partners, name='get_partners'),
 ]

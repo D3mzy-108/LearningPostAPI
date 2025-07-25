@@ -32,7 +32,11 @@ def _build_quest_object(quest):
 
 def quests(request):
     search = request.GET.get('search_quest') or None
-    quests = Quest.objects.filter(organization=None).order_by('-id')
+    code = request.GET.get('code') or None
+    if code is not None and code != '':
+        quests = Quest.objects.filter(organization__organization_code=code).order_by('-id')
+    else:
+        quests = Quest.objects.filter(organization=None).order_by('-id')
     if search is not None:
         quests = quests.filter(title__icontains=search).order_by('-id')
     paginator = Paginator(quests, 50)
@@ -63,9 +67,9 @@ def submit_quest(request):
     time = request.POST['time']
     about = request.POST['about']
     instructions = request.POST['instructions']
-    organization_code = request.POST.get('organization_code', None)
+    organization_code = request.POST.get('organization_code')
 
-    if organization_code:
+    if organization_code is not None and organization_code != '':
         organization = get_object_or_404(
             ProfessionalOrganization, organization_code=organization_code)
     else:
