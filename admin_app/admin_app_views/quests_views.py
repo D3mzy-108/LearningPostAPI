@@ -140,6 +140,7 @@ def bulk_upload(request, pk):
     rows = list(reader)
     if len(table_heads) == 9:
         for row in rows:
+            answer_options = [row[table_heads[2]], row[table_heads[3]], row[table_heads[4]], row[table_heads[5]]]
             question = Question()
             question.quest = get_object_or_404(Quest, pk=pk)
             question.comprehension = row[table_heads[0]]
@@ -148,10 +149,19 @@ def bulk_upload(request, pk):
             question.b = row[table_heads[3]]
             question.c = row[table_heads[4]]
             question.d = row[table_heads[5]]
-            question.answer = row[table_heads[6]]
             question.explanation = row[table_heads[7]]
             question.topic = row[table_heads[8]]
-            question.save()
+            
+            if row[table_heads[6]] in answer_options:
+                question.answer = row[table_heads[6]]
+                question.save()
+            else:
+                if row[table_heads[6]].lower() in ['a', 'b', 'c', 'd']:
+                    question.answer = answer_options[['a', 'b', 'c', 'd'].index(row[table_heads[6]].lower())]
+                    question.save()
+                else:
+                    pass
+
     return JsonResponse({'success': True, 'message': 'Questions saved successfully'})
 
 
