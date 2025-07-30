@@ -40,7 +40,8 @@ def _send_request_to_ai(user: User | None, prompt: str) -> str | None:
             contents=[user_prompt],
         )
         return response.text
-    except:
+    except e as Exception:
+        print(e)
         return None
 
 
@@ -187,6 +188,7 @@ def get_material_content(request, material_id):
         akada_response = _send_request_to_ai(user=None,
                                              prompt=f'Write a short textbook covering all core areas on the topic "{generated_study_material.topic}" in 4000 words. Tailor response for a child in {generated_study_material.quest.grade} class or grade to easily understand.')
         if akada_response is None:
+            print("FAILED TO GENERATE STUDY MATERIAL CONTENT")
             return JsonResponse({
                 'success': False,
                 'message': 'Unable to generate content. Please try again later.'
