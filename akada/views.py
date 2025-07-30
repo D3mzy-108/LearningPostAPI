@@ -40,7 +40,7 @@ def _send_request_to_ai(user: User | None, prompt: str) -> str | None:
             contents=[user_prompt],
         )
         return response.text
-    except e as Exception:
+    except Exception as e:
         print(e)
         return None
 
