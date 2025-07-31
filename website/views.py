@@ -6,48 +6,44 @@ from core.settings import BASE_DIR, STATIC_URL
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from .models import User
 
 
+@require_POST
 @csrf_exempt
 def login(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        email = data.get('email')
-        password = data.get('password')
+    data = request.POST
+    email = data.get('email')
+    password = data.get('password')
 
-        if not User.objects.filter(email=email).exists():
-            return JsonResponse({
-                'success': False,
-                'message': 'User does not exist.',
-            })
-        user = get_object_or_404(User, email=email)
-        if not user.check_password(password):
-            return JsonResponse({
-                'success': False,
-                'message': 'Incorrect Password.',
-            })
-        auth.login(request=request, user=user)
-        if not user.is_superuser:
-            return JsonResponse({
-                'success': False,
-                'message': 'Account is unauthorized.',
-            })
-        return JsonResponse({
-            'success': True,
-            'message': f'Welcome {user.username}.',
-            'user': {
-                'username': user.username,
-                'email': user.email,
-                'lastLogin': datetime.datetime.strftime(user.last_login, '%d-%m-%Y'),
-            },
-        })
-    else:
+    if not User.objects.filter(email=email).exists():
         return JsonResponse({
             'success': False,
-            'message': 'Invalid request.',
+            'message': 'User does not exist.',
         })
+    user = get_object_or_404(User, email=email)
+    if not user.check_password(password):
+        return JsonResponse({
+            'success': False,
+            'message': 'Incorrect Password.',
+        })
+    auth.login(request=request, user=user)
+    if not user.is_superuser:
+        return JsonResponse({
+            'success': False,
+            'message': 'Account is unauthorized.',
+        })
+    return JsonResponse({
+        'success': True,
+        'message': f'Welcome {user.username}.',
+        'user': {
+            'username': user.username,
+            'email': user.email,
+            'lastLogin': datetime.datetime.strftime(user.last_login, '%d-%m-%Y'),
+        },
+    })
 
 
 def home(request):
