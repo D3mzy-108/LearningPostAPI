@@ -1,5 +1,4 @@
 from django.urls import path
-
 from admin_app.admin_app_views.partnership_views import bulk_upload_test_question, get_partner_tests, get_partners, save_test_instance, single_upload_test_question, view_test_questions
 from admin_app.views import load_ext_form_data
 from .admin_app_views.subscription_views import add_plan, modify_plan, plans, save_plan_instance
