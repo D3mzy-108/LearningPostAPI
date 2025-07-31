@@ -1,6 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
+from admin_app.utils.csv_file_upload_manager import parse_questions_from_csv
 from admin_app.utils.grades import get_grades_list
 from endpoints.api_views.quest_views import _build_questions_list
 from ..models import *
@@ -133,34 +134,31 @@ def view_questions(request, pk):
 @csrf_exempt
 def bulk_upload(request, pk):
     questions_file = request.FILES.get('questions')
-    decoded_file = questions_file.read().decode('utf-8').splitlines()
-    delimiter = ',' if questions_file.name.endswith('.csv') else '\t'
-    reader = csv.DictReader(decoded_file, delimiter=delimiter)
-    table_heads = next(csv.reader(decoded_file, delimiter=delimiter), None)
-    rows = list(reader)
-    if len(table_heads) == 9:
-        for row in rows:
-            answer_options = [row[table_heads[2]], row[table_heads[3]], row[table_heads[4]], row[table_heads[5]]]
-            question = Question()
-            question.quest = get_object_or_404(Quest, pk=pk)
-            question.comprehension = row[table_heads[0]]
-            question.question = row[table_heads[1]]
-            question.a = row[table_heads[2]]
-            question.b = row[table_heads[3]]
-            question.c = row[table_heads[4]]
-            question.d = row[table_heads[5]]
-            question.explanation = row[table_heads[7]]
-            question.topic = row[table_heads[8]]
-            
-            if row[table_heads[6]] in answer_options:
-                question.answer = row[table_heads[6]]
+    table_heads, rows = parse_questions_from_csv(questions_file)
+    if table_heads is None and len(table_heads) != 9:
+        return JsonResponse({'success': False, 'message': 'Invalid file format'})
+    for row in rows:
+        answer_options = [row[table_heads[2]], row[table_heads[3]], row[table_heads[4]], row[table_heads[5]]]
+        question = Question()
+        question.quest = get_object_or_404(Quest, pk=pk)
+        question.comprehension = row[table_heads[0]]
+        question.question = row[table_heads[1]]
+        question.a = row[table_heads[2]]
+        question.b = row[table_heads[3]]
+        question.c = row[table_heads[4]]
+        question.d = row[table_heads[5]]
+        question.explanation = row[table_heads[7]]
+        question.topic = row[table_heads[8]]
+        
+        if row[table_heads[6]] in answer_options:
+            question.answer = row[table_heads[6]]
+            question.save()
+        else:
+            if row[table_heads[6]].lower() in ['a', 'b', 'c', 'd']:
+                question.answer = answer_options[['a', 'b', 'c', 'd'].index(row[table_heads[6]].lower())]
                 question.save()
             else:
-                if row[table_heads[6]].lower() in ['a', 'b', 'c', 'd']:
-                    question.answer = answer_options[['a', 'b', 'c', 'd'].index(row[table_heads[6]].lower())]
-                    question.save()
-                else:
-                    pass
+                pass
 
     return JsonResponse({'success': True, 'message': 'Questions saved successfully'})
 
