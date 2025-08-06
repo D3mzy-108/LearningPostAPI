@@ -220,7 +220,7 @@ def get_tests(request, username):
 
 
 def get_questions(request, testid):
-    questions = TestQuestion.objects.filter(test__pk=testid)
+    questions = TestQuestion.objects.filter(test__pk=testid).order_by('?')[:100]
     questions_list = []
     for question in questions:
         diagram_url = None
