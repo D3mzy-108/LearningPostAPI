@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from admin_app.models import Quest
 from website.models import User
@@ -33,23 +34,23 @@ class GeneratedStudyMaterials(models.Model):
     def __str__(self):
         return f'{self.topic}'
 
-    # def save(self, *args, **kwargs):
-    #     is_new_instance = self._state.adding
-    #     if is_new_instance:
-    #         if self.quest is not None and not self.quest.title in self.topic:
-    #             self.topic = f'{self.topic}'
-    #     return super().save(*args, **kwargs)
 
+class GenerativeAIContentReport(models.Model):
+    reporter = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    prompt = models.TextField()
+    response = models.TextField()
+    reason = models.CharField(max_length=255, help_text="User-provided reason for the report.")
+    created_at = models.DateTimeField(auto_now_add=True)
+    STATUS_CHOICES = [
+        ('pending', 'Pending Review'),
+        ('resolved', 'Resolved'),
+    ]
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='pending')
+    conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-# from django.db import models
+    class Meta:
+        verbose_name = 'Generative AI Content Report'
+        verbose_name_plural = 'Generative AI Content Reports'
 
-
-# class AkadaKnowledgeBank(models.Model):
-#     content = models.TextField()
-
-#     class Meta:
-#         verbose_name = 'AkadaKnowledgeBank'
-#         verbose_name_plural = 'AkadaKnowledgeBank'
-
-#     def __str__(self):
-#         return self.content[:30]
+    def __str__(self):
+        return f"Report #{self.id} by {self.reporter or 'Anonymous'}"

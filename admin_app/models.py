@@ -126,12 +126,20 @@ class UserFeedback(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.SET_NULL, related_name='m_feedbacks', blank=True, null=True)
     message = models.TextField()
-    is_viewed = models.BooleanField(default=False)
+    STATUS_CHOICES = [
+        ('pending', 'Pending Review'),
+        ('resolved', 'Resolved'),
+    ]
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='pending')
     feedback_type = models.CharField(
         max_length=20, choices=feedback_choices, null=True)
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'UserFeedback'
+        verbose_name_plural = 'UserFeedback'
 
     def __str__(self):
         return f'{self.feedback_type}\n{self.message}'
