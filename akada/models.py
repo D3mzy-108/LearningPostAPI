@@ -53,4 +53,4 @@ class GenerativeAIContentReport(models.Model):
         verbose_name_plural = 'Generative AI Content Reports'
 
     def __str__(self):
-        return f"Report #{self.id} by {self.reporter or 'Anonymous'}"
+        return f"Report #{self.conversation_id} by {self.reporter or 'Anonymous'}"
