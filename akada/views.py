@@ -247,6 +247,21 @@ def flag_ai_response(request):
     send_email_to_recipient(
         recipient_email=user.email,
         email_content=f"""
+        Hello {user.first_name},
+        
+        Thank you for reporting the AI-generated content. We've received your submission, and our team is actively reviewing it to address any concerns.
+        
+        
+        At LearningPost, we take these reports seriously and are working hard to resolve all related issues. Our goal is to ensure a safe and enjoyable experience for all users.
+        
+        
+        We appreciate your patience and support in helping us improve our platform. If you have any further questions, feel free to reach out.
+        
+        Best regards,
+        Daniel Fisher
+        LearningPost
+        """,
+        email_html_content=f"""
         <h2 style="color: #333333; font-size: 24px; margin-top: 0; margin-bottom: 15px;">
             Hello {user.first_name},
         </h2>

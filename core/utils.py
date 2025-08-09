@@ -1,7 +1,7 @@
 from django.core.mail import send_mail
 from django.conf import settings
 
-def send_email_to_recipient(recipient_email, email_content, subject="no-reply@learningpost.ng"):
+def send_email_to_recipient(recipient_email: str, email_content: str, email_html_content: str, subject: str="no-reply@learningpost.ng"):
     """
     Sends an email to the specified recipient with the given content.
     
@@ -16,6 +16,7 @@ def send_email_to_recipient(recipient_email, email_content, subject="no-reply@le
     try:
         send_mail(
             subject=subject,
+            message=email_content,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[recipient_email],
             fail_silently=False,
@@ -43,7 +44,7 @@ def send_email_to_recipient(recipient_email, email_content, subject="no-reply@le
                                 <!-- Main Content -->
                                 <tr>
                                     <td style="padding: 30px; color: #333333; line-height: 1.6; font-size: 16px;">
-                                        {email_content}
+                                        {email_html_content}
                                     </td>
                                 </tr>
 
