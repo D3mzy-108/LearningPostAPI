@@ -2,7 +2,7 @@ from django.urls import path
 from admin_app.admin_app_views.partnership_views import bulk_upload_test_question, get_partner_tests, get_partners, save_test_instance, single_upload_test_question, view_test_questions
 from admin_app.views import load_ext_form_data
 from .admin_app_views.subscription_views import add_plan, modify_plan, plans, save_plan_instance
-from .admin_app_views.quests_views import download_quest, quests, submit_quest, view_questions, bulk_upload, single_upload
+from .admin_app_views.quests_views import delete_question, download_quest, quests, submit_quest, view_questions, bulk_upload, single_upload, wipe_quest
 from .admin_app_views.library_views import  delete_chapter, library, submit_book, upload_chapter, view_book
 from .admin_app_views.reports_views import send_report, user_feedback
 
@@ -21,6 +21,8 @@ urlpatterns = [
          bulk_upload, name='bulk_upload'),
     path('quests/<int:pk>/questions/upload/single/',
          single_upload, name='single_upload'),
+    path("quests/delete-question/<int:question_id>/", delete_question, name="delete_question"),
+    path("quests/wipe-questions/<int:quest_id>/", wipe_quest, name="wipe_quest"),
     # ========================================================================================================
     # LIBRARY
     # ========================================================================================================

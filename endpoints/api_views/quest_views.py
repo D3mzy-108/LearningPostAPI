@@ -65,6 +65,7 @@ def _build_questions_list(questions) -> list[dict]:
             'answer': question.answer,
             'explanation': question.explanation,
             'topic': question.topic,
+            'is_draft': question.is_draft,
         })
     return selected_questions
 

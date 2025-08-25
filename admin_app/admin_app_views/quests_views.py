@@ -218,3 +218,36 @@ def download_quest(request, testid):
             ])
 
     return response
+
+
+@csrf_exempt
+@require_POST
+def delete_question(request, question_id):
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+    try:
+        user = User.objects.get(email=email)
+    except:
+        return JsonResponse({'success': False, 'message': 'User not found!'})
+    
+    if user.check_password(password) and user.is_superuser:
+        question = get_object_or_404(Question, id=question_id)
+        question.delete()
+        return JsonResponse({'success': True, 'message': 'Question deleted!'})
+    else:
+        return JsonResponse({'success': False, 'message': 'You are not authorized to delete questions on quests'})
+
+
+@csrf_exempt
+@require_POST
+def wipe_quest(request, quest_id):
+    try:
+        user = User.objects.get(email=request.POST.get('email'))
+    except:
+        return JsonResponse({'success': False, 'message': 'User not found!'})
+    if user.check_password(request.POST.get('password')) and user.is_superuser:
+        questions = Question.objects.filter(quest__id=quest_id)
+        questions.delete()
+        return JsonResponse({'success': True, 'message': 'Question deleted successfully'})
+    else:
+        return JsonResponse({'success': False, 'message': 'You are not authorized to delete questions on quests'})
