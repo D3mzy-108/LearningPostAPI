@@ -34,3 +34,24 @@ class UserSubscription(models.Model):
 
     def __str__(self):
         return f"{self.profile.first_name} -> {self.expiry_date}"
+
+
+class ProUserProfile(models.Model):
+    """
+    User Profile for LearningPost Pro (Professional) users.
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='pro_profile')
+    portrait = models.ImageField(
+        upload_to='reference_faces/',
+        blank=True,
+        null=True,
+        help_text="Upload a clear image of the user's face for proctoring."
+    )
+
+    class Meta:
+
+        verbose_name = 'ProUserProfile'
+        verbose_name_plural = 'ProUserProfiles'
+
+    def __str__(self):
+        pass

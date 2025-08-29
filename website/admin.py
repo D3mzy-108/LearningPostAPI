@@ -10,3 +10,7 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(UserSubscription)
 class UserSubscriptionAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(ProUserProfile)
+class ProUserProfileAdmin(admin.ModelAdmin):
+    pass

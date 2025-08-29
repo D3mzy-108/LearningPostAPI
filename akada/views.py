@@ -21,7 +21,8 @@ def _send_request_to_ai(user: User | None, prompt: str) -> str | None:
     try:
         gemini_api_key = config('GEMINI_API_KEY')
         client = genai.Client(api_key=gemini_api_key)
-        gemini_model = 'gemini-2.0-flash-lite'
+        # gemini_model = 'gemini-2.0-flash-lite'
+        gemini_model = 'gemini-2.5-flash-lite'
 
         # CALCULATE USER AGE FOR TAILORED RESPONSE
         if user:
@@ -66,9 +67,9 @@ def prompt_akada(request, username: str):
             'role': 'user',
             'parts': p.prompt,
         })
-    conversation_context = 'Here are past responses as context:\n\n"'
-    for pr in prompts_list[:4]:
-        conversation_context += f'{pr["parts"]}\n'
+    conversation_context = 'Here is the past questions and responses:\n\n"'
+    for pr in prompts_list[:2]:
+        conversation_context += f'{pr["role"]}: {pr["parts"]}\n'
     else:
         conversation_context += f'"\n\nRespond in an informal tone in about 150 words including as much detail as possible\n\n'
     if request.method == 'POST':

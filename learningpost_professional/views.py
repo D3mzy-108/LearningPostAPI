@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from admin_app.models import Chapter, Library, Quest
 from endpoints.api_views.quest_views import _build_quest_object
 from learningpost_professional.models import ProfessionalOrganization, Score, Test, TestQuestion
-from website.models import User
+from website.models import ProUserProfile, User
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib import auth
@@ -56,9 +56,14 @@ def professional_login(request):
         user = User.objects.get(email=email)
         if user.check_password(password):
             auth.login(request, user=user)
+            if not ProUserProfile.objects.filter(user__pk=user.pk).exists() or user.pro_profile.portrait is None:
+                render_edit_profile = True
+            else:
+                render_edit_profile = False
             return JsonResponse({
                 'success': True,
                 'message': 'Login successful!',
+                'render_edit_profile': render_edit_profile,
                 'user': {
                     'first_name': user.first_name,
                     'last_name': user.last_name,
