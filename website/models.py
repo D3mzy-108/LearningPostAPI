@@ -54,4 +54,4 @@ class ProUserProfile(models.Model):
         verbose_name_plural = 'ProUserProfiles'
 
     def __str__(self):
-        pass
+        return f'{self.user.first_name} {self.user.last_name}'
