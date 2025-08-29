@@ -86,6 +86,22 @@ def professional_login(request):
 
 @require_POST
 @csrf_exempt
+def update_pro_user_profile(request):
+    portrait = request.FILES.get('portraitPhoto')
+    user = get_object_or_404(User, email=request.POST.get('email'))
+    if not ProUserProfile.objects.filter(user__pk=user.pk).exists():
+        ProUserProfile.objects.create(user=user)
+    user.pro_profile.portrait = portrait
+    user.pro_profile.save()
+    return JsonResponse({
+        'success': True,
+        'message': 'Profile updated!',
+    })
+
+
+
+@require_POST
+@csrf_exempt
 def add_learning_track(request):
     # GET POSTED DATA
     username = request.POST.get('username') or ''
