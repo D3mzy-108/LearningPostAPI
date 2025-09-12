@@ -2,7 +2,7 @@ import csv
 
 
 def parse_questions_from_csv(file: any):
-    if not file.name.endswith('.csv') and not file.name.endswith('.tsv'):
+    if not file.name.endswith('.csv') and not file.name.endswith('.tsv') and not file.name.endswith('.TSV'):
         return None, []
     questions_file = file
     decoded_file = questions_file.read().decode('utf-8').splitlines()
