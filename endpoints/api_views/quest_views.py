@@ -1,3 +1,4 @@
+import random
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.core.paginator import Paginator
@@ -126,19 +127,25 @@ def get_quest(request, testid, username):
 
 def questions(request, testid, username):
     user = get_object_or_404(User, username=username)
+    questions_order = request.GET.get('order') or None
+
     if not is_subscription_valid(user=user):
         return JsonResponse({
             'success': False,
             'message': 'Your subscription is expired!'
         })
     all_questions = Question.objects.filter(
-        quest__pk=testid, is_draft=False).order_by('?')
+        quest__pk=testid, is_draft=False).order_by('id')
     unanswered_questions = all_questions.exclude(
-        answered_by__user__username=username).order_by('?')
+        answered_by__user__username=username).order_by('id')
+    if questions_order == 'random':
+        all_questions = all_questions.order_by('?')
+        unanswered_questions = unanswered_questions.order_by('?')
     if unanswered_questions.count() > 0:
-        random_items = unanswered_questions[:15]
+        random_items = list(unanswered_questions[:15])
     else:
-        random_items = all_questions[:15]
+        random_items = list(all_questions[:15])
+    random.shuffle(random_items)
 
     context = {
         'success': True,

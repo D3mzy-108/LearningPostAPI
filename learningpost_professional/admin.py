@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from learningpost_professional.models import ProfessionalOrganization, Score, Test, TestQuestion
+from learningpost_professional.models import ProfessionalOrganization, Test, TestAttempt, TestQuestion
 
 
 @admin.register(ProfessionalOrganization)
@@ -25,6 +25,6 @@ class TestQuestionAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Score)
-class ScoreAdmin(admin.ModelAdmin):
+@admin.register(TestAttempt)
+class TestAttemptAdmin(admin.ModelAdmin):
     pass

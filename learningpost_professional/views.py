@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 
 from admin_app.models import Chapter, Library, Quest
 from endpoints.api_views.quest_views import _build_quest_object
-from learningpost_professional.models import ProfessionalOrganization, Score, Test, TestQuestion
+from learningpost_professional.models import ProfessionalOrganization, Test, TestAttempt, TestQuestion
 from website.models import ProUserProfile, User
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -80,7 +80,7 @@ def professional_login(request):
     except:
         return JsonResponse({
             'success': False,
-            'message': 'Invalid credentials!'
+            'message': 'User not found!'
         })
 
 
@@ -229,7 +229,7 @@ def get_tests(request, username):
         'about': test.about,
         'instructions': test.instructions,
         'is_locked': test.expires <= datetime.date.today(),
-        'is_attempted': test.participants.all().filter(user__username=username).exists(),
+        'is_attempted': test.attempts.all().filter(user__username=username).exists(),
         'status': 'Closed' if test.expires <= datetime.date.today() else f'Closes on {test.expires}',
         'question_count': test.test_questions.count(),
     } for test in tests]
@@ -239,6 +239,9 @@ def get_tests(request, username):
         'tests': tests_list,
     })
 
+
+# TODO: CREATE A FUNCTION TO CREATE A TEST ATTEMPT INSTANCE.
+# THE ATTEMPT SHOULD ONLY BE PERMITTED IF THE USER'S FACE SIMILARITY IS ABOVE 75%
 
 def get_questions(request, testid):
     questions = TestQuestion.objects.filter(test__pk=testid).order_by('?')[:100]
@@ -269,13 +272,19 @@ def get_questions(request, testid):
 def save_test_score(request, username: str, testid: int):
     try:
         score = request.POST.get('score')
-        user = User.objects.get(username=username)
-        test = Test.objects.get(pk=testid)
-        score_instance = Score()
-        score_instance.user = user
-        score_instance.test = test
-        score_instance.score = score
-        score_instance.save()
+        # user = User.objects.get(username=username)
+        # test = Test.objects.get(pk=testid)
+        attempts = TestAttempt.objects.filter(
+            test__pk=testid, user__username=username)
+        if attempts.exists():
+            attempt = attempts.first()
+            attempt.score = score
+            attempt.save()
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid information provided',
+            })
         return JsonResponse({
             'success': True,
             'message': 'Score has been saved!',
@@ -291,16 +300,12 @@ def get_score(request, username: str, testid: int):
     user = get_object_or_404(User, username=username)
     # organizations = ProfessionalOrganization.objects.filter(
     #     members__pk=user.pk)
-    score = Score.objects.filter(
-        test__pk=testid, user__username=username).first()
+    score = TestAttempt.objects.filter(
+        test__pk=testid, user__username=username).first().to_json()
     if score is not None:
         return JsonResponse({
             'success': True,
-            'score': {
-                'score': score.score,
-                'date_attempted': score.date.date(),
-                'test': score.test.title,
-            }
+            'score': score
         })
     else:
         return JsonResponse({
