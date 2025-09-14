@@ -28,12 +28,19 @@ def _send_request_to_ai(user: User | None, prompt: str) -> str | None:
         if user:
             today = date.today()
             dob = user.dob
-            age = 10
+            age = 25
             if dob:
                 age = today.year - dob.year
+            
+            if age < 18:
+                instruction_format = 'Respond in an informal tone in about 150 words including as much detail as possible.'
+            else:
+                instruction_format = 'Respond in a semiformal tone in about 150 words including as much detail as possible.'
+
+            
 
             # FETCH RESPONSE FROM GEMINI AI
-            user_prompt = f'{prompt}\n\nTailor the response for a {age} year old to easily understand'
+            user_prompt = f'{prompt}\n\n{instruction_format} Tailor the response for a {age} year old to easily understand'
         else:
             user_prompt = prompt
         response = client.models.generate_content(
@@ -71,7 +78,7 @@ def prompt_akada(request, username: str):
     for pr in prompts_list[:2]:
         conversation_context += f'{pr["role"]}: {pr["parts"]}\n'
     else:
-        conversation_context += f'"\n\nRespond in an informal tone in about 150 words including as much detail as possible\n\n'
+        conversation_context += f'"\n\n'
     if request.method == 'POST':
         try:
             # INIT GEMINI PARAMS
