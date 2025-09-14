@@ -48,7 +48,7 @@ def start_test(request, username, test_id):
     test = get_object_or_404(Test, id=test_id)
 
     # Check for existing active attempt (not ended, not voided)
-    active_attempt = TestAttempt.objects.filter(user__username=username, test__id=test_id)
+    active_attempt = TestAttempt.objects.filter(user__username=username, test__id=test_id, is_attempted=True)
 
     if active_attempt.exists():
         return JsonResponse({
