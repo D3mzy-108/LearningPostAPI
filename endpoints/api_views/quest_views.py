@@ -128,6 +128,14 @@ def get_quest(request, testid, username):
 def questions(request, testid, username):
     user = get_object_or_404(User, username=username)
     questions_order = request.GET.get('order') or None
+    question_count = request.GET.get('count') or None
+    if question_count is not None:
+        try:
+            question_count = int(question_count)
+        except:
+            question_count = 15
+    else:
+        question_count = 15
 
     if not is_subscription_valid(user=user):
         return JsonResponse({
@@ -142,9 +150,9 @@ def questions(request, testid, username):
         all_questions = all_questions.order_by('?')
         unanswered_questions = unanswered_questions.order_by('?')
     if unanswered_questions.count() > 0:
-        random_items = list(unanswered_questions[:15])
+        random_items = list(unanswered_questions[:question_count])
     else:
-        random_items = list(all_questions[:15])
+        random_items = list(all_questions[:question_count])
     random.shuffle(random_items)
 
     context = {

@@ -48,19 +48,19 @@ def start_test(request, username, test_id):
     test = get_object_or_404(Test, id=test_id)
 
     # Check for existing active attempt (not ended, not voided)
-    active_attempt = TestAttempt.objects.filter(user__username=username, test__id=test_id, is_attempted=True)
+    active_attempt = TestAttempt.objects.filter(user__username=username, test__id=test_id)
 
-    if active_attempt.exists():
+    if active_attempt.exists() and active_attempt.first().is_attempted:
         return JsonResponse({
             'success': False,
             'message': 'You have already attempted this test!'
         })
-    
-    attempt = TestAttempt(
-        user=get_object_or_404(User, username=username),
-        test=test,
-    )
-    attempt.save()
+    elif not active_attempt.exists():
+        attempt = TestAttempt(
+            user=get_object_or_404(User, username=username),
+            test=test,
+        )
+        attempt.save()
     
     questions = TestQuestion.objects.filter(test__pk=test_id).order_by('?')[:100]
     questions_list = []
@@ -88,8 +88,8 @@ def start_test(request, username, test_id):
 @require_POST
 @csrf_exempt
 def save_test_score(request, username: str, testid: int):
-    try:
-        score = request.POST.get('score')
+    # try:
+        score = float(request.POST['score'])
         score_val = float(f'{score:.2f}')
         attempts = TestAttempt.objects.filter(
             test__pk=testid, user__username=username)
@@ -107,11 +107,11 @@ def save_test_score(request, username: str, testid: int):
             'success': True,
             'message': 'Score has been saved!',
         })
-    except:
-        return JsonResponse({
-            'success': False,
-            'message': 'Invalid information provided',
-        })
+    # except:
+    #     return JsonResponse({
+    #         'success': False,
+    #         'message': 'Invalid information provided',
+    #     })
 
 
 def get_attempt(request, username: str, testid: int):

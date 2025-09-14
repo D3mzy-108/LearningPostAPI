@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from website.models import User
 
@@ -57,6 +58,7 @@ class TestAttempt(models.Model):
     is_voided = models.BooleanField(default=False)
     is_attempted = models.BooleanField(default=False)
     proctoring_failures = models.IntegerField(default=0)
+    serial_number = models.UUIDField(default=uuid.uuid4, editable=False)
 
     def __str__(self):
         return f"{self.user.first_name}'s attempt on {self.test.title}"
@@ -79,13 +81,14 @@ class TestAttempt(models.Model):
             'test': {
                 'id': self.test.id,
                 'title': self.test.title,
-                'expires': self.test.expires,
+                'expires': self.test.expires.strftime('%Y-%m-%d'),
                 'pass_mark': self.test.pass_mark,
             },
-            'attempt_time': self.attempt_time,
+            'attempt_time': self.attempt_time.strftime('%Y-%m-%d %H:%M:%S'),
             'score': self.score,
             'is_voided': self.is_voided,
             'is_attempted': self.is_attempted,
             'proctoring_failures': self.proctoring_failures,
             'is_passed': self.is_passed,
+            'serial_number': str(self.serial_number)
         }
