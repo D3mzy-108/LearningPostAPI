@@ -70,6 +70,7 @@ def professional_login(request):
                     'email': user.email,
                     'username': user.username,
                     'lastLogin': datetime.datetime.strftime(user.last_login, '%d-%m-%Y'),
+                    'hasUnrestrictedAccess': user.is_superuser,
                 },
             })
         else:
