@@ -133,9 +133,9 @@ def questions(request, testid, username):
         try:
             question_count = int(question_count)
         except:
-            question_count = 15
+            question_count = 30
     else:
-        question_count = 15
+        question_count = 30
 
     if not is_subscription_valid(user=user):
         return JsonResponse({
